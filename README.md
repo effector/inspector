@@ -1,29 +1,42 @@
-# 🐣 Rollup starter with Typescript
+# Effector Inspector
 
-[![Build Status](https://travis-ci.org/toastyboost/rollup-starter.svg?branch=master)](https://travis-ci.org/toastyboost/rollup-starter) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+![Effector-Inspector](https://i.imgur.com/D5oqpLv.png)
 
-Build your module into a clean, typed and cross-platform package.  
-It's just works. Only key featurs.
+## Installation
 
-## Usage
+1. Install effector, logger and **inspector**
 
-`yarn build` builds the application to `dist/`  
-`yarn lint` check for errors `src/**.ts`
+```bash
+npm install effector
+npm install --dev effector-logger effector-inspector
+```
 
-## Features
+or yarn
 
-- [x] Bundles CJS/ES module formats
-- [x] Compression by Terser
-- [x] Aliases
-- [x] Sourcemaps
-- [x] ESLint plugins: Recommended, Typescript Recommended, React, Requiring Types
-- [x] Prettier
-- [x] No TSLint (because he's dead)
-- [x] Compiling types
-- [x] Remove console.log's from bundle with @rollup/strip
+```bash
+yarn add effector
+yarn add -D effector-logger effector-inspector
+```
 
-## TODO
+**effector-inspector** requires `effector` and `effector-logger` to be installed
 
-- [ ] Add CI
-- [ ] Add Badges: CI
-- [ ] Add article how to publish NPM package
+2. Follow instructions for [effector-logger](https://github.com/sergeysova/effector-logger#installation)
+
+- Setup babel plugin
+- Replace `effector` to `effector-logger`
+
+3. Open your root application file (`client.tsx` or `index.tsx`)
+
+Initialize effector logger in it first lines.
+
+```ts
+import { createInspector } from 'effector-inspector';
+
+createInspector();
+```
+
+4. Press hot keys to open inspector
+
+By default: `CTRL+B` in your application
+
+5. Watch your stores and its values
