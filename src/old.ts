@@ -26,44 +26,32 @@ interface Storage<T> {
   api: { add: Event<T> };
 }
 
-interface StoreDescriptor {
-  store: Store<any>;
-  mapped: boolean;
-}
+function createStorage<T extends CompositeUnit>(name: string): Storage<T> {
+  const add = createEvent<T>();
+  const $store = createStore<{ map: Map<string, T> }>(
+    { map: new Map() },
+    { name: `$${name}Storage` },
+  );
 
-interface StoreCreator {
-  store: Store<any>;
-  mapped?: boolean;
-  name?: string;
-}
-
-const storeAdd = createEvent<StoreCreator>();
-const $stores = createStore<Box<StoreDescriptor>>({ map: new Map() });
-
-$stores.on(storeAdd, ({ map }, descriptor) => {
-  const name = descriptor.name ?? createName(descriptor.store);
-
-  map.set(name, {
-    store: descriptor.store,
-    mapped: descriptor.mapped ?? false,
+  $store.on(add, ({ map }, element: T) => {
+    map.set(element.compositeName.path.join('/'), element);
+    return { map };
   });
 
-  return { map };
-});
+  const api = { add };
 
-function createName<T extends { compositeName: CompositeName }>(
-  unit: T,
-): string {
-  return unit.compositeName.path.join('/');
+  return { $store, api };
 }
 
-export function addStore(
-  store: Store<any>,
-  opts: { mapped?: boolean; name?: string } = {},
-): void {
-  storeAdd({ store, ...opts });
-}
-export const addEvent = createEvent();
+const stores = createStorage<Store<any>>('stores');
+const events = createStorage<Event<any>>('events');
+// const effects = createStorage<Effect<any, any, any>>('effects');
+// const domains = createStorage<Domain>('domain');
+
+export const addStore = stores.api.add;
+export const addEvent = events.api.add;
+// export const addEffect = effects.api.add;
+// export const addDomain = domains.api.add;
 
 interface Options {
   trimDomain?: string;
@@ -118,8 +106,43 @@ function Stores(options: Options): void {
   h('div', { style: styles.sectionHead, text: 'Stores' });
   h('div', () => {
     spec({ style: styles.storesTable });
+    list(
+      stores.$store.map(({ map }) => [...map.entries()]),
+      ({ store }) => {
+        h('div', () => {
+          spec({
+            style: styles.store,
+            attr: {
+              title: store.map(
+                ([, realStore]) =>
+                  (realStore as any).defaultConfig?.loc?.file ?? '',
+              ),
+            },
+          });
 
-    TreeView($stores.map(({ map }) => map));
+          const $name = store.map(([name]) =>
+            trimDomain(options.trimDomain, name),
+          );
+
+          h('pre', () => {
+            spec({
+              style: styles.storeName,
+              // @ts-ignore
+              text: $name,
+            });
+          });
+          h('pre', () => {
+            spec({
+              style: styles.storeValue,
+              // @ts-ignore
+              text: store.getState()[1].map((value) => JSON.stringify(value)),
+            });
+          });
+        });
+      },
+    );
+
+    TreeView();
   });
 }
 
@@ -154,8 +177,7 @@ const styles = {
     top: 0,
   },
   storesTable: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: 'table',
   },
   store: {
     display: 'table-row',
