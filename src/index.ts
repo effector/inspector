@@ -12,6 +12,7 @@ import {
 import { using, h, spec, list } from 'effector-dom';
 
 import { TreeView } from './tree-view';
+import { Options } from './config.h';
 
 interface CompositeUnit {
   compositeName: CompositeName;
@@ -65,11 +66,6 @@ export function addStore(
 }
 export const addEvent = createEvent();
 
-interface Options {
-  trimDomain?: string;
-  visible?: boolean;
-}
-
 export function createInspector(options: Options = {}): { root: HTMLElement } {
   const root = document.createElement('div');
   root.classList.add('effector-inspector');
@@ -119,7 +115,10 @@ function Stores(options: Options): void {
   h('div', () => {
     spec({ style: styles.storesTable });
 
-    TreeView($stores.map(({ map }) => map));
+    TreeView(
+      $stores.map(({ map }) => map),
+      options,
+    );
   });
 }
 

@@ -10,11 +10,15 @@ import {
   CompositeName,
 } from 'effector';
 import { using, h, spec, list, variant } from 'effector-dom';
+import { Options } from './config.h';
 
 type StoreDescriptor = { store: Store<any>; mapped: boolean };
 type StoresMap = Store<Map<string, StoreDescriptor>>;
 
-export function TreeView($stores: StoresMap) {
+const trimDomain = (domainName: string | undefined, name: string): string =>
+  domainName ? name.replace(domainName + '/', '') : name;
+
+export function TreeView($stores: StoresMap, options: Options): void {
   h('ul', () => {
     spec({ style: styles.list });
 
@@ -22,7 +26,9 @@ export function TreeView($stores: StoresMap) {
       $stores.map((map) => [...map.entries()]),
       ({ store }) => {
         const storeValue = store.map(([, value]) => value).getState();
-        const $storeName = store.map(([name]) => name);
+        const $storeName = store.map(([name]) =>
+          trimDomain(options.trimDomain, name),
+        );
         const $isExpanded = createStore(false);
         const expandToggle = createEvent<any>();
 
