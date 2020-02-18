@@ -141,8 +141,6 @@ function Stores(options: Options): void {
         });
       },
     );
-
-    TreeView();
   });
 }
 
