@@ -1,16 +1,6 @@
-/* eslint-disable @typescript-eslint/no-use-before-define, @typescript-eslint/ban-ts-ignore, @typescript-eslint/no-unnecessary-type-assertion */
-import {
-  createStore,
-  createEvent,
-  Store,
-  Event,
-  Effect,
-  Domain,
-  createApi,
-  CompositeName,
-} from 'effector';
-import { using, h, spec, list, variant } from 'effector-dom';
-import { Options } from './config.h';
+import { createStore, createEvent, Store } from 'effector';
+import { h, spec, list, variant } from 'forest';
+import { Options } from './types.h';
 
 type StoreDescriptor = { store: Store<any>; mapped: boolean };
 type StoresMap = Store<Map<string, StoreDescriptor>>;
@@ -41,7 +31,9 @@ export function TreeView($stores: StoresMap, options: Options): void {
 }
 
 function JsonNode($storeName: Store<string>, value: StoreDescriptor) {
-  const $type = value.store.map(getObjectType);
+  const $type = value
+    ? value.store.map((object) => ({ type: getObjectType(object) }))
+    : createStore({ type: '' });
 
   h('li', () => {
     spec({ style: styles.node });
@@ -49,56 +41,62 @@ function JsonNode($storeName: Store<string>, value: StoreDescriptor) {
     h('pre', { text: $storeName, style: styles.nodeTitle });
     h('pre', { text: ': ', style: styles.nodeTitle });
 
-    variant($type, {
-      Object() {
-        JsonObject(value.store);
-      },
-      Error() {
-        JsonObject(value.store);
-      },
-      WeakMap() {
-        JsonObject(value.store);
-      },
-      WeakSet() {
-        JsonObject(value.store);
-      },
-      Array() {
-        JsonArray(value.store);
-      },
-      Iterable() {
-        JsonIterable(value.store);
-      },
-      Map() {
-        JsonIterable(value.store);
-      },
-      Set() {
-        JsonIterable(value.store);
-      },
-      String() {
-        JsonValue(value.store, (raw) =>
-          typeof raw === 'string' ? `"${raw}"` : '',
-        );
-      },
-      Number() {
-        JsonValue(value.store);
-      },
-      Boolean() {
-        JsonValue(value.store, (raw) => (raw ? 'true' : 'false'));
-      },
-      Date() {
-        JsonValue(value.store, (raw) => raw?.toISOString?.());
-      },
-      Null() {
-        JsonValue(value.store, () => 'null');
-      },
-      Undefined() {
-        JsonValue(value.store, () => 'undefined');
-      },
-      Function() {
-        JsonValue(value.store, (raw) => raw?.toString?.());
-      },
-      Symbol() {
-        JsonValue(value.store, (raw) => raw?.toString?.());
+    return;
+
+    variant({
+      source: $type,
+      key: 'type',
+      cases: {
+        Object() {
+          JsonObject(value.store);
+        },
+        Error() {
+          JsonObject(value.store);
+        },
+        WeakMap() {
+          JsonObject(value.store);
+        },
+        WeakSet() {
+          JsonObject(value.store);
+        },
+        Array() {
+          JsonArray(value.store);
+        },
+        Iterable() {
+          JsonIterable(value.store);
+        },
+        Map() {
+          JsonIterable(value.store);
+        },
+        Set() {
+          JsonIterable(value.store);
+        },
+        String() {
+          JsonValue(value.store, (raw) =>
+            typeof raw === 'string' ? `"${raw}"` : '',
+          );
+        },
+        Number() {
+          JsonValue(value.store);
+        },
+        Boolean() {
+          JsonValue(value.store, (raw) => (raw ? 'true' : 'false'));
+        },
+        Date() {
+          JsonValue(value.store, (raw) => raw?.toISOString?.());
+        },
+        Null() {
+          JsonValue(value.store, () => 'null');
+        },
+        Undefined() {
+          JsonValue(value.store, () => 'undefined');
+        },
+        Function() {
+          JsonValue(value.store, (raw) => raw?.toString?.());
+        },
+        Symbol() {
+          JsonValue(value.store, (raw) => raw?.toString?.());
+        },
       },
     });
   });

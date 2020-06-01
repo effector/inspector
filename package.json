@@ -11,7 +11,7 @@
     "build": "webpack",
     "lint": "eslint --ext .ts,.tsx src",
     "commit": "git-cz",
-    "prepublish": "yarn build",
+    "prepublishOnly": "yarn build",
     "start": "parcel serve ./usage/index.html"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "@typescript-eslint/parser": "^2.16.0",
     "commitizen": "4.0.3",
     "cz-conventional-changelog": "3.0.2",
-    "effector": "^20.11.5",
+    "effector": "^20.15.8",
     "eslint": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
@@ -37,7 +37,8 @@
     "react-dom": "^16.11.0",
     "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.5",
+    "typescript": "^3.8.3",
+    "typescript-plugin-styled-components": "^1.4.4",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11"
   },
@@ -50,6 +51,7 @@
     "effector": "^20.11.5"
   },
   "dependencies": {
-    "effector-dom": "^0.0.11"
+    "forest": "^0.16.1",
+    "leafs": "^0.2.0"
   }
 }

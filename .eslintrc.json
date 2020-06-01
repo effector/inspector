@@ -25,7 +25,12 @@
         "createDefaultProgram": true,
         "tsconfigRootDir": "./"
       },
-      "plugins": ["@typescript-eslint"]
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/ban-ts-ignore": "off"
+      }
     }
   ]
 }

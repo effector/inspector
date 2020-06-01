@@ -18,7 +18,8 @@
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./dist",
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "plugins": [{ "name": "styled-components" }]
   },
   "exclude": ["./node_modules", "./dist"],
   "include": ["./src"]
