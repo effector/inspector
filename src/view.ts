@@ -158,28 +158,29 @@ function Logs($logs: Store<LogMeta[]>) {
   });
 }
 
-type TabsConfig<Keys extends string> = {
-  [K in Keys]: {
-    title: string | Store<string>;
-    fn: (_: { changeTab: Event<Keys> }) => void;
-  };
+type TabConfig<T> = {
+  title: string | Store<string>;
+  fn: (_: { changeTab: Event<T> }) => void;
 };
+type TabsConfig<Keys extends string> = Record<Keys, TabConfig<Keys>>;
 
-function Tabs<Keys extends string, Tabs extends TabsConfig<Keys>>(tabs: Tabs) {
+function Tabs<Keys extends string>(tabs: TabsConfig<Keys>) {
   const changeTab = createEvent<string>();
   const $tab = restore(changeTab, Object.keys(tabs)[0]);
 
   Section(() => {
     SectionHead(() => {
-      for (const [key, tab] of Object.entries(tabs)) {
+      for (const [key, tab] of Object.entries<TabConfig<Keys>>(tabs)) {
         SectionTab({
           text: tab.title,
-          data: { active: $tab.map((current) => current === key) },
+          data: {
+            active: $tab.map((current) => current === key),
+          },
           handler: { click: changeTab.prepend(() => key) },
         });
       }
     });
-    for (const [key, tab] of Object.entries(tabs)) {
+    for (const [key, tab] of Object.entries<TabConfig<Keys>>(tabs)) {
       SectionContent({
         visible: $tab.map((current) => current === key),
         fn() {
