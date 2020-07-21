@@ -130,7 +130,7 @@ const symbol = styled.span``;
 export const Content = {
   boolean,
   date,
-  null: nullable,
+  keyword: nullable,
   number,
   string,
   symbol,

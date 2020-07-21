@@ -11,6 +11,7 @@ const $deep = effector.createStore({
 });
 
 const $number = effector.createStore(0);
+const $bigint = effector.createStore(BigInt(498));
 const $bool = effector.createStore(false);
 const $bool2 = effector.createStore(true);
 const $null = effector.createStore(null);
@@ -53,17 +54,55 @@ const $mapInSet = effector.createStore(
   ]),
 );
 
+const $array = effector.createStore([
+  false,
+  5,
+  900e50,
+  'hello',
+  BigInt(720587) * BigInt(44),
+  new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]),
+  new Set([
+    new Map([['hello', new Set<any>(['b', 12])]]),
+  ]),
+  {
+    ref: new Set(['a', 2, false, null, undefined, new Date()]),
+  },
+]);
+
+const $fn1 = effector.createStore(function demo() {
+  /* */
+});
+const $fn2 = effector.createStore(() => 5);
+const op = (a, b) => a + b;
+const $fn3 = effector.createStore(op);
+
+const $setOfFns = effector.createStore({
+  ref: new Set([
+    function demo() {
+      return 0;
+    },
+    () => 5,
+    (a, b) => a + b,
+  ]),
+});
+
 inspector.addStore($set);
 inspector.addStore($setWrapped);
 inspector.addStore($map);
 inspector.addStore($mapWrapped);
 inspector.addStore($setInMap);
 inspector.addStore($mapInSet);
+inspector.addStore($array);
 inspector.addStore($example);
+inspector.addStore($fn1);
+inspector.addStore($fn2);
+inspector.addStore($fn3);
+inspector.addStore($setOfFns);
 inspector.addStore($foo);
 inspector.addStore($bar, { mapped: true });
 inspector.addStore($deep);
 inspector.addStore($number);
+inspector.addStore($bigint);
 inspector.addStore($bool);
 inspector.addStore($bool2);
 inspector.addStore($null);

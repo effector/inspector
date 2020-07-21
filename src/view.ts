@@ -69,17 +69,52 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
       source: $value.map((value) => ({ type: getType(value) })),
       key: 'type',
       cases: {
-        String: () => Content.string({ text: $value }),
+        String: () => Content.string({ text: ['"', $value, '"'] }),
         Number: () => Content.number({ text: $value }),
+        BigInt: () =>
+          Content.number({ text: [$value, 'n'], attr: { title: 'BigInt' } }),
         Boolean: () => Content.boolean({ text: $value }),
-        Null: () => Content.null({ text: 'null' }),
-        Undefined: () => Content.null({ text: 'undefined' }),
+        Null: () => Content.keyword({ text: 'null' }),
+        Undefined: () => Content.keyword({ text: 'undefined' }),
         Symbol: () => Content.symbol({ text: $value }),
+
+        Function() {
+          const attr = { title: $value.map((ƒ) => ƒ.toString()) };
+          h('span', { text: 'function', attr });
+          Content.keyword({
+            text: $value.map((ƒ) => (ƒ.name ? ` ${ƒ.name}` : '')),
+            attr,
+          });
+          h('span', { text: '()', attr });
+        },
 
         Date() {
           Content.date({
             text: $value.map((date) => date.toISOString?.()),
             attr: { title: $value },
+          });
+        },
+
+        Array() {
+          h('span', () => {
+            const click = createEvent<MouseEvent>();
+            const opened = createStore(false).on(click, (is) => !is);
+            spec({ data: { opened } });
+
+            h('span', {
+              text: '[',
+              fn() {
+                handler(
+                  { passive: true, capture: true, stop: true },
+                  { click },
+                );
+              },
+            });
+
+            list($value, ({ store }) =>
+              ListItem(() => Value({ state: store })),
+            );
+            spec({ text: ']' });
           });
         },
 
