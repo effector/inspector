@@ -1,4 +1,4 @@
-import { createStore, createEvent, Store } from 'effector';
+import { createStore, createEvent, Store, combine } from 'effector';
 import { list, h, variant, spec, rec, handler } from 'forest';
 import {
   Container,
@@ -64,7 +64,10 @@ function getType(value: unknown): 'unknown' | string {
 }
 
 function Stores($stores: Store<Record<string, StoreMeta>>) {
-  const Value = rec<any>(({ state: $value }) => {
+  const Value = rec<{ value: any; opened: boolean }>(({ state: $state }) => {
+    const $value = $state.map(({ value }) => value);
+    const $parentOpened = $state.map(({ opened }) => opened);
+
     variant({
       source: $value.map((value) => ({ type: getType(value) })),
       key: 'type',
@@ -86,7 +89,10 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
         Set() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
-            const opened = createStore(false).on(click, (is) => !is);
+            const $opened = createStore(false).on(click, (is) => !is);
+            const opened = combine($opened, $parentOpened, (current, parent) =>
+              parent ? current : false,
+            );
             spec({ data: { opened } });
 
             h('span', {
@@ -101,7 +107,10 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
 
             list(
               $value.map((set) => [...set.values()]),
-              ({ store }) => ListItem(() => Value({ state: store })),
+              ({ store }) =>
+                ListItem(() =>
+                  Value({ state: combine({ value: store, opened }) }),
+                ),
             );
             spec({ text: ']' });
           });
@@ -110,7 +119,10 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
         Map() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
-            const opened = createStore(false).on(click, (is) => !is);
+            const $opened = createStore(false).on(click, (is) => !is);
+            const opened = combine($opened, $parentOpened, (current, parent) =>
+              parent ? current : false,
+            );
             spec({ data: { opened } });
 
             h('span', () => {
@@ -136,7 +148,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                   });
 
                   h('span', { text: ' => ' });
-                  Value({ state: $value });
+                  Value({ state: combine({ value: $value, opened }) });
                 });
               },
             );
@@ -147,8 +159,17 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
         __() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
-            const opened = createStore(false).on(click, (is) => !is);
-            spec({ data: { opened } });
+            const $opened = createStore(false).on(click, (is) => !is);
+            const opened = combine($opened, $parentOpened, (current, parent) =>
+              parent ? current : false,
+            );
+            spec({
+              data: {
+                opened,
+                parent: $parentOpened.map(String),
+                current: $opened.map(String),
+              },
+            });
 
             h('span', { text: '{' });
             list(
@@ -169,7 +190,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                   });
 
                   h('span', { text: ': ' });
-                  Value({ state: $value });
+                  Value({ state: combine({ value: $value, opened }) });
                 });
               },
             );
@@ -196,7 +217,9 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
             Node(() => {
               NodeTitle({ text: [$name, ': '] });
               NodeContent(() => {
-                Value({ state: $value });
+                Value({
+                  state: combine({ value: $value, opened: true as boolean }),
+                });
               });
             });
           },
