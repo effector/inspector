@@ -11,6 +11,8 @@ const $deep = effector.createStore({
 });
 
 const $number = effector.createStore(0);
+const $numberInf = effector.createStore(Infinity);
+const $numberNot = effector.createStore(NaN);
 const $bigint = effector.createStore(BigInt(498));
 const $bool = effector.createStore(false);
 const $bool2 = effector.createStore(true);
@@ -124,6 +126,15 @@ const $iterators = effector.createStore([
 const $regexp1 = effector.createStore(/[\w\s]+/gi);
 const $regexp2 = effector.createStore(new RegExp('[\\w\\s]+', 'gi'));
 
+const $promise = effector.createStore(
+  new Promise((resolve) => setTimeout(resolve, 5000)),
+);
+const $promiseResolved = effector.createStore(Promise.resolve(1));
+const $promiseRejected = effector.createStore(Promise.reject(1));
+
+inspector.addStore($promise);
+inspector.addStore($promiseResolved);
+inspector.addStore($promiseRejected);
 inspector.addStore($regexp1);
 inspector.addStore($regexp2);
 inspector.addStore($error);
@@ -148,6 +159,8 @@ inspector.addStore($foo);
 inspector.addStore($bar, { mapped: true });
 inspector.addStore($deep);
 inspector.addStore($number);
+inspector.addStore($numberInf);
+inspector.addStore($numberNot);
 inspector.addStore($bigint);
 inspector.addStore($bool);
 inspector.addStore($bool2);
