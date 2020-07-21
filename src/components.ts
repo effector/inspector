@@ -143,6 +143,10 @@ const date = styled.span`
 
 const symbol = styled.span``;
 
+const regexp = styled.span`
+  color: orangered;
+`;
+
 export const Content = {
   boolean,
   date,
@@ -150,4 +154,5 @@ export const Content = {
   number,
   string,
   symbol,
+  regexp,
 };

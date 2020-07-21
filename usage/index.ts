@@ -121,6 +121,11 @@ const $iterators = effector.createStore([
   ]).entries(),
 ]);
 
+const $regexp1 = effector.createStore(/[\w\s]+/gi);
+const $regexp2 = effector.createStore(new RegExp('[\\w\\s]+', 'gi'));
+
+inspector.addStore($regexp1);
+inspector.addStore($regexp2);
 inspector.addStore($error);
 inspector.addStore($errorType);
 inspector.addStore($errorCustom);

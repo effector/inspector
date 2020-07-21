@@ -77,6 +77,13 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
         Undefined: () => Content.keyword({ text: 'undefined' }),
         Symbol: () => Content.symbol({ text: $value }),
 
+        RegExp() {
+          const $source = $value.map((rx) => rx.source);
+          const $flags = $value.map((rx) => rx.flags);
+
+          Content.regexp({ text: ['/', $source, '/', $flags] });
+        },
+
         Function() {
           const attr = { title: $value.map((ƒ) => ƒ.toString()) };
           h('span', { text: 'function', attr });
