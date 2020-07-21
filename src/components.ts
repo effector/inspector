@@ -102,14 +102,22 @@ export const NodeTitle = styled.pre`
   display: flex;
   margin: 0 0;
   color: darkred;
-  &::after {
-    content: ': ';
-    color: black;
-  }
+  font-family: hasklig, monofur, monospace;
 `;
 
 export const NodeContent = styled.pre`
   margin: 0 0;
+  font-family: hasklig, monofur, monospace;
+`;
+
+export const NodeButton = styled.button`
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  font-family: hasklig, monofur, monospace;
+  border-radius: 6px;
+  margin-left: 1rem;
 `;
 
 export const ListItem = styled.span`

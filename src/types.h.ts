@@ -24,6 +24,15 @@ export interface StoreMeta {
 
 export interface EventMeta {
   mapped: boolean;
+  lastTriggeredWith: any;
+}
+
+export interface LogMeta {
+  kind: 'event' | 'store';
+  name: string;
+  payload: any;
+  id: string;
+  datetime: Date;
 }
 
 export interface Inspector {

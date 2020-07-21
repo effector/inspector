@@ -1,7 +1,8 @@
 import * as effector from 'effector';
 import * as inspector from '../src';
 
-const event = effector.createEvent();
+const event = effector.createEvent<number>();
+const just = effector.createEvent<string>();
 
 const $foo = effector.createStore('hello');
 const $bar = $foo.map((foo) => foo.length);
@@ -169,11 +170,14 @@ inspector.addStore($date);
 inspector.addStore($symbol);
 inspector.addStore($args);
 inspector.addStore($window);
+inspector.addEvent(event);
+inspector.addEvent(just);
 
 inspector.createInspector({ visible: true });
 
-setInterval(event, 1800);
+setInterval(() => event(1), 2000);
+setTimeout(() => just('hello'), 0);
 
 $number.on(event, (counter) => counter + 1);
-$example.on(event, (counter) => counter + 110);
 $date.on(event, () => new Date());
+$foo.on(just, (s, n) => s + n);
