@@ -118,6 +118,30 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
           });
         },
 
+        Arguments() {
+          h('span', () => {
+            const click = createEvent<MouseEvent>();
+            const opened = createStore(false).on(click, (is) => !is);
+            spec({ data: { opened } });
+
+            h('span', {
+              text: 'Arguments [',
+              fn() {
+                handler(
+                  { passive: true, capture: true, stop: true },
+                  { click },
+                );
+              },
+            });
+
+            list(
+              $value.map((args) => [...args]),
+              ({ store }) => ListItem(() => Value({ state: store })),
+            );
+            spec({ text: ']' });
+          });
+        },
+
         Set() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
@@ -179,13 +203,55 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
           });
         },
 
-        __() {
+        Error() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
             const opened = createStore(false).on(click, (is) => !is);
             spec({ data: { opened } });
 
-            h('span', { text: '{' });
+            h('span', {
+              text: [$value.map((error) => error.name), ' {'],
+              attr: { title: $value.map((error) => error.constructor.name) },
+              fn() {
+                handler(
+                  { passive: true, capture: true, stop: true },
+                  { click },
+                );
+              },
+            });
+
+            ListItem(() => {
+              spec({ data: { hidden: 'expanded' } });
+
+              Content.string({
+                text: [`"message"`],
+                fn() {
+                  handler(
+                    { passive: true, capture: true, stop: true },
+                    { click },
+                  );
+                },
+              });
+              h('span', { text: ': ' });
+              Value({ state: $value.map((error) => error.message) });
+            });
+
+            ListItem(() => {
+              spec({ data: { hidden: 'folded' } });
+
+              Content.string({
+                text: [`"stack"`],
+                fn() {
+                  handler(
+                    { passive: true, capture: true, stop: true },
+                    { click },
+                  );
+                },
+              });
+              h('span', { text: ': ' });
+              Value({ state: $value.map((error) => error.stack) });
+            });
+
             list(
               $value.map((object) => [...Object.entries(object)]),
               ({ store }) => {
@@ -208,8 +274,51 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                 });
               },
             );
-            h('span', { text: '}' });
           });
+
+          h('span', { text: '}' });
+        },
+
+        __({ store }) {
+          h('span', () => {
+            const click = createEvent<MouseEvent>();
+            const opened = createStore(false).on(click, (is) => !is);
+            spec({ data: { opened } });
+
+            h('span', {
+              text: [store.map(({ type }) => type), ' {'],
+              fn() {
+                handler(
+                  { passive: true, capture: true, stop: true },
+                  { click },
+                );
+              },
+            });
+
+            list(
+              $value.map((object) => [...Object.entries(object)]),
+              ({ store }) => {
+                const $key = store.map(([key]) => key);
+                const $value = store.map(([, value]) => value);
+
+                ListItem(() => {
+                  Content.string({
+                    text: [`"`, $key, `"`],
+                    fn() {
+                      handler(
+                        { passive: true, capture: true, stop: true },
+                        { click },
+                      );
+                    },
+                  });
+
+                  h('span', { text: ': ' });
+                  Value({ state: $value });
+                });
+              },
+            );
+          });
+          h('span', { text: '}' });
         },
       },
     });

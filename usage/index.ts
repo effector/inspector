@@ -86,6 +86,28 @@ const $setOfFns = effector.createStore({
   ]),
 });
 
+const $args = effector.createStore(
+  (function(a, b, c, d) {
+    return arguments; // eslint-disable-line prefer-rest-params
+  })(1, 5, {}, () => 0),
+);
+
+const $error = effector.createStore(new Error('random'));
+const $errorType = effector.createStore(new TypeError('random'));
+class CustomError extends Error {
+  demo = 123;
+  hello = '';
+  name = 'Custom';
+  constructor(message: string) {
+    super(message);
+    this.hello = message;
+  }
+}
+const $errorCustom = effector.createStore(new CustomError('message'));
+
+inspector.addStore($error);
+inspector.addStore($errorType);
+inspector.addStore($errorCustom);
 inspector.addStore($set);
 inspector.addStore($setWrapped);
 inspector.addStore($map);
@@ -108,6 +130,7 @@ inspector.addStore($bool2);
 inspector.addStore($null);
 inspector.addStore($date);
 inspector.addStore($symbol);
+inspector.addStore($args);
 
 inspector.createInspector({ visible: true });
 

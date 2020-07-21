@@ -98,6 +98,22 @@ export const ListItem = styled.span`
     padding-left: 8px;
   }
 
+  &[data-hidden='folded'] {
+    display: none;
+
+    [data-opened='true'] > & {
+      display: block;
+    }
+  }
+
+  &[data-hidden='expanded'] {
+    display: inline-block;
+
+    [data-opened='true'] > & {
+      display: none;
+    }
+  }
+
   &:not(:last-child)::after {
     content: ', ';
   }
