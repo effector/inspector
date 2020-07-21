@@ -76,39 +76,50 @@ export const NodeTitle = styled.pre`
 
 export const NodeContent = styled.pre`
   margin: 0 0;
+`;
 
-  & [data-style='boolean'] {
-    color: mediumvioletred;
-    font-style: italic;
-  }
+export const ListItem = styled.span`
+  display: inline-block;
 
-  & [data-style='number'] {
-    color: blue;
-  }
-
-  & [data-style='string'] {
-    color: green;
-  }
-
-  & [data-style='null'] {
-    color: blue;
-    font-weight: bold;
-  }
-
-  & [data-style='date'] {
-    color: olive;
-  }
-
-  & [data-kind='list-item'] {
-    display: inline-block;
-  }
-
-  & [data-kind='list-item']:not(:last-child)::after {
-    content: ', ';
-  }
-
-  & [data-opened='true'] > [data-kind='list-item'] {
+  [data-opened='true'] > & {
     display: block;
     padding-left: 8px;
   }
+
+  &:not(:last-child)::after {
+    content: ', ';
+  }
 `;
+
+const boolean = styled.span`
+  color: mediumvioletred;
+  font-style: italic;
+`;
+
+const number = styled.span`
+  color: blue;
+`;
+
+const string = styled.span`
+  color: green;
+`;
+
+const nullable = styled.span`
+  color: blue;
+  font-weight: bold;
+`;
+
+const date = styled.span`
+  color: olive;
+`;
+
+const symbol = styled.span``;
+
+export const Content = {
+  boolean,
+  date,
+  null: nullable,
+  number,
+  string,
+  symbol,
+};

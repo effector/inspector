@@ -9,6 +9,9 @@ import {
   NodeTitle,
   NodeContent,
   Section,
+  Content,
+  ListItem,
+  ListItem,
 } from './components';
 import { StoreMeta } from './types.h';
 
@@ -66,40 +69,20 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
       source: $value.map((value) => ({ type: getType(value) })),
       key: 'type',
       cases: {
-        String() {
-          h('span', {
-            text: ['"', $value, '"'],
-            data: { style: 'string' },
-          });
-        },
-        Number() {
-          h('span', {
-            text: $value,
-            data: { style: 'number' },
-          });
-        },
-        Boolean() {
-          h('span', {
-            text: $value,
-            data: { style: 'boolean' },
-          });
-        },
-        Null() {
-          h('span', { text: 'null', data: { style: 'null' } });
-        },
-        Undefined() {
-          h('span', { text: 'undefined', data: { style: 'null' } });
-        },
-        Symbol() {
-          h('span', { text: $value });
-        },
+        String: () => Content.string({ text: $value }),
+        Number: () => Content.number({ text: $value }),
+        Boolean: () => Content.boolean({ text: $value }),
+        Null: () => Content.null({ text: 'null' }),
+        Undefined: () => Content.null({ text: 'undefined' }),
+        Symbol: () => Content.symbol({ text: $value }),
+
         Date() {
-          h('span', {
+          Content.date({
             text: $value.map((date) => date.toISOString?.()),
             attr: { title: $value },
-            data: { style: 'date' },
           });
         },
+
         Set() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
@@ -118,16 +101,12 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
 
             list(
               $value.map((set) => [...set.values()]),
-              ({ store }) => {
-                h('span', () => {
-                  spec({ data: { kind: 'list-item' } });
-                  Value({ state: store });
-                });
-              },
+              ({ store }) => ListItem(() => Value({ state: store })),
             );
             spec({ text: ']' });
           });
         },
+
         Map() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
@@ -145,10 +124,8 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                 const $key = store.map(([key]) => key);
                 const $value = store.map(([, value]) => value);
 
-                h('span', () => {
-                  spec({ data: { kind: 'list-item' } });
-                  h('span', {
-                    data: { style: 'string' },
+                ListItem(() => {
+                  Content.string({
                     text: [`"`, $key, `"`],
                     fn() {
                       handler(
@@ -157,6 +134,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                       );
                     },
                   });
+
                   h('span', { text: ' => ' });
                   Value({ state: $value });
                 });
@@ -165,6 +143,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
             spec({ text: '}' });
           });
         },
+
         __() {
           h('span', () => {
             const click = createEvent<MouseEvent>();
@@ -178,10 +157,8 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                 const $key = store.map(([key]) => key);
                 const $value = store.map(([, value]) => value);
 
-                h('span', () => {
-                  spec({ data: { kind: 'list-item' } });
-                  h('span', {
-                    data: { style: 'string' },
+                ListItem(() => {
+                  Content.string({
                     text: [`"`, $key, `"`],
                     fn() {
                       handler(
@@ -190,6 +167,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
                       );
                     },
                   });
+
                   h('span', { text: ': ' });
                   Value({ state: $value });
                 });
