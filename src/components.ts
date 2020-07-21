@@ -37,20 +37,42 @@ export const Section = styled.section`
   flex-flow: column;
   position: relative;
   width: 100%;
+  border-radius: inherit;
 `;
 
 export const SectionHead = styled.div`
   background-color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   display: flex;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   line-height: 2rem;
-  padding: 0.5rem 1rem;
   position: sticky;
   left: 0;
   right: 0;
   top: 0;
+`;
+
+export const SectionTab = styled.div`
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: inherit;
+  border-top-right-radius: 0;
+
+  &:hover {
+    box-shadow: inset 0 -2px 0 0 mediumvioletred;
+  }
+
+  &:not(:first-child) {
+    border-top-left-radius: 0;
+  }
+
+  &[data-active='true'] {
+    background: linear-gradient(rgba(199, 21, 133, 0), rgba(199, 21, 133, 0.1));
+  }
 `;
 
 export const SectionContent = styled.div`

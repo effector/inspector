@@ -1,4 +1,4 @@
-import { createStore, createEvent, Store } from 'effector';
+import { createStore, createEvent, Store, restore } from 'effector';
 import { list, h, variant, spec, rec, handler } from 'forest';
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   NodeTitle,
   NodeContent,
   Section,
+  SectionTab,
 } from './components';
 import { ObjectView } from './object-view';
 import { StoreMeta } from './types.h';
@@ -48,35 +49,73 @@ export function Root(
   Container({
     visible: $isVisible,
     fn() {
-      Stores($stores);
-      // Events($events)
+      Tabs({
+        stores: {
+          title: 'Stores',
+          fn() {
+            Stores($stores);
+          },
+        },
+        // events: {
+        //   title: 'Events',
+        //   fn() {
+        //     Node({ text: 'events' });
+        //   },
+        // },
+        // logs: {
+        //   title: 'Logs',
+        //   fn() {
+        //     Node({ text: 'Logs' });
+        //   },
+        // },
+      });
     },
   });
 }
 
-function Stores($stores: Store<Record<string, StoreMeta>>) {
-  Section(() => {
-    SectionHead({ text: 'Stores' });
-    SectionContent(() => {
-      NodeList(() => {
-        const $list = $stores.map((map) =>
-          Object.entries(map).map(([name, meta]) => ({ name, ...meta })),
-        );
+function Tabs(
+  tabs: Record<string, { title: string | Store<string>; fn: () => void }>,
+) {
+  const changeTab = createEvent<string>();
+  const $tab = restore(changeTab, Object.keys(tabs)[0]);
 
-        list({
-          source: $list,
-          key: 'name',
-          fields: ['name', 'value'],
-          fn({ fields: [$name, $value] }) {
-            Node(() => {
-              NodeTitle({ text: [$name] });
-              NodeContent(() => {
-                ObjectView({ value: $value });
-              });
-            });
-          },
+  Section(() => {
+    SectionHead(() => {
+      for (const [key, tab] of Object.entries(tabs)) {
+        SectionTab({
+          text: tab.title,
+          data: { active: $tab.map((current) => current === key) },
+          handler: { click: changeTab.prepend(() => key) },
         });
+      }
+    });
+    for (const [key, tab] of Object.entries(tabs)) {
+      SectionContent({
+        visible: $tab.map((current) => current === key),
+        fn: tab.fn,
       });
+    }
+  });
+}
+
+function Stores($stores: Store<Record<string, StoreMeta>>) {
+  NodeList(() => {
+    const $list = $stores.map((map) =>
+      Object.entries(map).map(([name, meta]) => ({ name, ...meta })),
+    );
+
+    list({
+      source: $list,
+      key: 'name',
+      fields: ['name', 'value'],
+      fn({ fields: [$name, $value] }) {
+        Node(() => {
+          NodeTitle({ text: [$name] });
+          NodeContent(() => {
+            ObjectView({ value: $value });
+          });
+        });
+      },
     });
   });
 }
