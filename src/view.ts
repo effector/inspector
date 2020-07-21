@@ -194,7 +194,7 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
           fields: ['name', 'value'],
           fn({ fields: [$name, $value] }) {
             Node(() => {
-              NodeTitle({ text: [$name, ': '] });
+              NodeTitle({ text: [$name] });
               NodeContent(() => {
                 Value({ state: $value });
               });

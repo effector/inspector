@@ -20,16 +20,23 @@ export const Container = styled.div`
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
+  width: 100%;
+  max-width: 46rem;
 
   & > * + * {
     border-left: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  @media screen and (max-width: 700px) {
+    max-width: 30rem;
   }
 `;
 
 export const Section = styled.section`
   display: flex;
   flex-flow: column;
-  width: 26rem;
+  position: relative;
+  width: 100%;
 `;
 
 export const SectionHead = styled.div`
@@ -72,6 +79,11 @@ export const Node = styled.li`
 export const NodeTitle = styled.pre`
   display: flex;
   margin: 0 0;
+  color: darkred;
+  &::after {
+    content: ': ';
+    color: black;
+  }
 `;
 
 export const NodeContent = styled.pre`
