@@ -1,4 +1,4 @@
-import { Store } from 'effector';
+import { Store, Event } from 'effector';
 
 export interface Options {
   trimDomain?: string;
@@ -11,8 +11,18 @@ export interface StoreCreator {
   mapped: boolean;
 }
 
+export interface EventCreator {
+  event: Event<any>;
+  name: string;
+  mapped: boolean;
+}
+
 export interface StoreMeta {
   value: any;
+  mapped: boolean;
+}
+
+export interface EventMeta {
   mapped: boolean;
 }
 
