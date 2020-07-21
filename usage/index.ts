@@ -105,6 +105,22 @@ class CustomError extends Error {
 }
 const $errorCustom = effector.createStore(new CustomError('message'));
 
+const $window = effector.createStore(window);
+
+const $uint = effector.createStore(new Uint32Array([0, 5, 1, 2]));
+const $weakSet = effector.createStore(
+  new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }]),
+);
+
+const $iterators = effector.createStore([
+  new Set(['a', 2, false, null, undefined, new Date()]).entries(),
+  ['a', 2, false, null, undefined, new Date()].entries(),
+  new Map<string, any>([
+    ['a', 2],
+    ['b', false],
+  ]).entries(),
+]);
+
 inspector.addStore($error);
 inspector.addStore($errorType);
 inspector.addStore($errorCustom);
@@ -120,6 +136,9 @@ inspector.addStore($fn1);
 inspector.addStore($fn2);
 inspector.addStore($fn3);
 inspector.addStore($setOfFns);
+inspector.addStore($uint);
+inspector.addStore($weakSet);
+inspector.addStore($iterators);
 inspector.addStore($foo);
 inspector.addStore($bar, { mapped: true });
 inspector.addStore($deep);
@@ -131,6 +150,7 @@ inspector.addStore($null);
 inspector.addStore($date);
 inspector.addStore($symbol);
 inspector.addStore($args);
+inspector.addStore($window);
 
 inspector.createInspector({ visible: true });
 

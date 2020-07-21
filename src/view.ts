@@ -11,7 +11,6 @@ import {
   Section,
   Content,
   ListItem,
-  ListItem,
 } from './components';
 import { StoreMeta } from './types.h';
 
@@ -56,7 +55,7 @@ export function Root(
   });
 }
 
-const typeRegexp = /\[object (\w+)\]/;
+const typeRegexp = /\[object ([\w\s]+)\]/;
 function getType(value: unknown): 'unknown' | string {
   const typeString = Object.prototype.toString.call(value);
   const match = typeRegexp.exec(typeString);
@@ -86,6 +85,35 @@ function Stores($stores: Store<Record<string, StoreMeta>>) {
             attr,
           });
           h('span', { text: '()', attr });
+        },
+
+        AsyncFunction() {
+          const attr = { title: $value.map((ƒ) => ƒ.toString()) };
+          h('span', { text: 'async function', attr });
+          Content.keyword({
+            text: $value.map((ƒ) => (ƒ.name ? ` ${ƒ.name}` : '')),
+            attr,
+          });
+          h('span', { text: '()', attr });
+        },
+
+        Window() {
+          h('span', () => {
+            const click = createEvent<MouseEvent>();
+            const opened = createStore(false).on(click, (is) => !is);
+            spec({ data: { opened } });
+
+            h('span', {
+              text: 'Window {...',
+              fn() {
+                handler(
+                  { passive: true, capture: true, stop: true },
+                  { click },
+                );
+              },
+            });
+            spec({ text: '}' });
+          });
         },
 
         Date() {
