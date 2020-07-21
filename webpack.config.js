@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const Package = require('./package.json');
 
 module.exports = {
   mode: 'production',
@@ -32,7 +33,10 @@ module.exports = {
     tls: 'empty',
     child_process: 'empty',
   },
-  externals: ['effector', 'effector-dom'],
+  externals: [].concat(
+    Object.keys(Package.peerDependencies),
+    Object.keys(Package.dependencies),
+  ),
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin()],

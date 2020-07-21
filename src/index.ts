@@ -7,7 +7,7 @@ import {
   sample,
 } from 'effector';
 import { using } from 'forest';
-import { StyledRoot } from 'leafs';
+import { StyledRoot } from 'foliage';
 
 import { Options, StoreCreator, Inspector, StoreMeta } from './types.h';
 import { Root } from './view';

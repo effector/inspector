@@ -1,4 +1,4 @@
-import { styled } from 'leafs';
+import { styled } from 'foliage';
 
 export const Container = styled.div`
   background-color: white;
@@ -50,6 +50,7 @@ export const SectionContent = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow-y: auto;
 `;
 
 export const NodeList = styled.ul`
@@ -75,4 +76,39 @@ export const NodeTitle = styled.pre`
 
 export const NodeContent = styled.pre`
   margin: 0 0;
+
+  & [data-style='boolean'] {
+    color: mediumvioletred;
+    font-style: italic;
+  }
+
+  & [data-style='number'] {
+    color: blue;
+  }
+
+  & [data-style='string'] {
+    color: green;
+  }
+
+  & [data-style='null'] {
+    color: blue;
+    font-weight: bold;
+  }
+
+  & [data-style='date'] {
+    color: olive;
+  }
+
+  & [data-kind='list-item'] {
+    display: inline-block;
+  }
+
+  & [data-kind='list-item']:not(:last-child)::after {
+    content: ', ';
+  }
+
+  & [data-opened='true'] > [data-kind='list-item'] {
+    display: block;
+    padding-left: 8px;
+  }
 `;

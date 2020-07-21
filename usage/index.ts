@@ -21,6 +21,44 @@ const domain = effector.createDomain();
 
 const $example = domain.createStore(100);
 
+const $set = effector.createStore(
+  new Set(['a', 2, false, null, undefined, new Date()]),
+);
+
+const $setWrapped = effector.createStore({
+  ref: new Set(['a', 2, false, null, undefined, new Date()]),
+});
+
+const $map = effector.createStore(
+  new Map<string, any>([
+    ['a', 2],
+    ['b', false],
+  ]),
+);
+
+const $mapWrapped = effector.createStore({
+  ref: new Map<string, any>([
+    ['a', 2],
+    ['b', false],
+  ]),
+});
+
+const $setInMap = effector.createStore(
+  new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]),
+);
+
+const $mapInSet = effector.createStore(
+  new Set([
+    new Map([['hello', new Set<any>(['b', 12])]]),
+  ]),
+);
+
+inspector.addStore($set);
+inspector.addStore($setWrapped);
+inspector.addStore($map);
+inspector.addStore($mapWrapped);
+inspector.addStore($setInMap);
+inspector.addStore($mapInSet);
 inspector.addStore($example);
 inspector.addStore($foo);
 inspector.addStore($bar, { mapped: true });
