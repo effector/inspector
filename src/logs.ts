@@ -1,5 +1,5 @@
 import { Store, createStore, createEvent, combine, restore } from 'effector';
-import { list, h, spec } from 'forest';
+import { list, h } from 'forest';
 
 import { LogMeta } from './types.h';
 import {
@@ -14,7 +14,7 @@ import {
 import { ObjectView } from './object-view';
 import { createJsonSetting, createSetting } from './setting';
 
-type Kind = 'event' | 'store';
+type Kind = 'event' | 'store' | 'effect';
 
 const kindSetting = createJsonSetting<Kind[]>('filter-kinds');
 const textSetting = createSetting('filter-text');
@@ -46,6 +46,11 @@ export function Logs($logs: Store<LogMeta[]>) {
       title: 'Store',
       attr: { checked: $kinds.map((list) => list.includes('store')) },
       handler: { click: toggleKind.prepend(() => 'store') },
+    });
+    Checkbox({
+      title: 'Effect',
+      attr: { checked: $kinds.map((list) => list.includes('effect')) },
+      handler: { click: toggleKind.prepend(() => 'effect') },
     });
 
     h('span', { text: 'Filter:' });

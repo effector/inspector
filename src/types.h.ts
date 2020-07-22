@@ -1,4 +1,4 @@
-import { Store, Event } from 'effector';
+import { Store, Event, Effect } from 'effector';
 
 export interface Options {
   trimDomain?: string;
@@ -17,6 +17,13 @@ export interface EventCreator {
   mapped: boolean;
 }
 
+export interface EffectCreator {
+  effect: Effect<any, any, any>;
+  sid: string;
+  name: string;
+  attached: boolean;
+}
+
 export interface StoreMeta {
   value: any;
   mapped: boolean;
@@ -27,8 +34,14 @@ export interface EventMeta {
   lastTriggeredWith: any;
 }
 
+export interface EffectMeta {
+  inFlight: number;
+  name: string;
+  effect: Effect<any, any, any>;
+}
+
 export interface LogMeta {
-  kind: 'event' | 'store';
+  kind: 'event' | 'store' | 'effect';
   name: string;
   payload: any;
   id: string;

@@ -1,11 +1,12 @@
 import { createStore, createEvent, Store } from 'effector';
 
-import { StoreMeta, EventMeta, LogMeta } from './types.h';
+import { StoreMeta, EventMeta, LogMeta, EffectMeta } from './types.h';
 import { Container } from './components';
 import { Tabs } from './tabs';
 import { Logs } from './logs';
 import { Stores } from './stores';
 import { Events } from './events';
+import { Effects } from './effects';
 
 const KEY_B = 2;
 
@@ -26,6 +27,7 @@ $isVisible
 export function Root(
   $stores: Store<Record<string, StoreMeta>>,
   $events: Store<Record<string, EventMeta>>,
+  $effects: Store<Record<string, EffectMeta>>,
   $logs: Store<LogMeta[]>,
   visible = false,
 ) {
@@ -49,6 +51,12 @@ export function Root(
           title: 'Stores',
           fn() {
             Stores($stores);
+          },
+        },
+        effects: {
+          title: 'Effects',
+          fn() {
+            Effects($effects);
           },
         },
         events: {

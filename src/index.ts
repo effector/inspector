@@ -1,6 +1,7 @@
 import {
   Store,
   Event,
+  Effect,
   CompositeName,
   createEvent,
   createStore,
@@ -11,13 +12,15 @@ import { using } from 'forest';
 import { StyledRoot } from 'foliage';
 
 import {
-  Options,
-  StoreCreator,
-  Inspector,
-  StoreMeta,
+  EffectCreator,
+  EffectMeta,
   EventCreator,
   EventMeta,
+  Inspector,
   LogMeta,
+  Options,
+  StoreCreator,
+  StoreMeta,
 } from './types.h';
 import { Root } from './view';
 
@@ -28,6 +31,10 @@ const $stores = createStore<Record<string, StoreMeta>>({});
 const eventAdd = createEvent<EventCreator>();
 const eventTriggered = createEvent<{ name: string; params: any }>();
 const $events = createStore<Record<string, EventMeta>>({});
+
+const effectAdd = createEvent<EffectCreator>();
+const effectTriggered = createEvent<{ sid: string }>();
+const $effects = createStore<Record<string, EffectMeta>>({});
 
 const $logs = createStore<LogMeta[]>([]);
 
@@ -56,6 +63,24 @@ $events
   .on(eventTriggered, (map, { name, params }) => {
     // should not change the order of fields
     map[name] = { ...map[name], lastTriggeredWith: params };
+    return { ...map };
+  });
+
+$effects
+  .on(effectAdd, (map, effect) => ({
+    ...map,
+    [effect.sid]: {
+      name: effect.name,
+      effect: effect.effect,
+      inFlight: effect.effect.inFlight.getState(),
+    },
+  }))
+  .on(effectTriggered, (map, { sid }) => {
+    const fx = map[sid];
+    map[sid] = {
+      ...fx,
+      inFlight: fx.effect.inFlight.getState(),
+    };
     return { ...map };
   });
 
@@ -103,7 +128,7 @@ export function createInspector(options: Options = {}): Inspector {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $logs, options.visible));
+  using(root, () => Root($stores, $events, $effects, $logs, options.visible));
   using(root, StyledRoot);
 
   return { root };
@@ -137,6 +162,42 @@ export function addEvent(
       params,
     })),
     to: eventTriggered,
+  });
+}
+
+export function addEffect(
+  effect: Effect<any, any, any>,
+  options: { attached?: boolean; sid?: string } = {},
+) {
+  const name = createName(effect);
+  const sid = options.sid || effect.sid || name;
+
+  effectAdd({ effect, name, sid, attached: options.attached ?? false });
+
+  forward({
+    from: [effect, effect.finally],
+    to: effectTriggered.prepend(() => ({ sid })),
+  });
+
+  forward({
+    from: [
+      effect.map((params) => ({
+        kind: 'effect',
+        name,
+        payload: params,
+      })),
+      effect.done.map((params) => ({
+        kind: 'effect',
+        name: name + '.done',
+        payload: params,
+      })),
+      effect.fail.map((params) => ({
+        kind: 'effect',
+        name: name + '.fail',
+        payload: params,
+      })),
+    ],
+    to: createRecordFx,
   });
 }
 

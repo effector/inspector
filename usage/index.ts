@@ -133,50 +133,60 @@ const $promise = effector.createStore(
 const $promiseResolved = effector.createStore(Promise.resolve(1));
 const $promiseRejected = effector.createStore(Promise.reject(1));
 
-inspector.addStore($promise);
-inspector.addStore($promiseResolved);
-inspector.addStore($promiseRejected);
-inspector.addStore($regexp1);
-inspector.addStore($regexp2);
-inspector.addStore($error);
-inspector.addStore($errorType);
-inspector.addStore($errorCustom);
-inspector.addStore($set);
-inspector.addStore($setWrapped);
-inspector.addStore($map);
-inspector.addStore($mapWrapped);
-inspector.addStore($setInMap);
-inspector.addStore($mapInSet);
+const exampleFx = effector.createEffect({
+  handler() {
+    return new Promise((resolve) => setTimeout(resolve, 1000));
+  },
+});
+
+inspector.addEffect(exampleFx);
+inspector.addEvent(event);
+inspector.addEvent(just);
+inspector.addStore($args);
 inspector.addStore($array);
+inspector.addStore($bar, { mapped: true });
+inspector.addStore($bigint);
+inspector.addStore($bool);
+inspector.addStore($bool2);
+inspector.addStore($date);
+inspector.addStore($deep);
+inspector.addStore($error);
+inspector.addStore($errorCustom);
+inspector.addStore($errorType);
 inspector.addStore($example);
 inspector.addStore($fn1);
 inspector.addStore($fn2);
 inspector.addStore($fn3);
-inspector.addStore($setOfFns);
-inspector.addStore($uint);
-inspector.addStore($weakSet);
-inspector.addStore($iterators);
 inspector.addStore($foo);
-inspector.addStore($bar, { mapped: true });
-inspector.addStore($deep);
+inspector.addStore($iterators);
+inspector.addStore($map);
+inspector.addStore($mapInSet);
+inspector.addStore($mapWrapped);
+inspector.addStore($null);
 inspector.addStore($number);
 inspector.addStore($numberInf);
 inspector.addStore($numberNot);
-inspector.addStore($bigint);
-inspector.addStore($bool);
-inspector.addStore($bool2);
-inspector.addStore($null);
-inspector.addStore($date);
+inspector.addStore($promise);
+inspector.addStore($promiseRejected);
+inspector.addStore($promiseResolved);
+inspector.addStore($regexp1);
+inspector.addStore($regexp2);
+inspector.addStore($set);
+inspector.addStore($setInMap);
+inspector.addStore($setOfFns);
+inspector.addStore($setWrapped);
 inspector.addStore($symbol);
-inspector.addStore($args);
+inspector.addStore($uint);
+inspector.addStore($weakSet);
 inspector.addStore($window);
-inspector.addEvent(event);
-inspector.addEvent(just);
 
 inspector.createInspector({ visible: true });
 
 setInterval(() => event(1), 2000);
 setTimeout(() => just('hello'), 0);
+setInterval(() => {
+  exampleFx();
+}, 1500);
 
 $number.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());
