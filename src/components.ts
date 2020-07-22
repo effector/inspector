@@ -1,4 +1,5 @@
-import { styled } from 'foliage';
+import { styled, Spec } from 'foliage';
+import { spec, h } from 'forest';
 
 export const Container = styled.div`
   background-color: white;
@@ -185,4 +186,36 @@ export const Content = {
   string,
   symbol,
   regexp,
+};
+
+export const Panel = styled.div`
+  display: flex;
+  padding: 1rem;
+`;
+
+const Check = styled.input``;
+
+const Label = styled.label`
+  padding: 0 0.5rem;
+`;
+
+export const Input = styled.input`
+  padding: 0 0.5rem;
+  margin: 0 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0.2rem;
+`;
+
+type Cb = () => void;
+
+export const Checkbox = (arg: Spec & { title: string }) => {
+  const { title, ...config } = arg;
+
+  Label(() => {
+    Check(() => {
+      spec({ attr: { type: 'checkbox' } });
+      spec(config);
+    });
+    spec({ text: title });
+  });
 };

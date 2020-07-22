@@ -15,3 +15,14 @@ export function createSetting(name: string) {
     write: (value: string) => write(name, value),
   };
 }
+
+export function createJsonSetting<T>(name: string) {
+  return {
+    read: (defaultValue: T): T =>
+      JSON.parse(read(name, JSON.stringify(defaultValue))),
+    write: (value: T): T => {
+      write(name, JSON.stringify(value));
+      return value;
+    },
+  };
+}
