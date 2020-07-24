@@ -7,7 +7,7 @@
     "isolatedModules": true,
     "jsx": "react",
     "lib": ["dom", "dom.iterable", "ESNext"],
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "skipLibCheck": true,

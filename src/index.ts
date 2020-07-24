@@ -17,6 +17,7 @@ import {
   EventCreator,
   EventMeta,
   Inspector,
+  Kind,
   LogMeta,
   Options,
   StoreCreator,
@@ -87,10 +88,9 @@ $effects
 let id = 1e3;
 const nextId = () => (++id).toString(36);
 
-const createRecordFx = createEffect<
-  Pick<LogMeta, 'name' | 'kind' | 'payload'>,
-  LogMeta
->({
+type CreateRecord = Pick<LogMeta, 'name' | 'kind' | 'payload'>;
+
+const createRecordFx = createEffect<CreateRecord, LogMeta>({
   handler({ name, kind, payload }) {
     return {
       id: nextId(),
@@ -179,24 +179,26 @@ export function addEffect(
     to: effectTriggered.prepend(() => ({ sid })),
   });
 
+  const effectRun = effect.map((params) => ({
+    kind: 'effect' as Kind,
+    name,
+    payload: params,
+  }));
+
+  const effectDone = effect.done.map((params) => ({
+    kind: 'effect' as Kind,
+    name: name + '.done',
+    payload: params,
+  }));
+
+  const effectFail = effect.fail.map((params) => ({
+    kind: 'effect' as Kind,
+    name: name + '.fail',
+    payload: params,
+  }));
+
   forward({
-    from: [
-      effect.map((params) => ({
-        kind: 'effect',
-        name,
-        payload: params,
-      })),
-      effect.done.map((params) => ({
-        kind: 'effect',
-        name: name + '.done',
-        payload: params,
-      })),
-      effect.fail.map((params) => ({
-        kind: 'effect',
-        name: name + '.fail',
-        payload: params,
-      })),
-    ],
+    from: [effectRun, effectDone, effectFail],
     to: createRecordFx,
   });
 }

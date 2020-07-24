@@ -40,8 +40,10 @@ export interface EffectMeta {
   effect: Effect<any, any, any>;
 }
 
+export type Kind = 'event' | 'store' | 'effect';
+
 export interface LogMeta {
-  kind: 'event' | 'store' | 'effect';
+  kind: Kind;
   name: string;
   payload: any;
   id: string;

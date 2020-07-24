@@ -1,5 +1,5 @@
 import { styled, Spec } from 'foliage';
-import { spec, h } from 'forest';
+import { spec } from 'forest';
 
 export const Container = styled.div`
   background-color: white;

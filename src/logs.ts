@@ -1,7 +1,7 @@
 import { Store, createStore, createEvent, combine, restore } from 'effector';
 import { list, h } from 'forest';
 
-import { LogMeta } from './types.h';
+import { LogMeta, Kind } from './types.h';
 import {
   NodeList,
   Node,
@@ -10,19 +10,21 @@ import {
   Panel,
   Checkbox,
   Input,
+  NodeButton,
 } from './components';
 import { ObjectView } from './object-view';
 import { createJsonSetting, createSetting } from './setting';
-
-type Kind = 'event' | 'store' | 'effect';
 
 const kindSetting = createJsonSetting<Kind[]>('filter-kinds');
 const textSetting = createSetting('filter-text');
 
 export function Logs($logs: Store<LogMeta[]>) {
   const defaultKinds: Kind[] = ['event', 'store'];
+
   const toggleKind = createEvent<Kind>();
   const filterChanged = createEvent<string>();
+  const clearClicked = createEvent<MouseEvent>();
+
   const $kinds = createStore(kindSetting.read(defaultKinds));
   const $filterText = restore(filterChanged, textSetting.read(''));
 
@@ -34,6 +36,7 @@ export function Logs($logs: Store<LogMeta[]>) {
     )
     .watch(kindSetting.write);
   $filterText.watch(textSetting.write);
+  $logs.on(clearClicked, () => []);
 
   Panel(() => {
     h('span', { text: 'Show: ' });
@@ -62,6 +65,8 @@ export function Logs($logs: Store<LogMeta[]>) {
         ),
       },
     });
+
+    NodeButton({ text: 'Clear', handler: { click: clearClicked } });
   });
 
   NodeList(() => {
