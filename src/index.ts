@@ -122,8 +122,9 @@ forward({
 
 $logs.on(createRecordFx.doneData, (logs, record) => [record, ...logs]);
 
-export function createInspector(options: Options = {}): Inspector {
-  const root = document.createElement('div');
+export function createInspector(options: Options = {}): Inspector | undefined {
+  const root = typeof document === 'object' && document.createElement('div');
+  if (!root) return undefined;
   root.classList.add('effector-inspector');
 
   document.body.append(root);

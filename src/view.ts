@@ -14,7 +14,7 @@ const $isVisible = createStore(false);
 const togglePressed = createEvent();
 const showInspector = createEvent();
 
-document.addEventListener('keypress', (event) => {
+typeof document === 'object' && document.addEventListener('keypress', (event) => {
   if (event.keyCode === KEY_B && event.ctrlKey) {
     togglePressed();
   }
