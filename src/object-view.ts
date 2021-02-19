@@ -11,7 +11,7 @@ function getType(value: unknown): 'unknown' | string {
 }
 
 export function ObjectView<T extends any>(_: { value: Store<T> }): void {
-  const Value = rec<any>(({ state: $value }) => {
+  const Value = rec<any>(({ store: $value }) => {
     variant({
       source: $value.map((value) => ({ type: getType(value) })),
       key: 'type',
@@ -94,9 +94,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
               },
             });
 
-            list($value, ({ store }) =>
-              ListItem(() => Value({ state: store })),
-            );
+            list($value, ({ store }) => ListItem(() => Value({ store })));
             spec({ text: ']' });
           });
         },
@@ -119,7 +117,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
 
             list(
               $value.map((args) => [...args]),
-              ({ store }) => ListItem(() => Value({ state: store })),
+              ({ store }) => ListItem(() => Value({ store })),
             );
             spec({ text: ']' });
           });
@@ -143,7 +141,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
 
             list(
               $value.map((set) => [...set.values()]),
-              ({ store }) => ListItem(() => Value({ state: store })),
+              ({ store }) => ListItem(() => Value({ store })),
             );
             spec({ text: ']' });
           });
@@ -178,7 +176,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                   });
 
                   h('span', { text: ' => ' });
-                  Value({ state: $value });
+                  Value({ store: $value });
                 });
               },
             );
@@ -216,7 +214,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                 },
               });
               h('span', { text: ': ' });
-              Value({ state: $value.map((error) => error.message) });
+              Value({ store: $value.map((error) => error.message) });
             });
 
             ListItem(() => {
@@ -232,7 +230,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                 },
               });
               h('span', { text: ': ' });
-              Value({ state: $value.map((error) => error.stack) });
+              Value({ store: $value.map((error) => error.stack) });
             });
 
             list(
@@ -253,7 +251,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                   });
 
                   h('span', { text: ': ' });
-                  Value({ state: $value });
+                  Value({ store: $value });
                 });
               },
             );
@@ -296,7 +294,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                   });
 
                   h('span', { text: ': ' });
-                  Value({ state: $value });
+                  Value({ store: $value });
                 });
               },
             );
@@ -307,5 +305,5 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
     });
   });
 
-  Value({ state: _.value });
+  Value({ store: _.value });
 }

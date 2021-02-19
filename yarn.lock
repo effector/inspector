@@ -4354,10 +4354,10 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-foliage@^0.105.0:
-  version "0.105.0"
-  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.105.0.tgz#75346fdcd9838a4b76b95e5a5dd1739612894683"
-  integrity sha512-vfpk311AhyRiAu+zN2OJ4XU2XQ9Hd0eBnn/+yKuJpxP8+A76bWUnGWlHVdXxpiUwT3mBT42aQd2m03pTcn6YcA==
+foliage@^0.106.0:
+  version "0.106.0"
+  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.106.0.tgz#5fa4dfa820d7b76b450187268f07e5e5e0e22993"
+  integrity sha512-rmxzH3kR1MM9gXJC4RESnW3B8Rztq4Jqe4nf8e2PGbyKGOfbPVLjnt3tmqiQomJm9uU6e/OWHxSdpn5lIlGUgw==
   dependencies:
     stylis "^4.0.0"
 
@@ -8628,10 +8628,10 @@ typescript-plugin-styled-components@^1.4.4:
   resolved "https://registry.yarnpkg.com/typescript-plugin-styled-components/-/typescript-plugin-styled-components-1.4.4.tgz#fff26d516ff213dffe1a5627fe76f23ae3ee6ada"
   integrity sha512-w5S5lSpzRFM+61KNNpGtlF46DuTJTyzfWM4g6ic9m189ILEoU3sgoTNHNS2MxQhXsGtQZwAlINKG+Dwy0euwUg==
 
-typescript@^3.9.7:
-  version "3.9.9"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.9.tgz#e69905c54bc0681d0518bd4d587cc6f2d0b1a674"
-  integrity sha512-kdMjTiekY+z/ubJCATUPlRDl39vXYiMV9iyeMuEuXZh2we6zz80uovNN2WlAxmmdE/Z/YQe+EbOEXB5RHEED3w==
+typescript@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.5.tgz#123a3b214aaff3be32926f0d8f1f6e704eb89a72"
+  integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
 
 uncss@^0.17.2:
   version "0.17.3"
