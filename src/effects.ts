@@ -1,8 +1,15 @@
 import { Store } from 'effector';
-import { list, h } from 'forest';
+import { list, h, text } from 'forest';
 
 import { EffectMeta } from './types.h';
-import { NodeList, Node, NodeTitle, NodeContent, Content } from './components';
+import {
+  NodeList,
+  Node,
+  NodeTitle,
+  NodeContent,
+  Content,
+  ListItem,
+} from './components';
 
 export function Effects($effects: Store<Record<string, EffectMeta>>) {
   NodeList(() => {
@@ -20,9 +27,11 @@ export function Effects($effects: Store<Record<string, EffectMeta>>) {
           NodeContent(() => {
             h('span', () => {
               h('span', { text: [' {'] });
-              Content.string({ text: `"inFlight": ` });
-              Content.number({ text: $inFlight });
-              h('span', { text: ['}'] });
+              ListItem(() => {
+                Content.string({ text: `"inFlight": ` });
+                Content.number({ text: $inFlight });
+              });
+              text`}`;
             });
           });
         });
