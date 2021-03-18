@@ -68,14 +68,14 @@ export const Container = styled.div`
   }
 
   background-color: var(--bg);
-  border-radius: 0.5rem;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   color: var(--text);
   display: flex;
   flex-direction: row;
-  bottom: 3rem;
-  right: 3rem;
-  top: 3rem;
+  bottom: 64px;
+  right: 64px;
+  top: 64px;
   position: fixed;
   z-index: 1000;
   user-select: none;
@@ -86,14 +86,14 @@ export const Container = styled.div`
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
   width: 100%;
-  max-width: 46rem;
+  max-width: 736px;
 
   & > * + * {
     border-left: 1px solid var(--border);
   }
 
   @media screen and (max-width: 700px) {
-    max-width: 30rem;
+    max-width: 480px;
   }
 `;
 
@@ -113,9 +113,9 @@ export const SectionHead = styled.div`
   border-bottom-right-radius: 0;
   box-shadow: var(--tabs-shadow);
   display: flex;
-  font-size: 1.03rem;
+  font-size: 16px;
   font-weight: 500;
-  line-height: 2rem;
+  line-height: 20px;
   position: sticky;
   left: 0;
   right: 0;
@@ -124,7 +124,7 @@ export const SectionHead = styled.div`
 
 export const SectionTab = styled.div`
   color: var(--tab-text);
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   cursor: pointer;
   border-radius: inherit;
   border-top-right-radius: 0;
@@ -163,9 +163,9 @@ export const NodeList = styled.ul`
 
 export const Node = styled.li`
   display: flex;
-  font-size: 0.95rem;
+  font-size: 12px;
   line-height: 1.3;
-  padding: 0.5rem 1rem;
+  padding: 6px 10px;
   margin: 0 0;
 `;
 
