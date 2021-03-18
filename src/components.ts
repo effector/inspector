@@ -1,21 +1,21 @@
-import { styled, Spec } from "foliage";
-import { spec } from "forest";
+import { styled, Spec } from 'foliage';
+import { spec } from 'forest';
 
 export const Container = styled.div`
-  --white: #fff;
-
   --primary: #ff8c00;
   --primary-light: #ffb152;
   --primary-dark: #c86e00;
+  --primary-text: #fff;
 
-  --scrollbar: var(--primary-light);
-
+  --text: #404040;
   --border: #dadada;
   --shadow: 0 4px 20px 4px rgba(0, 0, 0, 0.1);
 
+  --scrollbar: var(--primary-light);
+
   --tabs-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 
-  --tab-bg: var(--white);
+  --tab-bg: #fff;
   --tab-text: #606060;
   --tab-text-active: var(--primary);
   --tab-shadow-active: var(--primary);
@@ -31,10 +31,11 @@ export const Container = styled.div`
   --code-regexp: #95b70e;
 
   @media (prefers-color-scheme: dark) {
-    --scrollbar: var(--primary);
-
+    --text: #ddd;
     --border: #111;
     --shadow: 0 4px 20px 4px rgba(0, 0, 0, 0.1);
+
+    --scrollbar: var(--primary);
 
     --tabs-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
@@ -50,7 +51,7 @@ export const Container = styled.div`
     --code-string: #2cb472;
     --code-bool: #ff62d3;
     --code-number: #9990ff;
-    --code-date: var(--white);
+    --code-date: #fff;
     --code-regexp: #e5ff7e;
   }
 
@@ -69,6 +70,7 @@ export const Container = styled.div`
   background-color: var(--bg);
   border-radius: 0.5rem;
   box-shadow: var(--shadow);
+  color: var(--text);
   display: flex;
   flex-direction: row;
   bottom: 3rem;
@@ -77,9 +79,9 @@ export const Container = styled.div`
   position: fixed;
   z-index: 1000;
   user-select: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "PT Sans", Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'PT Sans', Helvetica, Arial, sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
@@ -135,7 +137,7 @@ export const SectionTab = styled.div`
     border-top-left-radius: 0;
   }
 
-  &[data-active="true"] {
+  &[data-active='true'] {
     color: var(--tab-text-active);
     box-shadow: inset 0 -2px 0 0 var(--tab-shadow-active);
   }
@@ -171,22 +173,22 @@ export const NodeTitle = styled.pre`
   display: flex;
   margin: 0 0;
   color: var(--code-var);
-  font-family: "JetBrains Mono", hasklig, monofur, monospace;
+  font-family: 'JetBrains Mono', hasklig, monofur, monospace;
 `;
 
 export const NodeContent = styled.pre`
   color: var(--code-func);
   margin: 0 0;
-  font-family: "JetBrains Mono", hasklig, monofur, monospace;
+  font-family: 'JetBrains Mono', hasklig, monofur, monospace;
 `;
 
 export const NodeButton = styled.button`
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--primary-text);
   border: var(--primary);
   padding: 0.2rem 0.4rem;
   margin: 0;
-  font-family: "JetBrains Mono", hasklig, monofur, monospace;
+  font-family: 'JetBrains Mono', hasklig, monofur, monospace;
   border-radius: 4px;
   margin-left: 1rem;
 
@@ -199,29 +201,29 @@ export const NodeButton = styled.button`
 export const ListItem = styled.span`
   display: inline-block;
 
-  [data-opened="true"] > & {
+  [data-opened='true'] > & {
     display: block;
     padding-left: 8px;
   }
 
-  &[data-hidden="folded"] {
+  &[data-hidden='folded'] {
     display: none;
 
-    [data-opened="true"] > & {
+    [data-opened='true'] > & {
       display: block;
     }
   }
 
-  &[data-hidden="expanded"] {
+  &[data-hidden='expanded'] {
     display: inline-block;
 
-    [data-opened="true"] > & {
+    [data-opened='true'] > & {
       display: none;
     }
   }
 
   &:not(:last-child)::after {
-    content: ", ";
+    content: ', ';
   }
 `;
 
@@ -294,7 +296,7 @@ export const Checkbox = (arg: Spec & { title: string }) => {
 
   Label(() => {
     Check(() => {
-      spec({ attr: { type: "checkbox" } });
+      spec({ attr: { type: 'checkbox' } });
       spec(config);
     });
     spec({ text: title });
