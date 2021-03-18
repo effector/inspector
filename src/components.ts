@@ -87,8 +87,9 @@ export const Container = styled.div`
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
-  width: 100%;
-  max-width: 736px;
+  width: 736px;
+  max-width: 90%;
+  min-width: 400px;
 
   @media screen and (max-width: 700px) {
     max-width: 480px;
@@ -112,7 +113,8 @@ export const DragHandler = styled.div`
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 
-  &:hover {
+  &:hover,
+  &[data-active='true'] {
     background-color: var(--primary);
     color: var(--bg);
   }
