@@ -2,11 +2,75 @@ import { styled, Spec } from 'foliage';
 import { spec } from 'forest';
 
 export const Container = styled.div`
-  background-color: white;
+  --primary: #ff8c00;
+  --primary-light: #ffb152;
+  --primary-dark: #c86e00;
+  --primary-text: #fff;
+
+  --text: #404040;
+  --border: #dadada;
+  --shadow: 0 4px 20px 4px rgba(0, 0, 0, 0.1);
+
+  --scrollbar: var(--primary-light);
+
+  --tabs-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+  --tab-bg: #fff;
+  --tab-text: #606060;
+  --tab-text-active: var(--primary);
+  --tab-shadow-active: var(--primary);
+
+  --content-bg: #f9f9f9;
+
+  --code-var: #ff8c00;
+  --code-func: #249ec6;
+  --code-string: #00a153;
+  --code-bool: #ff62d3;
+  --code-number: #7a70f3;
+  --code-date: #333;
+  --code-regexp: #95b70e;
+
+  @media (prefers-color-scheme: dark) {
+    --text: #ddd;
+    --border: #111;
+    --shadow: 0 4px 20px 4px rgba(0, 0, 0, 0.1);
+
+    --scrollbar: var(--primary);
+
+    --tabs-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    --tab-bg: #444;
+    --tab-text: #ddd;
+    --tab-text-active: var(--primary);
+    --tab-shadow-active: var(--primary);
+
+    --content-bg: #333;
+
+    --code-var: #ff8c00;
+    --code-func: #a5d4e2;
+    --code-string: #2cb472;
+    --code-bool: #ff62d3;
+    --code-number: #9990ff;
+    --code-date: #fff;
+    --code-regexp: #e5ff7e;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);
+  }
+
+  background-color: var(--bg);
   border-radius: 0.5rem;
-  box-shadow: 0 14.5px 5.2px -10px rgba(0, 0, 0, 0.038),
-    0 23.9px 16.6px -10px rgba(0, 0, 0, 0.057),
-    0 64px 118px -10px rgba(0, 0, 0, 0.08), 0 0 10px -3px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow);
+  color: var(--text);
   display: flex;
   flex-direction: row;
   bottom: 3rem;
@@ -25,7 +89,7 @@ export const Container = styled.div`
   max-width: 46rem;
 
   & > * + * {
-    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 1px solid var(--border);
   }
 
   @media screen and (max-width: 700px) {
@@ -42,14 +106,15 @@ export const Section = styled.section`
 `;
 
 export const SectionHead = styled.div`
-  background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: var(--tab-bg);
+  border-bottom: 1px solid var(--border);
   border-radius: inherit;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  box-shadow: var(--tabs-shadow);
   display: flex;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.03rem;
+  font-weight: 500;
   line-height: 2rem;
   position: sticky;
   left: 0;
@@ -58,13 +123,14 @@ export const SectionHead = styled.div`
 `;
 
 export const SectionTab = styled.div`
+  color: var(--tab-text);
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: inherit;
   border-top-right-radius: 0;
 
   &:hover {
-    box-shadow: inset 0 -2px 0 0 mediumvioletred;
+    box-shadow: inset 0 -2px 0 0 var(--tab-shadow-active);
   }
 
   &:not(:first-child) {
@@ -72,11 +138,13 @@ export const SectionTab = styled.div`
   }
 
   &[data-active='true'] {
-    background: linear-gradient(rgba(199, 21, 133, 0), rgba(199, 21, 133, 0.1));
+    color: var(--tab-text-active);
+    box-shadow: inset 0 -2px 0 0 var(--tab-shadow-active);
   }
 `;
 
 export const SectionContent = styled.div`
+  background-color: var(--content-bg);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -95,6 +163,8 @@ export const NodeList = styled.ul`
 
 export const Node = styled.li`
   display: flex;
+  font-size: 0.95rem;
+  line-height: 1.3;
   padding: 0.5rem 1rem;
   margin: 0 0;
 `;
@@ -102,23 +172,30 @@ export const Node = styled.li`
 export const NodeTitle = styled.pre`
   display: flex;
   margin: 0 0;
-  color: darkred;
+  color: var(--code-var);
   font-family: 'JetBrains Mono', hasklig, monofur, monospace;
 `;
 
 export const NodeContent = styled.pre`
+  color: var(--code-func);
   margin: 0 0;
   font-family: 'JetBrains Mono', hasklig, monofur, monospace;
 `;
 
 export const NodeButton = styled.button`
-  background-color: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: var(--primary);
   padding: 0.2rem 0.4rem;
   margin: 0;
   font-family: 'JetBrains Mono', hasklig, monofur, monospace;
-  border-radius: 6px;
+  border-radius: 4px;
   margin-left: 1rem;
+
+  &:focus {
+    box-shadow: 0 0 0 1px var(--primary-dark), 0 0 3px 0 var(--primary-dark);
+    outline: 0;
+  }
 `;
 
 export const ListItem = styled.span`
@@ -151,31 +228,31 @@ export const ListItem = styled.span`
 `;
 
 const boolean = styled.span`
-  color: mediumvioletred;
+  color: var(--code-bool);
   font-style: italic;
 `;
 
 const number = styled.span`
-  color: blue;
+  color: var(--code-number);
 `;
 
 const string = styled.span`
-  color: green;
+  color: var(--code-string);
 `;
 
 const nullable = styled.span`
-  color: blue;
+  color: var(--code-number);
   font-weight: bold;
 `;
 
 const date = styled.span`
-  color: olive;
+  color: var(--code-date);
 `;
 
 const symbol = styled.span``;
 
 const regexp = styled.span`
-  color: orangered;
+  color: var(--code-regexp);
 `;
 
 export const Content = {
@@ -202,8 +279,14 @@ const Label = styled.label`
 export const Input = styled.input`
   padding: 0 0.5rem;
   margin: 0 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
   border-radius: 0.2rem;
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+    outline: 0;
+  }
 `;
 
 type Cb = () => void;
