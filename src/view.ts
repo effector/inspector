@@ -1,7 +1,7 @@
 import { createStore, createEvent, Store } from 'effector';
 
 import { StoreMeta, EventMeta, LogMeta, EffectMeta } from './types.h';
-import { Container } from './components';
+import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
 import { Logs } from './logs';
 import { Stores } from './stores';
@@ -14,15 +14,15 @@ const $isVisible = createStore(false);
 const togglePressed = createEvent();
 const showInspector = createEvent();
 
-typeof document === 'object' && document.addEventListener('keypress', (event) => {
-  if (event.keyCode === KEY_B && event.ctrlKey) {
-    togglePressed();
-  }
-});
+if (typeof document === 'object') {
+  document.addEventListener('keypress', (event) => {
+    if (event.keyCode === KEY_B && event.ctrlKey) {
+      togglePressed();
+    }
+  });
+}
 
-$isVisible
-  .on(togglePressed, (visible) => !visible)
-  .on(showInspector, () => true);
+$isVisible.on(togglePressed, (visible) => !visible).on(showInspector, () => true);
 
 export function Root(
   $stores: Store<Record<string, StoreMeta>>,
@@ -46,6 +46,8 @@ export function Root(
   Container({
     visible: $isVisible,
     fn() {
+      DragHandler({ visible: createStore(false as boolean), text: '∙∙∙' });
+
       Tabs({
         stores: {
           title: 'Stores',

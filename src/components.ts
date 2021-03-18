@@ -67,6 +67,8 @@ export const Container = styled.div`
     background-color: var(--scrollbar);
   }
 
+  color-scheme: light dark;
+
   background-color: var(--bg);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -79,21 +81,40 @@ export const Container = styled.div`
   position: fixed;
   z-index: 1000;
   user-select: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'PT Sans', Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'PT Sans', Helvetica, Arial,
+    sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
   width: 100%;
   max-width: 736px;
 
-  & > * + * {
-    border-left: 1px solid var(--border);
-  }
-
   @media screen and (max-width: 700px) {
     max-width: 480px;
+  }
+`;
+
+export const DragHandler = styled.div`
+  cursor: col-resize;
+  display: flex;
+  word-break: break-all;
+  line-height: 6px;
+  color: var(--primary);
+  background-color: var(--bg);
+  width: 8px;
+  margin-left: -10px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-top: 48px;
+  margin-bottom: 48px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+
+  &:hover {
+    background-color: var(--primary);
+    color: var(--bg);
   }
 `;
 
