@@ -1,6 +1,6 @@
 {
   "name": "effector-inspector",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "main": "./dist/common.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
