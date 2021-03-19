@@ -30,9 +30,7 @@ export function Logs($logs: Store<LogMeta[]>) {
 
   $kinds
     .on(toggleKind, (exist, toggled) =>
-      exist.includes(toggled)
-        ? exist.filter((i) => i !== toggled)
-        : [...exist, toggled],
+      exist.includes(toggled) ? exist.filter((i) => i !== toggled) : [...exist, toggled],
     )
     .watch(kindSetting.write);
   $filterText.watch(textSetting.write);
@@ -60,9 +58,7 @@ export function Logs($logs: Store<LogMeta[]>) {
     Input({
       attr: { value: $filterText },
       handler: {
-        change: filterChanged.prepend(
-          (event) => (event.currentTarget as any)?.value ?? '',
-        ),
+        change: filterChanged.prepend((event) => (event.currentTarget as any)?.value ?? ''),
       },
     });
 
@@ -78,14 +74,8 @@ export function Logs($logs: Store<LogMeta[]>) {
         const $kindMatched = combine($kind, $kinds, (current, visible) =>
           visible.includes(current),
         );
-        const $textMatched = combine($filterText, $name, (filter, name) =>
-          name.includes(filter),
-        );
-        const $visible = combine(
-          $kindMatched,
-          $textMatched,
-          (kind, text) => kind && text,
-        );
+        const $textMatched = combine($filterText, $name, (filter, name) => name.includes(filter));
+        const $visible = combine($kindMatched, $textMatched, (kind, text) => kind && text);
 
         Node({
           visible: $visible,

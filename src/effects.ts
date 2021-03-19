@@ -2,14 +2,7 @@ import { Store } from 'effector';
 import { list, h, text } from 'forest';
 
 import { EffectMeta } from './types.h';
-import {
-  NodeList,
-  Node,
-  NodeTitle,
-  NodeContent,
-  Content,
-  ListItem,
-} from './components';
+import { NodeList, Node, NodeTitle, NodeContent, Content, ListItem } from './components';
 
 export function Effects($effects: Store<Record<string, EffectMeta>>) {
   NodeList(() => {

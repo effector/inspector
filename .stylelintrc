@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-rational-order"
+  ],
+  "rules": {
+    "plugin/rational-order": [
+      true,
+      {
+        "empty-line-between-groups": true
+      }
+    ],
+    "rule-empty-line-before": "always-multi-line",
+    "declaration-block-no-duplicate-custom-properties": "off"
+  }
+}

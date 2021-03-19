@@ -204,8 +204,6 @@ export function addEffect(
   });
 }
 
-function createName<T extends { compositeName: CompositeName }>(
-  unit: T,
-): string {
+function createName<T extends { compositeName: CompositeName }>(unit: T): string {
   return unit.compositeName.path.join('/');
 }
