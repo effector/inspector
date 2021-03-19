@@ -15,18 +15,17 @@ import {
 import { ObjectView } from './object-view';
 import { createJsonSetting, createSetting } from './setting';
 
-const kindSetting = createJsonSetting<Kind[]>('filter-kinds');
-const textSetting = createSetting('filter-text');
+const defaultKinds: Kind[] = ['event', 'store'];
+const kindSetting = createJsonSetting<Kind[]>('filter-kinds', defaultKinds);
+const textSetting = createSetting('filter-text', '');
 
 export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>) {
-  const defaultKinds: Kind[] = ['event', 'store'];
-
   const toggleKind = createEvent<Kind>();
   const filterChanged = createEvent<string>();
   const clearClicked = createEvent<MouseEvent>();
 
-  const $kinds = createStore(kindSetting.read(defaultKinds));
-  const $filterText = restore(filterChanged, textSetting.read(''));
+  const $kinds = createStore(kindSetting.read());
+  const $filterText = restore(filterChanged, textSetting.read());
 
   $kinds
     .on(toggleKind, (exist, toggled) =>

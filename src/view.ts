@@ -8,6 +8,7 @@ import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
+import { createJsonSetting } from './setting';
 
 const KEY_B = 2;
 const KEY_L = 12;
@@ -60,22 +61,7 @@ function ref() {
   const $ref = restore(setRef, null);
   node(setRef);
 
-  return $ref;
-}
-
-function storage(name: string, defaultValue: string) {
-  const save = createEvent<string>();
-
-  save.watch((value) => {
-    localStorage.setItem(name, value);
-  });
-
-  return {
-    read() {
-      return localStorage.getItem(name) ?? defaultValue;
-    },
-    save,
-  };
+  return $ref as Store<DOMElement>;
 }
 
 $isVisible.on(togglePressed, (visible) => !visible).on(showInspector, () => true);
@@ -104,24 +90,22 @@ export function Root(
     fn() {
       const $blockRef = ref();
 
-      const widthSetting = storage('setting', '736');
-      const $width = createStore(parseInt(widthSetting.read(), 10));
+      const widthSetting = createJsonSetting('width', 736);
+      const $width = createStore(widthSetting.read());
       spec({ style: { width: val`${$width}px` } });
 
       DragHandler({
         text: '∙∙∙',
         fn() {
-          const $handlerRef = ref();
           const { mouseMove, mouseDown, mouseUp, $inDrag } = dragdrop();
 
           spec({ data: { active: $inDrag } });
 
           const $shift = createStore(0);
 
-          const $refs = combine([$blockRef, $handlerRef]);
-          const dragStart = sample($refs, mouseDown, (refs, event) => [...refs, event] as const);
-          const dragMove = sample($refs, mouseMove, ([block], event) => {
-            const rect = block!.getBoundingClientRect();
+          const dragStart = sample($blockRef, mouseDown, (block, event) => ({ block, event }));
+          const dragMove = sample($blockRef, mouseMove, (block, event) => {
+            const rect = block.getBoundingClientRect();
             return rect.right - event.clientX;
           });
 
@@ -129,16 +113,11 @@ export function Root(
 
           $width.on(correctWidth, (_, width) => width);
 
-          $shift.on(dragStart, (_, [block, , event]) =>
+          $shift.on(dragStart, (_, { block, event }) =>
             block ? block.getBoundingClientRect().left - event.clientX : 0,
           );
 
-          sample({
-            source: $width,
-            clock: mouseUp,
-            fn: (source) => String(source),
-            target: widthSetting.save,
-          });
+          sample($width, mouseUp, widthSetting.save);
         },
       });
 

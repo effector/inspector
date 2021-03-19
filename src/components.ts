@@ -295,7 +295,9 @@ const date = styled.span`
   color: var(--code-date);
 `;
 
-const symbol = styled.span``;
+const symbol = styled.span`
+  /* nothing here */
+`;
 
 const regexp = styled.span`
   color: var(--code-regexp);
@@ -317,7 +319,9 @@ export const Panel = styled.div`
   padding: 1rem;
 `;
 
-const Check = styled.input``;
+const Check = styled.input`
+  /* nothing here */
+`;
 
 const Label = styled.label`
   display: flex;

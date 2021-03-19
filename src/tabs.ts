@@ -8,12 +8,12 @@ type TabConfig<T> = {
 };
 type TabsConfig<Keys extends string> = Record<Keys, TabConfig<Keys>>;
 
-const lastTab = createSetting('last-tab');
-
 export function Tabs<Keys extends string>(tabs: TabsConfig<Keys>) {
   const tabList = Object.keys(tabs) as Keys[];
   const firstTab = tabList[0];
-  const savedTab = lastTab.read(firstTab) as Keys;
+
+  const lastTab = createSetting('last-tab', firstTab);
+  const savedTab = lastTab.read() as Keys;
   const initialTab = tabList.includes(savedTab) ? savedTab : firstTab;
 
   const changeTab = createEvent<Keys>();

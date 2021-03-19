@@ -17,7 +17,6 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
 
     const foldableClicked = createEvent<MouseEvent>();
     const $localOpened = createStore(false).on(foldableClicked, (opened) => !opened);
-    foldableClicked.watch((s) => console.warn('foldableClicked', s));
 
     const $opened = combine($parentOpened, $localOpened, (parent, local) =>
       parent === true ? local : false,
@@ -227,11 +226,8 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
         Error({ store: $variantSource }) {
           const [$value, $opened] = remap($variantSource, ['value', 'opened']);
 
-          const [$name, $message, $stack] = remap($value as Store<Error>, [
-            'name',
-            'message',
-            'stack',
-          ]);
+          const [$name, $message] = remap($value as Store<Error>, ['name', 'message']);
+          const $stack = $value.map((error) => error.stack ?? null);
 
           h('span', () => {
             spec({ data: { opened: $opened } });
@@ -273,13 +269,13 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
                 },
               });
               h('span', { text: ': ' });
-              Value({
-                store: combine({
-                  value: $stack,
-                  parentOpened: $opened,
-                  key: 'stack',
-                }),
+
+              const store = combine({
+                value: $stack,
+                parentOpened: $opened,
+                key: 'stack',
               });
+              Value({ store });
             });
 
             list(
@@ -360,11 +356,16 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
     });
   });
 
-  Value({
-    store: combine({
-      value: _.value,
+  const value = _.value;
+
+  const store = combine(
+    {
+      value,
       parentOpened: createStore(true),
       key: '',
-    }),
-  });
+    },
+    (a) => a, // solving ts errors
+  );
+
+  Value({ store });
 }

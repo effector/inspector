@@ -1,7 +1,9 @@
-const PREFIX = 0xeffec ** 3;
+import { createEvent } from 'effector';
+
+const PREFIX = (0xeffec ** 2).toString(36);
 
 function read(name: string, defaultValue: string): string {
-  return localStorage.getItem(`${PREFIX}-${name}`) ?? defaultValue ?? '';
+  return localStorage.getItem(`${PREFIX}-${name}`) ?? defaultValue;
 }
 
 function write(name: string, value: string): string {
@@ -9,19 +11,25 @@ function write(name: string, value: string): string {
   return value;
 }
 
-export function createSetting(name: string) {
+export function createSetting(name: string, defaultValue: string) {
+  const save = createEvent<string>();
+  save.watch((value) => write(name, value));
   return {
-    read: (defaultValue: string) => read(name, defaultValue),
+    read: () => read(name, defaultValue),
     write: (value: string) => write(name, value),
+    save,
   };
 }
 
-export function createJsonSetting<T>(name: string) {
+export function createJsonSetting<T>(name: string, defaultValue: T) {
+  const save = createEvent<T>();
+  save.watch((value) => write(name, JSON.stringify(value)));
   return {
-    read: (defaultValue: T): T => JSON.parse(read(name, JSON.stringify(defaultValue))),
+    read: (): T => JSON.parse(read(name, JSON.stringify(defaultValue))),
     write: (value: T): T => {
       write(name, JSON.stringify(value));
       return value;
     },
+    save,
   };
 }
