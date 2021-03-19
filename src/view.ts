@@ -10,15 +10,22 @@ import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
 
 const KEY_B = 2;
+const KEY_L = 12;
 
 const $isVisible = createStore(false);
 const togglePressed = createEvent();
+const clearPressed = createEvent();
 const showInspector = createEvent();
 
 if (typeof document === 'object') {
   document.addEventListener('keypress', (event) => {
-    if (event.keyCode === KEY_B && event.ctrlKey) {
-      togglePressed();
+    if (event.ctrlKey) {
+      if (event.key === 'l' || event.keyCode === KEY_L) {
+        clearPressed();
+      }
+      if (event.key === 'b' || event.keyCode === KEY_B) {
+        togglePressed();
+      }
     }
   });
 }
@@ -157,7 +164,7 @@ export function Root(
         logs: {
           title: 'Logs',
           fn() {
-            Logs($logs);
+            Logs($logs, clearPressed);
           },
         },
       });

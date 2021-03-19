@@ -1,4 +1,4 @@
-import { Store, createStore, createEvent, combine, restore } from 'effector';
+import { Store, createStore, createEvent, combine, restore, Event } from 'effector';
 import { list, h } from 'forest';
 
 import { LogMeta, Kind } from './types.h';
@@ -18,7 +18,7 @@ import { createJsonSetting, createSetting } from './setting';
 const kindSetting = createJsonSetting<Kind[]>('filter-kinds');
 const textSetting = createSetting('filter-text');
 
-export function Logs($logs: Store<LogMeta[]>) {
+export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>) {
   const defaultKinds: Kind[] = ['event', 'store'];
 
   const toggleKind = createEvent<Kind>();
@@ -34,7 +34,7 @@ export function Logs($logs: Store<LogMeta[]>) {
     )
     .watch(kindSetting.write);
   $filterText.watch(textSetting.write);
-  $logs.on(clearClicked, () => []);
+  $logs.on(clearClicked, () => []).on(hotKeyClear, () => []);
 
   Panel(() => {
     h('span', { text: 'Show: ' });
@@ -62,7 +62,11 @@ export function Logs($logs: Store<LogMeta[]>) {
       },
     });
 
-    NodeButton({ text: 'Clear', handler: { click: clearClicked } });
+    NodeButton({
+      text: 'Clear',
+      handler: { click: clearClicked },
+      attr: { title: 'Press CTRL+L to clear logs' },
+    });
   });
 
   NodeList(() => {
