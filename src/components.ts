@@ -313,16 +313,21 @@ export const Content = {
 
 export const Panel = styled.div`
   display: flex;
+  flex-shrink: 0;
   padding: 1rem;
 `;
 
 const Check = styled.input``;
 
 const Label = styled.label`
+  display: flex;
+  flex-shrink: 0;
   padding: 0 0.5rem;
 `;
 
 export const Input = styled.input`
+  display: flex;
+  flex-shrink: 0;
   margin: 0 0.5rem;
   padding: 0 0.5rem;
 
@@ -335,8 +340,6 @@ export const Input = styled.input`
     box-shadow: 0 0 0 1px var(--primary);
   }
 `;
-
-type Cb = () => void;
 
 export const Checkbox = (arg: Spec & { title: string }) => {
   const { title, ...config } = arg;

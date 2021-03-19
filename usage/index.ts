@@ -1,63 +1,65 @@
-import * as effector from 'effector';
+import { createStore, createEvent, createDomain, createEffect } from 'effector';
 import * as inspector from '../src';
 
-const event = effector.createEvent<number>();
-const just = effector.createEvent<string>();
+const event = createEvent<number>();
+const just = createEvent<string>();
 
-const $foo = effector.createStore('hello');
+const $foo = createStore('hello');
 const $bar = $foo.map((foo) => foo.length);
 
-const $deep = effector.createStore({
+const $deep = createStore({
   demo: { baz: 1, baf: 'hello', naf: false },
 });
 
-const $number = effector.createStore(0);
-const $numberInf = effector.createStore(Infinity);
-const $numberNot = effector.createStore(NaN);
-const $bigint = effector.createStore(BigInt(498));
-const $bool = effector.createStore(false);
-const $bool2 = effector.createStore(true);
-const $null = effector.createStore(null);
-const $date = effector.createStore(new Date());
-const $symbol = effector.createStore(Symbol.asyncIterator);
+const veryRootDomain = createDomain();
 
-const domain = effector.createDomain();
+const anotherInsideDeepDarkDomainForRoot = veryRootDomain.createDomain();
+
+const $number = anotherInsideDeepDarkDomainForRoot.createStore(0);
+const $numberInf = createStore(Infinity);
+const $numberNot = createStore(NaN);
+const $bigint = createStore(BigInt(498));
+const $bool = createStore(false);
+const $bool2 = createStore(true);
+const $null = createStore(null);
+const $date = createStore(new Date());
+const $symbol = createStore(Symbol.asyncIterator);
+
+const domain = createDomain();
 
 const $example = domain.createStore(100);
 
-const $set = effector.createStore(
-  new Set(['a', 2, false, null, undefined, new Date()]),
-);
+const $set = createStore(new Set(['a', 2, false, null, undefined, new Date()]));
 
-const $setWrapped = effector.createStore({
+const $setWrapped = createStore({
   ref: new Set(['a', 2, false, null, undefined, new Date()]),
 });
 
-const $map = effector.createStore(
+const $map = createStore(
   new Map<string, any>([
     ['a', 2],
     ['b', false],
   ]),
 );
 
-const $mapWrapped = effector.createStore({
+const $mapWrapped = createStore({
   ref: new Map<string, any>([
     ['a', 2],
     ['b', false],
   ]),
 });
 
-const $setInMap = effector.createStore(
+const $setInMap = createStore(
   new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]),
 );
 
-const $mapInSet = effector.createStore(
+const $mapInSet = createStore(
   new Set([
     new Map([['hello', new Set<any>(['b', 12])]]),
   ]),
 );
 
-const $array = effector.createStore([
+const $array = createStore([
   false,
   5,
   900e50,
@@ -72,14 +74,14 @@ const $array = effector.createStore([
   },
 ]);
 
-const $fn1 = effector.createStore(function demo() {
+const $fn1 = createStore(function demo() {
   /* */
 });
-const $fn2 = effector.createStore(() => 5);
+const $fn2 = createStore(() => 5);
 const op = (a, b) => a + b;
-const $fn3 = effector.createStore(op);
+const $fn3 = createStore(op);
 
-const $setOfFns = effector.createStore({
+const $setOfFns = createStore({
   ref: new Set([
     function demo() {
       return 0;
@@ -89,14 +91,14 @@ const $setOfFns = effector.createStore({
   ]),
 });
 
-const $args = effector.createStore(
+const $args = createStore(
   (function(a, b, c, d) {
     return arguments; // eslint-disable-line prefer-rest-params
   })(1, 5, {}, () => 0),
 );
 
-const $error = effector.createStore(new Error('random'));
-const $errorType = effector.createStore(new TypeError('random'));
+const $error = createStore(new Error('random'));
+const $errorType = createStore(new TypeError('random'));
 class CustomError extends Error {
   demo = 123;
   hello = '';
@@ -106,16 +108,14 @@ class CustomError extends Error {
     this.hello = message;
   }
 }
-const $errorCustom = effector.createStore(new CustomError('message'));
+const $errorCustom = createStore(new CustomError('message'));
 
-const $window = effector.createStore(window);
+const $window = createStore(window);
 
-const $uint = effector.createStore(new Uint32Array([0, 5, 1, 2]));
-const $weakSet = effector.createStore(
-  new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }]),
-);
+const $uint = createStore(new Uint32Array([0, 5, 1, 2]));
+const $weakSet = createStore(new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }]));
 
-const $iterators = effector.createStore([
+const $iterators = createStore([
   new Set(['a', 2, false, null, undefined, new Date()]).entries(),
   ['a', 2, false, null, undefined, new Date()].entries(),
   new Map<string, any>([
@@ -124,16 +124,14 @@ const $iterators = effector.createStore([
   ]).entries(),
 ]);
 
-const $regexp1 = effector.createStore(/[\w\s]+/gi);
-const $regexp2 = effector.createStore(new RegExp('[\\w\\s]+', 'gi'));
+const $regexp1 = createStore(/[\w\s]+/gi);
+const $regexp2 = createStore(new RegExp('[\\w\\s]+', 'gi'));
 
-const $promise = effector.createStore(
-  new Promise((resolve) => setTimeout(resolve, 5000)),
-);
-const $promiseResolved = effector.createStore(Promise.resolve(1));
-const $promiseRejected = effector.createStore(Promise.reject(1));
+const $promise = createStore(new Promise((resolve) => setTimeout(resolve, 5000)));
+const $promiseResolved = createStore(Promise.resolve(1));
+const $promiseRejected = createStore(Promise.reject(1));
 
-const exampleFx = effector.createEffect({
+const exampleFx = createEffect({
   handler() {
     return new Promise((resolve) => setTimeout(resolve, 1000));
   },

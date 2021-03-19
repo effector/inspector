@@ -1,6 +1,8 @@
 # Effector Inspector
 
-![Effector-Inspector](https://i.imgur.com/D5oqpLv.png)
+| Dark theme and simple log list                | Stores with inspectable values             |
+| --------------------------------------------- | ------------------------------------------ |
+| ![Dark-Logs](https://i.imgur.com/17j8ZRw.png) | ![Stores](https://i.imgur.com/R2Wx3Oe.png) |
 
 ## Installation
 
