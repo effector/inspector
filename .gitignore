@@ -162,4 +162,6 @@ sketch
 storybook-static
 dist
 
+.idea
+
 # End of https://www.gitignore.io/api/git,node,react,macos,visualstudiocode
