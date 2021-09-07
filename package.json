@@ -2,6 +2,14 @@
   "name": "effector-inspector",
   "version": "0.5.0",
   "main": "./dist/common.js",
+  "module": "./dist/common.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/common.mjs",
+      "require": "./dist/common.js",
+      "default": "./dist/common.mjs"
+    }
+  },
   "types": "./dist/index.d.ts",
   "license": "MIT",
   "files": [
