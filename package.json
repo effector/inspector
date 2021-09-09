@@ -30,9 +30,13 @@
     "@babel/preset-typescript": "^7.10.4",
     "@commitlint/cli": "8.2.0",
     "@commitlint/config-conventional": "8.2.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@types/babel__core": "^7.1.15",
     "@types/node": "^13.7.1",
     "@types/react": "^16.9.17",
-    "@types/babel__core": "^7.1.15",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "commitizen": "4.0.3",
@@ -47,17 +51,13 @@
     "prettier": "^1.19.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "rollup": "^2.56.3",
+    "rollup-plugin-terser": "^7.0.2",
     "stylelint": "^13.12.0",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^4.0.0",
     "typescript": "^4.2.3",
-    "typescript-plugin-styled-components": "^1.4.4",
-    "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2",
-    "@rollup/plugin-node-resolve": "^13.0.4",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-typescript": "^8.2.5"
+    "typescript-plugin-styled-components": "^1.4.4"
   },
   "config": {
     "commitizen": {
@@ -68,7 +68,7 @@
     "effector": "^21.0.0 || ^22.1.0"
   },
   "dependencies": {
-    "foliage": "^0.106.0",
+    "foliage": "^0.200.0",
     "forest": "^0.20.2"
   }
 }

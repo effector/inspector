@@ -1,12 +1,12 @@
 import {
-  Store,
-  Event,
-  Effect,
   CompositeName,
+  createEffect,
   createEvent,
   createStore,
+  Effect,
+  Event,
   forward,
-  createEffect,
+  Store,
 } from 'effector';
 import { using } from 'forest';
 import { StyledRoot } from 'foliage';
@@ -16,6 +16,7 @@ import {
   EffectMeta,
   EventCreator,
   EventMeta,
+  FilesMap,
   Inspector,
   Kind,
   LogMeta,
@@ -24,6 +25,8 @@ import {
   StoreMeta,
 } from './types.h';
 import { Root } from './view';
+
+const $files = createStore<FilesMap>({});
 
 const storeAdd = createEvent<StoreCreator>();
 const storeUpdated = createEvent<{ name: string; value: any }>();
@@ -52,6 +55,19 @@ $stores
     map[name] = { ...map[name], value };
     return { ...map };
   });
+
+$files.on(storeAdd, (map, { name, file }) => {
+  if (file) {
+    if (map[file]) {
+      const list = map[file];
+      return { ...map, [file]: [...list, { kind: 'store', name }] };
+    }
+
+    return { ...map, [file]: [{ kind: 'store', name }] };
+  }
+
+  return map;
+});
 
 $events
   .on(eventAdd, (map, payload) => ({
@@ -129,7 +145,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, options.visible));
+  using(root, () => Root($stores, $events, $effects, $logs, $files, options.visible));
   using(root, StyledRoot);
 
   return { root };
@@ -141,7 +157,9 @@ export function addStore(
 ): void {
   const name = options.name || createName(store);
 
-  storeAdd({ store, name, mapped: options.mapped || false });
+  const file: string | undefined = (store as any).defaultConfig?.loc?.file;
+
+  storeAdd({ store, name, mapped: options.mapped || false, file });
 
   forward({
     from: store.updates.map((value) => ({ name, value })),

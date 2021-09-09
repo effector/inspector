@@ -9,6 +9,7 @@ export interface StoreCreator {
   store: Store<any>;
   name: string;
   mapped: boolean;
+  file?: string;
 }
 
 export interface EventCreator {
@@ -53,3 +54,6 @@ export interface LogMeta {
 export interface Inspector {
   root: HTMLElement;
 }
+
+type FileName = string
+export type FilesMap = Record<FileName, Array<{ kind: 'store' | 'event' | 'effect'; name: string }>>

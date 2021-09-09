@@ -1,5 +1,16 @@
-import { createStore, createEvent, createDomain, createEffect } from 'effector';
+import { createDomain, createEffect, createEvent, createStore } from 'effector';
 import * as inspector from '../src';
+import {
+  $args,
+  $error,
+  $errorCustom,
+  $errorType,
+  $fn1,
+  $fn2,
+  $fn3,
+  $setOfFns,
+  $window,
+} from './another';
 
 const event = createEvent<number>();
 const just = createEvent<string>();
@@ -73,44 +84,6 @@ const $array = createStore([
     ref: new Set(['a', 2, false, null, undefined, new Date()]),
   },
 ]);
-
-const $fn1 = createStore(function demo() {
-  /* */
-});
-const $fn2 = createStore(() => 5);
-const op = (a, b) => a + b;
-const $fn3 = createStore(op);
-
-const $setOfFns = createStore({
-  ref: new Set([
-    function demo() {
-      return 0;
-    },
-    () => 5,
-    (a, b) => a + b,
-  ]),
-});
-
-const $args = createStore(
-  (function(a, b, c, d) {
-    return arguments; // eslint-disable-line prefer-rest-params
-  })(1, 5, {}, () => 0),
-);
-
-const $error = createStore(new Error('random'));
-const $errorType = createStore(new TypeError('random'));
-class CustomError extends Error {
-  demo = 123;
-  hello = '';
-  name = 'Custom';
-  constructor(message: string) {
-    super(message);
-    this.hello = message;
-  }
-}
-const $errorCustom = createStore(new CustomError('message'));
-
-const $window = createStore(window);
 
 const $uint = createStore(new Uint32Array([0, 5, 1, 2]));
 const $weakSet = createStore(new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }]));

@@ -1,6 +1,6 @@
 import { createStore, createEvent, Store, restore, sample, guard, combine } from 'effector';
 
-import { StoreMeta, EventMeta, LogMeta, EffectMeta } from './types.h';
+import { StoreMeta, EventMeta, LogMeta, EffectMeta, FilesMap } from './types.h';
 import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
 import { Logs } from './logs';
@@ -9,6 +9,7 @@ import { Events } from './events';
 import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
 import { createJsonSetting } from './setting';
+import { Files } from './files';
 
 const KEY_B = 2;
 const KEY_L = 12;
@@ -71,6 +72,7 @@ export function Root(
   $events: Store<Record<string, EventMeta>>,
   $effects: Store<Record<string, EffectMeta>>,
   $logs: Store<LogMeta[]>,
+  $files: Store<FilesMap>,
   visible = false,
 ) {
   if (visible) {
@@ -144,6 +146,17 @@ export function Root(
           title: 'Logs',
           fn() {
             Logs($logs, clearPressed);
+          },
+        },
+        files: {
+          title: 'Files',
+          fn() {
+            Files({
+              $stores,
+              $events,
+              $effects,
+              $files,
+            });
           },
         },
       });

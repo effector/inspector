@@ -242,6 +242,10 @@ export const NodeButton = styled.button`
     outline: 0;
     box-shadow: 0 0 0 1px var(--primary-dark), 0 0 3px 0 var(--primary-dark);
   }
+
+  &:hover {
+    background-color: var(--primary-dark);
+  }
 `;
 
 export const ListItem = styled.span`
@@ -303,6 +307,13 @@ const regexp = styled.span`
   color: var(--code-regexp);
 `;
 
+export const Row = styled.div`
+  display: flex;
+  * + * {
+    margin-left: 0.5rem;
+  }
+`;
+
 export const Content = {
   boolean,
   date,
@@ -345,6 +356,11 @@ export const Input = styled.input`
   }
 `;
 
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const Checkbox = (arg: Spec & { title: string }) => {
   const { title, ...config } = arg;
 
@@ -356,3 +372,5 @@ export const Checkbox = (arg: Spec & { title: string }) => {
     spec({ text: title });
   });
 };
+
+export const Select = styled.select``;
