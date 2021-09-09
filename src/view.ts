@@ -124,6 +124,17 @@ export function Root(
       });
 
       Tabs({
+        files: {
+          title: 'Files',
+          fn() {
+            Files({
+              $stores,
+              $events,
+              $effects,
+              $files,
+            });
+          },
+        },
         stores: {
           title: 'Stores',
           fn() {
@@ -146,17 +157,6 @@ export function Root(
           title: 'Logs',
           fn() {
             Logs($logs, clearPressed);
-          },
-        },
-        files: {
-          title: 'Files',
-          fn() {
-            Files({
-              $stores,
-              $events,
-              $effects,
-              $files,
-            });
           },
         },
       });

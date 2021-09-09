@@ -1,9 +1,19 @@
-import { combine, createEvent, createStore, sample, Store } from 'effector';
-import { h, list } from 'forest';
+import { combine, createEvent, createStore, restore, sample, Store } from 'effector';
+import { h, list, node } from 'forest';
 import { styled } from 'foliage';
 
 import { EffectMeta, EventMeta, FilesMap, StoreMeta } from './types.h';
-import { Column, Panel, Row, Select, Node, NodeList, NodeTitle, NodeButton } from './components';
+import {
+  Column,
+  Panel,
+  Row,
+  Select,
+  Node,
+  NodeList,
+  NodeTitle,
+  NodeButton,
+  Input,
+} from './components';
 import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
@@ -39,6 +49,8 @@ export function Files(source: {
       Row({
         visible: $hasSelectedFile,
         fn() {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          NodeButton({ text: '◀', handler: { click: fileCleanup.prepend(() => {}) } });
           h('span', { text: 'File:' });
           Select({
             handler: {
@@ -56,24 +68,41 @@ export function Files(source: {
               });
             },
           });
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          NodeButton({ text: 'Clean', handler: { click: fileCleanup.prepend(() => {}) } });
         },
       });
 
       Column({
         visible: $noFileSelected,
         fn() {
-          h('h5', { text: 'Please, select file from the list' });
-          FileList(() => {
-            list($filesList, ({ store }) => {
-              const selectFile = createEvent<MouseEvent>();
-              sample({
-                source: store,
-                clock: selectFile,
-                target: fileSelected,
+          const filterChanged = createEvent<string>();
+          const $filter = restore(filterChanged, '');
+          const $filteredFiles = combine($filter, $filesList, (searchWord, list) =>
+            list.filter((file) => file.includes(searchWord)),
+          );
+
+          Title({ text: 'Please, select file from the list or type the name' });
+          const searchChanged = filterChanged.prepend(
+            (e: Event | KeyboardEvent) => (e.currentTarget as HTMLInputElement)?.value,
+          );
+          Column(() => {
+            Search({
+              attr: { value: $filter, placeholder: 'Type a part of the file name' },
+              handler: { change: searchChanged, keydown: searchChanged as any },
+            });
+            FileList(() => {
+              list($filteredFiles, ({ store, key }) => {
+                const selectFile = createEvent<MouseEvent>();
+                sample({
+                  source: store,
+                  clock: selectFile,
+                  target: fileSelected,
+                });
+                FileItem({
+                  text: store,
+                  attr: { tabIndex: '0' },
+                  handler: { click: selectFile },
+                });
               });
-              FileItem({ text: store, handler: { click: selectFile } });
             });
           });
         },
@@ -141,7 +170,28 @@ export function Files(source: {
   });
 }
 
-const FileList = styled.ul`
+const Title = styled.h4`
+  margin-top: 0;
+`;
+
+const Search = styled.input`
+  display: flex;
+  flex-shrink: 0;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.2rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 2rem;
+
+  &:focus {
+    border-color: var(--primary);
+    outline: 0;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+`;
+
+const FileList = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -157,22 +207,23 @@ const FileList = styled.ul`
   }
 `;
 
-const FileItem = styled.li`
+const FileItem = styled.button`
   color: var(--primary-text);
   font-family: 'JetBrains Mono', hasklig, monofur, monospace;
   font-size: 14px;
+  text-align: left;
 
   border: var(--primary);
   padding: 0.2rem 0.4rem;
 
   cursor: pointer;
 
-  &:focus {
-    outline: 0;
-    box-shadow: 0 0 0 1px var(--primary-dark), 0 0 3px 0 var(--primary-dark);
-  }
-
   &:hover {
     background-color: var(--primary-dark);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--primary-dark);
   }
 `;
