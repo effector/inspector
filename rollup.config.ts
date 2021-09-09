@@ -19,6 +19,13 @@ export default defineConfig({
       sourcemap: true,
       externalLiveBindings: false
     },
+    {
+      file: 'dist/common.mjs',
+      format: 'esm',
+      plugins: [terser()],
+      sourcemap: true,
+      externalLiveBindings: false
+    },
   ],
   plugins: [
     commonjs(),
