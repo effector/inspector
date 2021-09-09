@@ -34,7 +34,7 @@ export interface StoreMeta {
 
 export interface EventMeta {
   mapped: boolean;
-  lastTriggeredWith: any;
+  history: any[];
 }
 
 export interface EffectMeta {

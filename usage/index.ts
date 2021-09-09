@@ -12,7 +12,7 @@ import {
   $window,
 } from './another';
 
-const event = createEvent<number>();
+const event = createEvent<{ count: number }>();
 const just = createEvent<string>();
 
 const $foo = createStore('hello');
@@ -152,8 +152,8 @@ inspector.addStore($weakSet);
 inspector.addStore($window);
 
 inspector.createInspector({ visible: true });
-
-setInterval(() => event(1), 2000);
+let incrementor = 0;
+setInterval(() => event({ count: incrementor++ }), 2000);
 setTimeout(() => just('hello'), 0);
 setInterval(() => {
   exampleFx();

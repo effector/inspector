@@ -1,8 +1,9 @@
 import { Store } from 'effector';
 import { list } from 'forest';
+import { styled } from 'foliage';
 
 import { EventMeta } from './types.h';
-import { NodeList, Node, NodeTitle, NodeContent } from './components';
+import { Node, NodeContent, NodeList, NodeTitle } from './components';
 import { ObjectView } from './object-view';
 
 export function Events($events: Store<Record<string, EventMeta>>) {
@@ -14,14 +15,18 @@ export function Events($events: Store<Record<string, EventMeta>>) {
     list({
       source: $list,
       key: 'name',
-      fields: ['name', 'lastTriggeredWith'],
-      fn({ fields: [$name] }) {
+      fields: ['name', 'history'],
+      fn({ fields: [$name, $history] }) {
         Node(() => {
           NodeTitle({ text: [$name, ' '] });
-          // NodeContent(() => {
-          //   h('span', { text: 'with: ' });
-          //   ObjectView({ value: $lastTriggeredParams });
-          // });
+
+          HistoryLine(() => {
+            list($history, ({ store }) => {
+              NodeContent(() => {
+                ObjectView({ value: store });
+              });
+            });
+          });
           // NodeButton({
           //   text: 'Logs',
           //   handler: { click: changeTab.prepend(() => 'logs') },
@@ -31,3 +36,23 @@ export function Events($events: Store<Record<string, EventMeta>>) {
     });
   });
 }
+
+const HistoryLine = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+
+  :nth-child(2),
+  :nth-child(3),
+  :nth-child(4),
+  :nth-child(5) {
+    opacity: 0.8;
+  }
+
+  > :nth-child(n + 6) {
+    opacity: 0.5;
+  }
+
+  > :not(:first-child) {
+    margin-left: 0.5rem;
+  }
+`;

@@ -75,12 +75,16 @@ $events
     ...map,
     [payload.name]: {
       mapped: payload.mapped,
-      lastTriggeredWith: undefined,
+      history: [],
     },
   }))
   .on(eventTriggered, (map, { name, params }) => {
     // should not change the order of fields
-    map[name] = { ...map[name], lastTriggeredWith: params };
+
+    map[name] = {
+      ...map[name],
+      history: [JSON.parse(JSON.stringify(params)), ...map[name].history],
+    };
     return { ...map };
   });
 
@@ -188,7 +192,12 @@ export function addStore(
 ): void {
   const name = options.name || createName(store);
 
-  storeAdd({ store, name, mapped: options.mapped || false, file: getLocFile(store) });
+  storeAdd({
+    store,
+    name,
+    mapped: options.mapped || false,
+    file: getLocFile(store),
+  });
 
   forward({
     from: store.updates.map((value) => ({ name, value })),
@@ -202,7 +211,12 @@ export function addEvent(
 ): void {
   const name = options.name || createName(event);
 
-  eventAdd({ event, name, mapped: options.mapped || false, file: getLocFile(event) });
+  eventAdd({
+    event,
+    name,
+    mapped: options.mapped || false,
+    file: getLocFile(event),
+  });
 
   forward({
     from: event.map((params) => ({
@@ -220,7 +234,13 @@ export function addEffect(
   const name = createName(effect);
   const sid = options.sid || effect.sid || name;
 
-  effectAdd({ effect, name, sid, attached: options.attached ?? false, file: getLocFile(effect) });
+  effectAdd({
+    effect,
+    name,
+    sid,
+    attached: options.attached ?? false,
+    file: getLocFile(effect),
+  });
 
   forward({
     from: [effect, effect.finally],

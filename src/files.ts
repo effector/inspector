@@ -117,13 +117,13 @@ export function Files(source: {
         $currentFile,
         source.$files,
         source.$events,
-        (file, files, events) => {
-          if (file === '' || !files[file]) {
+        (current, files, events) => {
+          if (current === '' || !files[current]) {
             return {};
           }
 
           return Object.fromEntries(
-            files[file]
+            files[current]
               .filter(({ kind }) => kind === 'event')
               .map(({ name }) => [name, events[name]]),
           );
@@ -133,13 +133,13 @@ export function Files(source: {
         $currentFile,
         source.$files,
         source.$stores,
-        (file, files, stores) => {
-          if (file === '' || !files[file]) {
+        (current, files, stores) => {
+          if (current === '' || !files[current]) {
             return {};
           }
 
           return Object.fromEntries(
-            files[file]
+            files[current]
               .filter(({ kind }) => kind === 'store')
               .map(({ name }) => [name, stores[name]]),
           );
@@ -149,13 +149,13 @@ export function Files(source: {
         $currentFile,
         source.$files,
         source.$effects,
-        (file, files, effects) => {
-          if (file === '' || !files[file]) {
+        (current, files, effects) => {
+          if (current === '' || !files[current]) {
             return {};
           }
 
           return Object.fromEntries(
-            files[file]
+            files[current]
               .filter(({ kind }) => kind === 'effect')
               .map(({ name }) => [name, effects[name]]),
           );
