@@ -1,6 +1,6 @@
 {
   "name": "effector-inspector",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "./dist/common.js",
   "module": "./dist/common.mjs",
   "exports": {
