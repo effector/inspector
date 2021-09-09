@@ -7,6 +7,7 @@ import {
   Event,
   forward,
   Store,
+  Unit,
 } from 'effector';
 import { using } from 'forest';
 import { StyledRoot } from 'foliage';
@@ -83,6 +84,19 @@ $events
     return { ...map };
   });
 
+$files.on(eventAdd, (map, { name, file }) => {
+  if (file) {
+    if (map[file]) {
+      const list = map[file];
+      return { ...map, [file]: [...list, { kind: 'event', name }] };
+    }
+
+    return { ...map, [file]: [{ kind: 'event', name }] };
+  }
+
+  return map;
+});
+
 $effects
   .on(effectAdd, (map, effect) => ({
     ...map,
@@ -100,6 +114,19 @@ $effects
     };
     return { ...map };
   });
+
+$files.on(effectAdd, (map, { name, file }) => {
+  if (file) {
+    if (map[file]) {
+      const list = map[file];
+      return { ...map, [file]: [...list, { kind: 'event', name }] };
+    }
+
+    return { ...map, [file]: [{ kind: 'event', name }] };
+  }
+
+  return map;
+});
 
 let id = 1e3;
 const nextId = () => (++id).toString(36);
@@ -151,15 +178,17 @@ export function createInspector(options: Options = {}): Inspector | undefined {
   return { root };
 }
 
+function getLocFile(unit: Unit<any>): string | undefined {
+  return (unit as any).defaultConfig?.loc?.file;
+}
+
 export function addStore(
   store: Store<any>,
   options: { mapped?: boolean; name?: string } = {},
 ): void {
   const name = options.name || createName(store);
 
-  const file: string | undefined = (store as any).defaultConfig?.loc?.file;
-
-  storeAdd({ store, name, mapped: options.mapped || false, file });
+  storeAdd({ store, name, mapped: options.mapped || false, file: getLocFile(store) });
 
   forward({
     from: store.updates.map((value) => ({ name, value })),
@@ -173,7 +202,7 @@ export function addEvent(
 ): void {
   const name = options.name || createName(event);
 
-  eventAdd({ event, name, mapped: options.mapped || false });
+  eventAdd({ event, name, mapped: options.mapped || false, file: getLocFile(event) });
 
   forward({
     from: event.map((params) => ({
@@ -191,7 +220,7 @@ export function addEffect(
   const name = createName(effect);
   const sid = options.sid || effect.sid || name;
 
-  effectAdd({ effect, name, sid, attached: options.attached ?? false });
+  effectAdd({ effect, name, sid, attached: options.attached ?? false, file: getLocFile(effect) });
 
   forward({
     from: [effect, effect.finally],

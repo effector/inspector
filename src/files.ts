@@ -4,6 +4,9 @@ import { styled } from 'foliage';
 
 import { EffectMeta, EventMeta, FilesMap, StoreMeta } from './types.h';
 import { Column, Panel, Row, Select, Node, NodeList, NodeTitle, NodeButton } from './components';
+import { Stores } from './stores';
+import { Events } from './events';
+import { Effects } from './effects';
 
 export function Files(source: {
   $stores: Store<Record<string, StoreMeta>>;
@@ -53,6 +56,7 @@ export function Files(source: {
               });
             },
           });
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           NodeButton({ text: 'Clean', handler: { click: fileCleanup.prepend(() => {}) } });
         },
       });
@@ -73,6 +77,65 @@ export function Files(source: {
             });
           });
         },
+      });
+    },
+  });
+
+  Panel({
+    visible: $hasSelectedFile,
+    fn() {
+      const $events = combine(
+        $currentFile,
+        source.$files,
+        source.$events,
+        (file, files, events) => {
+          if (file === '' || !files[file]) {
+            return {};
+          }
+
+          return Object.fromEntries(
+            files[file]
+              .filter(({ kind }) => kind === 'event')
+              .map(({ name }) => [name, events[name]]),
+          );
+        },
+      );
+      const $stores = combine(
+        $currentFile,
+        source.$files,
+        source.$stores,
+        (file, files, stores) => {
+          if (file === '' || !files[file]) {
+            return {};
+          }
+
+          return Object.fromEntries(
+            files[file]
+              .filter(({ kind }) => kind === 'store')
+              .map(({ name }) => [name, stores[name]]),
+          );
+        },
+      );
+      const $effects = combine(
+        $currentFile,
+        source.$files,
+        source.$effects,
+        (file, files, effects) => {
+          if (file === '' || !files[file]) {
+            return {};
+          }
+
+          return Object.fromEntries(
+            files[file]
+              .filter(({ kind }) => kind === 'effect')
+              .map(({ name }) => [name, effects[name]]),
+          );
+        },
+      );
+      Column(() => {
+        Events($events);
+        Stores($stores);
+        Effects($effects);
       });
     },
   });

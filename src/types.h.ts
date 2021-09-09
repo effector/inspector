@@ -16,6 +16,7 @@ export interface EventCreator {
   event: Event<any>;
   name: string;
   mapped: boolean;
+  file?: string;
 }
 
 export interface EffectCreator {
@@ -23,6 +24,7 @@ export interface EffectCreator {
   sid: string;
   name: string;
   attached: boolean;
+  file?: string;
 }
 
 export interface StoreMeta {
@@ -55,5 +57,8 @@ export interface Inspector {
   root: HTMLElement;
 }
 
-type FileName = string
-export type FilesMap = Record<FileName, Array<{ kind: 'store' | 'event' | 'effect'; name: string }>>
+type FileName = string;
+export type FilesMap = Record<
+  FileName,
+  Array<{ kind: 'store' | 'event' | 'effect'; name: string }>
+>;
