@@ -1,7 +1,7 @@
 import { Store, createStore, createEvent, combine, restore, Event } from 'effector';
 import { list, h } from 'forest';
 
-import { LogMeta, Kind } from './types.h';
+import { LogMeta, Kind, Options } from './types.h';
 import {
   NodeList,
   Node,
@@ -14,12 +14,13 @@ import {
 } from './components';
 import { ObjectView } from './object-view';
 import { createJsonSetting, createSetting } from './setting';
+import { trimDomain } from './trim-domain';
 
 const defaultKinds: Kind[] = ['event', 'store'];
 const kindSetting = createJsonSetting<Kind[]>('filter-kinds', defaultKinds);
 const textSetting = createSetting('filter-text', '');
 
-export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>) {
+export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options: Options) {
   const toggleKind = createEvent<Kind>();
   const filterChanged = createEvent<string>();
   const clearClicked = createEvent<MouseEvent>();
@@ -73,7 +74,8 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>) {
       source: $logs,
       key: 'id',
       fields: ['kind', 'name', 'payload', 'datetime'],
-      fn({ fields: [$kind, $name, $payload, $datetime] }) {
+      fn({ fields: [$kind, $rawName, $payload, $datetime] }) {
+        const $name = trimDomain($rawName, options);
         const $kindMatched = combine($kind, $kinds, (current, visible) =>
           visible.includes(current),
         );

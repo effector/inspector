@@ -176,7 +176,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, $files, options.visible));
+  using(root, () => Root($stores, $events, $effects, $logs, $files, options));
   using(root, StyledRoot);
 
   return { root };

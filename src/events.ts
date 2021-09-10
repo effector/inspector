@@ -2,11 +2,12 @@ import { Store } from 'effector';
 import { list } from 'forest';
 import { styled } from 'foliage';
 
-import { EventMeta } from './types.h';
+import { EventMeta, Options } from './types.h';
 import { Node, NodeContent, NodeList, NodeTitle } from './components';
 import { ObjectView } from './object-view';
+import { trimDomain } from './trim-domain';
 
-export function Events($events: Store<Record<string, EventMeta>>) {
+export function Events($events: Store<Record<string, EventMeta>>, options: Options) {
   NodeList(() => {
     const $list = $events.map((map) =>
       Object.entries(map).map(([name, meta]) => ({ name, ...meta })),
@@ -18,7 +19,7 @@ export function Events($events: Store<Record<string, EventMeta>>) {
       fields: ['name', 'history'],
       fn({ fields: [$name, $history] }) {
         Node(() => {
-          NodeTitle({ text: [$name, ' '] });
+          NodeTitle({ text: [trimDomain($name, options), ' '] });
 
           // HistoryLine(() => {
           //   list($history, ({ store }) => {

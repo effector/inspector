@@ -1,6 +1,6 @@
 import { createStore, createEvent, Store, restore, sample, guard, combine } from 'effector';
 
-import { StoreMeta, EventMeta, LogMeta, EffectMeta, FilesMap } from './types.h';
+import { StoreMeta, EventMeta, LogMeta, EffectMeta, FilesMap, Options } from './types.h';
 import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
 import { Logs } from './logs';
@@ -73,9 +73,9 @@ export function Root(
   $effects: Store<Record<string, EffectMeta>>,
   $logs: Store<LogMeta[]>,
   $files: Store<FilesMap>,
-  visible = false,
+  options: Options = {},
 ) {
-  if (visible) {
+  if (options.visible) {
     showInspector();
   }
 
@@ -132,31 +132,32 @@ export function Root(
               $events,
               $effects,
               $files,
+              options,
             });
           },
         },
         stores: {
           title: 'Stores',
           fn() {
-            Stores($stores);
+            Stores($stores, options);
           },
         },
         effects: {
           title: 'Effects',
           fn() {
-            Effects($effects);
+            Effects($effects, options);
           },
         },
         events: {
           title: 'Events',
           fn() {
-            Events($events);
+            Events($events, options);
           },
         },
         logs: {
           title: 'Logs',
           fn() {
-            Logs($logs, clearPressed);
+            Logs($logs, clearPressed, options);
           },
         },
       });

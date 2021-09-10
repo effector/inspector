@@ -1,19 +1,9 @@
 import { combine, createEvent, createStore, restore, sample, Store } from 'effector';
-import { h, list, node } from 'forest';
+import { h, list } from 'forest';
 import { styled } from 'foliage';
 
-import { EffectMeta, EventMeta, FilesMap, StoreMeta } from './types.h';
-import {
-  Column,
-  Panel,
-  Row,
-  Select,
-  Node,
-  NodeList,
-  NodeTitle,
-  NodeButton,
-  Input,
-} from './components';
+import { EffectMeta, EventMeta, FilesMap, Options, StoreMeta } from './types.h';
+import { Column, NodeButton, Panel, Row, Select } from './components';
 import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
@@ -23,6 +13,7 @@ export function Files(source: {
   $events: Store<Record<string, EventMeta>>;
   $effects: Store<Record<string, EffectMeta>>;
   $files: Store<FilesMap>;
+  options: Options;
 }) {
   const $filesList = source.$files.map((files) =>
     Object.keys(files).sort((a, b) => {
@@ -50,7 +41,12 @@ export function Files(source: {
         visible: $hasSelectedFile,
         fn() {
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          NodeButton({ text: '◀', handler: { click: fileCleanup.prepend(() => {}) } });
+          NodeButton({
+            text: '◀',
+            handler: {
+              click: fileCleanup.prepend(() => {}),
+            },
+          });
           h('span', { text: 'File:' });
           Select({
             handler: {
@@ -86,7 +82,10 @@ export function Files(source: {
           );
           Column(() => {
             Search({
-              attr: { value: $filter, placeholder: 'Type a part of the file name' },
+              attr: {
+                value: $filter,
+                placeholder: 'Type a part of the file name',
+              },
               handler: { change: searchChanged, keydown: searchChanged as any },
             });
             FileList(() => {
@@ -162,9 +161,9 @@ export function Files(source: {
         },
       );
       Column(() => {
-        Events($events);
-        Stores($stores);
-        Effects($effects);
+        Events($events, options);
+        Stores($stores, options);
+        Effects($effects, options);
       });
     },
   });
