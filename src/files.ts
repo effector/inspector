@@ -208,7 +208,7 @@ const FileList = styled.div`
 `;
 
 const FileItem = styled.button`
-  color: var(--primary-text);
+  color: var(--text);
   font-family: 'JetBrains Mono', hasklig, monofur, monospace;
   font-size: 14px;
   text-align: left;

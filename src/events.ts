@@ -20,13 +20,13 @@ export function Events($events: Store<Record<string, EventMeta>>) {
         Node(() => {
           NodeTitle({ text: [$name, ' '] });
 
-          HistoryLine(() => {
-            list($history, ({ store }) => {
-              NodeContent(() => {
-                ObjectView({ value: store });
-              });
-            });
-          });
+          // HistoryLine(() => {
+          //   list($history, ({ store }) => {
+          //     NodeContent(() => {
+          //       ObjectView({ value: store });
+          //     });
+          //   });
+          // });
           // NodeButton({
           //   text: 'Logs',
           //   handler: { click: changeTab.prepend(() => 'logs') },
