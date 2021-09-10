@@ -44,6 +44,7 @@ export function Files(source: {
           NodeButton({
             text: '◀',
             handler: {
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
               click: fileCleanup.prepend(() => {}),
             },
           });
@@ -161,9 +162,9 @@ export function Files(source: {
         },
       );
       Column(() => {
-        Events($events, options);
-        Stores($stores, options);
-        Effects($effects, options);
+        Events($events, source.options);
+        Stores($stores, source.options);
+        Effects($effects, source.options);
       });
     },
   });
