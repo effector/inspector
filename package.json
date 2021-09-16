@@ -71,7 +71,7 @@
     }
   },
   "peerDependencies": {
-    "effector": "^21.0.0 || ^22.1.0"
+    "effector": "^22.1.0"
   },
   "dependencies": {
     "foliage": "^0.200.0",
