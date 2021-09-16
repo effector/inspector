@@ -3830,9 +3830,9 @@ flatted@^3.1.0:
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
 foliage@^0.200.0:
-  version "0.200.0"
-  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.200.0.tgz#a5da6c869d0eb841492052c7f1a21fdb316fd34a"
-  integrity sha512-pJz0sV3RmlQFEqR8jWLTHVDwK7XOvx0JFRLXaj8yWxeyMF9JrV9Y5V/pQX0Iqq/ISUJMXDi7vmnTIH68szk23w==
+  version "0.200.1"
+  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.200.1.tgz#86fd9035d3b55145081ab4ff22d0f4f1aaa6ab98"
+  integrity sha512-b8lTdKQBzO85VEi027n9QpmB47bWQXIE784NtdcPFJw9O8rTMJF6dPKR6VK7w+lTuZ0/e/6fJOW/8ZUoScsjcQ==
   dependencies:
     autoprefixer "^10.2.4"
     csso "^4.2.0"
