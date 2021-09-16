@@ -15,7 +15,7 @@
     "target": "ESNext",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./",
+    "declarationDir": "./dist",
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./dist",

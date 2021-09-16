@@ -1,18 +1,23 @@
 {
   "name": "effector-inspector",
   "version": "0.7.1",
-  "main": "./dist/common.js",
-  "module": "./dist/common.mjs",
+  "main": "index.js",
+  "module": "index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/common.mjs",
-      "require": "./dist/common.js",
-      "default": "./dist/common.mjs"
-    }
+      "import": "./index.mjs",
+      "require": "./index.js",
+      "default": "./index.mjs"
+    },
+    "./index.mjs": "./index.mjs"
   },
-  "types": "./dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "files": [
+    "index.js",
+    "index.js.map",
+    "index.mjs",
+    "index.mjs.map",
     "dist"
   ],
   "scripts": {
@@ -39,6 +44,7 @@
     "@types/react": "^16.9.17",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
+    "babel-plugin-module-resolver": "^4.1.0",
     "commitizen": "4.0.3",
     "cz-conventional-changelog": "3.0.2",
     "effector": "^22.1.1",
