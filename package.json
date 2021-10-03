@@ -1,6 +1,6 @@
 {
   "name": "effector-inspector",
-  "version": "0.7.2",
+  "version": "0.0.0-real-version-will-be-set-on-ci",
   "main": "index.js",
   "module": "index.mjs",
   "exports": {
