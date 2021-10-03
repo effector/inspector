@@ -1,6 +1,6 @@
 {
   "name": "effector-inspector",
-  "version": "0.7.2",
+  "version": "0.0.0-real-version-will-be-set-on-ci",
   "main": "index.js",
   "module": "index.mjs",
   "exports": {
@@ -24,6 +24,7 @@
     "build": "rollup --config rollup.config.ts --configPlugin typescript",
     "lint": "eslint --ext .ts,.tsx src",
     "commit": "git-cz",
+    "test": "echo no tests",
     "prepublishOnly": "yarn build",
     "start": "parcel serve ./usage/index.html",
     "lint:style": "stylelint src/**/*.{js,css,ts,tsx} --fix",

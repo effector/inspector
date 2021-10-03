@@ -42,3 +42,11 @@ createInspector();
 By default: `CTRL+B` in your application
 
 5. Watch your stores and its values
+
+## Release process
+
+1. Check out the [draft release](https://github.com/effector/inspector/releases).
+1. All PRs should have correct labels and useful titles. You can [review available labels here](https://github.com/effector/inspector/blob/master/.github/release-drafter.yml).
+1. Update labels for PRs and titles, next [manually run the release drafter action](https://github.com/effector/inspector/actions/workflows/release-drafter.yml) to regenerate the draft release.
+1. Review the new version and press "Publish"
+1. If required check "Create discussion for this release"
