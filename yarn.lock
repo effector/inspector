@@ -3829,16 +3829,15 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.2.tgz#64bfed5cb68fe3ca78b3eb214ad97b63bedce561"
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
-foliage@^0.200.0:
-  version "0.200.1"
-  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.200.1.tgz#86fd9035d3b55145081ab4ff22d0f4f1aaa6ab98"
-  integrity sha512-b8lTdKQBzO85VEi027n9QpmB47bWQXIE784NtdcPFJw9O8rTMJF6dPKR6VK7w+lTuZ0/e/6fJOW/8ZUoScsjcQ==
+foliage@^0.201.0:
+  version "0.201.0"
+  resolved "https://registry.yarnpkg.com/foliage/-/foliage-0.201.0.tgz#87366d9a100d8cec2a5f96621ae33ddd4fe378bf"
+  integrity sha512-RkgGPf0If28rHVfgbjFUHINpMyba0RfiDdtSl0AYED4QGe3il2Y/m/G4+dvI5A9y5EFdBYdfqNZbtoJJiyC4pg==
   dependencies:
     autoprefixer "^10.2.4"
     csso "^4.2.0"
     postcss "^8.2.6"
     postcss-nested "^5.0.3"
-    stylis "^4.0.0"
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -8252,11 +8251,6 @@ stylelint@^9.10.1:
     sugarss "^2.0.0"
     svg-tags "^1.0.0"
     table "^5.0.0"
-
-stylis@^4.0.0:
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.0.10.tgz#446512d1097197ab3f02fb3c258358c3f7a14240"
-  integrity sha512-m3k+dk7QeJw660eIKRRn3xPF6uuvHs/FFzjX3HQ5ove0qYsiygoAhwn5a3IYKaZPo5LrYD0rfVmtv1gNY1uYwg==
 
 sugarss@^2.0.0:
   version "2.0.0"
