@@ -24,6 +24,7 @@
     "build": "rollup --config rollup.config.ts --configPlugin typescript",
     "lint": "eslint --ext .ts,.tsx src",
     "commit": "git-cz",
+    "test": "echo no tests",
     "prepublishOnly": "yarn build",
     "start": "parcel serve ./usage/index.html",
     "lint:style": "stylelint src/**/*.{js,css,ts,tsx} --fix",
