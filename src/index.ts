@@ -80,10 +80,10 @@ $events
   }))
   .on(eventTriggered, (map, { name, params }) => {
     // should not change the order of fields
-
+    const safeParams = params === undefined ? undefined : JSON.parse(JSON.stringify(params));
     map[name] = {
       ...map[name],
-      history: [JSON.parse(JSON.stringify(params)), ...map[name].history],
+      history: [safeParams, ...map[name].history],
     };
     return { ...map };
   });
