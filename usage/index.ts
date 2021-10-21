@@ -12,6 +12,7 @@ import {
   $window,
 } from './another';
 
+const emptyEvent = createEvent();
 const event = createEvent<{ count: number }>();
 const just = createEvent<string>();
 
@@ -111,6 +112,7 @@ const exampleFx = createEffect({
 });
 
 inspector.addEffect(exampleFx);
+inspector.addEvent(emptyEvent);
 inspector.addEvent(event);
 inspector.addEvent(just);
 inspector.addStore($args);
@@ -153,6 +155,7 @@ inspector.addStore($window);
 
 inspector.createInspector({ visible: true });
 let incrementor = 0;
+setInterval(() => emptyEvent(), 2000);
 setInterval(() => event({ count: incrementor++ }), 2000);
 setTimeout(() => just('hello'), 0);
 setInterval(() => {
