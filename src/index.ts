@@ -27,21 +27,21 @@ import {
 } from './types.h';
 import { Root } from './view';
 
-const $files = createStore<FilesMap>({});
+const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
 
 const storeAdd = createEvent<StoreCreator>();
 const storeUpdated = createEvent<{ name: string; value: any }>();
-const $stores = createStore<Record<string, StoreMeta>>({});
+const $stores = createStore<Record<string, StoreMeta>>({}, {serialize: 'ignore'});
 
 const eventAdd = createEvent<EventCreator>();
 const eventTriggered = createEvent<{ name: string; params: any }>();
-const $events = createStore<Record<string, EventMeta>>({});
+const $events = createStore<Record<string, EventMeta>>({}, {serialize: 'ignore'});
 
 const effectAdd = createEvent<EffectCreator>();
 const effectTriggered = createEvent<{ sid: string }>();
-const $effects = createStore<Record<string, EffectMeta>>({});
+const $effects = createStore<Record<string, EffectMeta>>({}, {serialize: 'ignore'});
 
-const $logs = createStore<LogMeta[]>([]);
+const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
 
 $stores
   .on(storeAdd, (map, payload) => ({
