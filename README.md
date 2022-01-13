@@ -1,8 +1,8 @@
 # Effector Inspector
 
-| Dark theme and simple log list                | Stores with inspectable values             |
-| --------------------------------------------- | ------------------------------------------ |
-| ![Dark-Logs](https://i.imgur.com/17j8ZRw.png) | ![Stores](https://i.imgur.com/R2Wx3Oe.png) |
+| Dark theme and unit tracing                     | Units in files                            |
+| ----------------------------------------------- | ----------------------------------------- |
+| ![Dark-Traces](https://i.imgur.com/Gqx47NV.png) | ![Units](https://i.imgur.com/xqrp2wl.png) |
 
 ## Installation
 
