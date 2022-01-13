@@ -6,8 +6,13 @@ import {
   Effect,
   Event,
   forward,
+  guard,
+  merge,
+  sample,
   Store,
   Unit,
+  step,
+  Node,
 } from 'effector';
 import { using } from 'forest';
 import { StyledRoot } from 'foliage';
@@ -23,7 +28,12 @@ import {
   LogMeta,
   Options,
   StoreCreator,
+  Trace,
   StoreMeta,
+  StackTrace,
+  TraceStoreChange,
+  TraceEventTrigger,
+  TraceEffectRun,
 } from './types.h';
 import { Root } from './view';
 
@@ -42,6 +52,37 @@ const effectTriggered = createEvent<{ sid: string }>();
 const $effects = createStore<Record<string, EffectMeta>>({}, {serialize: 'ignore'});
 
 const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
+
+const traceStoreChange = createEvent<TraceStoreChange>();
+const traceEventTrigger = createEvent<TraceEventTrigger>();
+const traceEffectRun = createEvent<TraceEffectRun>();
+const traceAdd = merge([traceStoreChange, traceEventTrigger, traceEffectRun]);
+
+const traceFinished = createEvent();
+
+const $traces = createStore<StackTrace[]>([]);
+const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] });
+
+$currentTrace.on(traceAdd, ({ time, traces }, trace) => ({
+  time: time ? time : Date.now(),
+  traces: [...traces, trace],
+}));
+
+guard({
+  source: $currentTrace,
+  clock: traceAdd,
+  filter: ({ traces }) => traces.length === 1,
+}).watch(() => queueMicrotask(traceFinished));
+
+const moveTrace = sample({
+  source: $currentTrace,
+  clock: traceFinished,
+});
+
+$traces.on(moveTrace, (stackTraces, newTrace) => [...stackTraces, newTrace]);
+$currentTrace.reset(moveTrace);
+
+// $traces.watch((t) => console.log('traces', t));
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -169,6 +210,65 @@ forward({
 
 $logs.on(createRecordFx.doneData, (logs, record) => [record, ...logs]);
 
+function graphite(unit: Unit<any>): Node {
+  return (unit as any).graphite;
+}
+
+function traceEffect(effect: Effect<any, any, any>) {
+  const name = createName(effect);
+  graphite(effect).seq.unshift(
+    step.compute({
+      fn(data, scope, stack) {
+        traceEffectRun({ type: 'effect', name, argument: data.param });
+        return data;
+      },
+    }),
+  );
+  traceEvent(effect.doneData, `${name}.doneData`);
+  traceEvent(effect.failData, `${name}.failData`);
+}
+
+function traceEvent(event: Event<any>, name = createName(event)) {
+  graphite(event).seq.unshift(
+    step.compute({
+      fn(data, scope, stack) {
+        traceEventTrigger({ type: 'event', name, argument: data });
+        return data;
+      },
+    }),
+  );
+}
+
+function copy<T>(a: T): T {
+  return JSON.parse(JSON.stringify(a));
+}
+
+function traceStore($store: Store<any>) {
+  const name = createName($store);
+  traceEvent($store.updates, `${name}.updates`);
+  graphite($store).seq.unshift(
+    step.compute({
+      fn(data, scope) {
+        scope.trace = { before: copy(scope.state.current) };
+        return data;
+      },
+    }),
+  );
+  graphite($store).seq.push(
+    step.compute({
+      fn(data, scope, stack) {
+        traceStoreChange({
+          type: 'store',
+          name,
+          before: scope.trace.before,
+          current: data,
+        });
+        return data;
+      },
+    }),
+  );
+}
+
 export function createInspector(options: Options = {}): Inspector | undefined {
   const root = typeof document === 'object' && document.createElement('div');
   if (!root) return undefined;
@@ -176,7 +276,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, $files, options));
+  using(root, () => Root($stores, $events, $effects, $logs, $files, $traces, options));
   using(root, StyledRoot);
 
   return { root };
@@ -199,6 +299,8 @@ export function addStore(
     file: getLocFile(store),
   });
 
+  traceStore(store);
+
   forward({
     from: store.updates.map((value) => ({ name, value })),
     to: storeUpdated,
@@ -217,6 +319,8 @@ export function addEvent(
     mapped: options.mapped || false,
     file: getLocFile(event),
   });
+
+  traceEvent(event);
 
   forward({
     from: event.map((params) => ({
@@ -241,6 +345,8 @@ export function addEffect(
     attached: options.attached ?? false,
     file: getLocFile(effect),
   });
+
+  traceEffect(effect);
 
   forward({
     from: [effect, effect.finally],

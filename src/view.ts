@@ -1,6 +1,14 @@
-import { createStore, createEvent, Store, restore, sample, guard, combine } from 'effector';
+import { createEvent, createStore, restore, sample, Store } from 'effector';
 
-import { StoreMeta, EventMeta, LogMeta, EffectMeta, FilesMap, Options } from './types.h';
+import {
+  EffectMeta,
+  EventMeta,
+  FilesMap,
+  LogMeta,
+  Options,
+  StackTrace,
+  StoreMeta,
+} from './types.h';
 import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
 import { Logs } from './logs';
@@ -10,6 +18,7 @@ import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
 import { createJsonSetting } from './setting';
 import { Files } from './files';
+import { Traces } from './traces';
 
 const KEY_B = 2;
 const KEY_L = 12;
@@ -73,6 +82,7 @@ export function Root(
   $effects: Store<Record<string, EffectMeta>>,
   $logs: Store<LogMeta[]>,
   $files: Store<FilesMap>,
+  $traces: Store<StackTrace[]>,
   options: Options = {},
 ) {
   if (options.visible) {
@@ -105,7 +115,10 @@ export function Root(
 
           const $shift = createStore(0);
 
-          const dragStart = sample($blockRef, mouseDown, (block, event) => ({ block, event }));
+          const dragStart = sample($blockRef, mouseDown, (block, event) => ({
+            block,
+            event,
+          }));
           const dragMove = sample($blockRef, mouseMove, (block, event) => {
             const rect = block.getBoundingClientRect();
             return rect.right - event.clientX;
@@ -152,6 +165,12 @@ export function Root(
           title: 'Events',
           fn() {
             Events($events, options);
+          },
+        },
+        traces: {
+          title: 'Traces',
+          fn() {
+            Traces($traces, clearPressed, options);
           },
         },
         logs: {
