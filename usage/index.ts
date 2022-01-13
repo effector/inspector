@@ -28,6 +28,7 @@ const veryRootDomain = createDomain();
 const anotherInsideDeepDarkDomainForRoot = veryRootDomain.createDomain();
 
 const $number = anotherInsideDeepDarkDomainForRoot.createStore(0);
+const $anotherNumber = createStore(0);
 const $numberInf = createStore(Infinity);
 const $numberNot = createStore(NaN);
 const $bigint = createStore(BigInt(498));
@@ -152,6 +153,7 @@ inspector.addStore($symbol);
 inspector.addStore($uint);
 inspector.addStore($weakSet);
 inspector.addStore($window);
+inspector.addStore($anotherNumber);
 
 inspector.createInspector({ visible: true });
 let incrementor = 0;
@@ -162,6 +164,6 @@ setInterval(() => {
   exampleFx();
 }, 1500);
 
-$number.on(event, (counter) => counter + 1);
+$anotherNumber.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());
 $foo.on(just, (s, n) => s + n);
