@@ -219,7 +219,7 @@ function traceEffect(effect: Effect<any, any, any>) {
   graphite(effect).seq.unshift(
     step.compute({
       fn(data, scope, stack) {
-        traceEffectRun({ type: 'effect', name, argument: data.param });
+        traceEffectRun({ type: 'effect', name, argument: data?.param });
         return data;
       },
     }),
