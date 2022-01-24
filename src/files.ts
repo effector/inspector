@@ -87,7 +87,7 @@ export function Files(source: {
                 value: $filter,
                 placeholder: 'Type a part of the file name',
               },
-              handler: { change: searchChanged, keydown: searchChanged as any },
+              handler: { input: searchChanged },
             });
             FileList(() => {
               list($filteredFiles, ({ store, key }) => {
