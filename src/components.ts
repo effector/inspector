@@ -1,5 +1,5 @@
-import { styled, Spec } from 'foliage';
-import { spec } from 'forest';
+import {Spec, styled} from 'foliage';
+import {spec} from 'forest';
 
 export const Container = styled.div`
   --primary: #ff8c00;
@@ -374,3 +374,20 @@ export const Checkbox = (arg: Spec & { title: string }) => {
 };
 
 export const Select = styled.select``;
+
+export const Search = styled.input`
+  display: flex;
+  flex-shrink: 0;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.2rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 2rem;
+
+  &:focus {
+    border-color: var(--primary);
+    outline: 0;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+`;

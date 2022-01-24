@@ -3,7 +3,7 @@ import { h, list } from 'forest';
 import { styled } from 'foliage';
 
 import { EffectMeta, EventMeta, FilesMap, Options, StoreMeta } from './types.h';
-import { Column, NodeButton, Panel, Row, Select } from './components';
+import { Column, NodeButton, Panel, Row, Select, Search } from './components';
 import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
@@ -172,23 +172,6 @@ export function Files(source: {
 
 const Title = styled.h4`
   margin-top: 0;
-`;
-
-const Search = styled.input`
-  display: flex;
-  flex-shrink: 0;
-  padding: 0 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 0.2rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  line-height: 2rem;
-
-  &:focus {
-    border-color: var(--primary);
-    outline: 0;
-    box-shadow: 0 0 0 2px var(--primary);
-  }
 `;
 
 const FileList = styled.div`
