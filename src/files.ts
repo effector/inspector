@@ -27,7 +27,7 @@ export function Files(source: {
   const fileSelected = createEvent<string>();
   const fileCleanup = createEvent();
 
-  const $currentFile = createStore('');
+  const $currentFile = createStore('',{serialize:'ignore'});
   const $hasSelectedFile = $currentFile.map((file) => file !== '');
   const $noFileSelected = $hasSelectedFile.map((has) => !has);
 

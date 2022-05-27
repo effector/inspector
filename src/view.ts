@@ -23,7 +23,7 @@ import { Traces } from './traces';
 const KEY_B = 2;
 const KEY_L = 12;
 
-const $isVisible = createStore(false);
+const $isVisible = createStore(false,{serialize:'ignore'});
 const togglePressed = createEvent();
 const clearPressed = createEvent();
 const showInspector = createEvent();
@@ -42,7 +42,7 @@ if (typeof document === 'object') {
 }
 
 function dragdrop() {
-  const $inDrag = createStore(false);
+  const $inDrag = createStore(false,{serialize:'ignore'});
   const mouseDown = createEvent<MouseEvent>();
   const mouseMove = createEvent<MouseEvent>();
   const mouseUp = createEvent<MouseEvent>();
@@ -103,7 +103,7 @@ export function Root(
       const $blockRef = ref();
 
       const widthSetting = createJsonSetting('width', 736);
-      const $width = createStore(widthSetting.read());
+      const $width = createStore(widthSetting.read(),{serialize:'ignore'});
       spec({ style: { width: val`${$width}px` } });
 
       DragHandler({
@@ -113,7 +113,7 @@ export function Root(
 
           spec({ data: { active: $inDrag } });
 
-          const $shift = createStore(0);
+          const $shift = createStore(0,{serialize:'ignore'});
 
           const dragStart = sample($blockRef, mouseDown, (block, event) => ({
             block,
