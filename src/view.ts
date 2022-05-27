@@ -1,4 +1,4 @@
-import { createEvent, createStore, restore, sample, Store } from 'effector';
+import { createEvent, createStore, sample, Store } from 'effector';
 
 import {
   EffectMeta,
@@ -68,7 +68,7 @@ function dragdrop() {
 
 function ref() {
   const setRef = createEvent<DOMElement>();
-  const $ref = restore(setRef, null);
+  const $ref = createStore<DOMElement| null>(null).on(setRef, (_, ref) => ref)
   node(setRef);
 
   return $ref as Store<DOMElement>;

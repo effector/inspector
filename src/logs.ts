@@ -1,4 +1,4 @@
-import { Store, createStore, createEvent, combine, restore, Event } from 'effector';
+import { Store, createStore, createEvent, combine, Event } from 'effector';
 import { list, h } from 'forest';
 
 import { LogMeta, Kind, Options } from './types.h';
@@ -26,7 +26,7 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options:
   const clearClicked = createEvent<MouseEvent>();
 
   const $kinds = createStore(kindSetting.read(),{serialize:'ignore'});
-  const $filterText = restore(filterChanged, textSetting.read());
+  const $filterText = createStore(textSetting.read(), {serialize:'ignore'}).on(filterChanged, (_, filterText) => filterText)
 
   $kinds
     .on(toggleKind, (exist, toggled) =>

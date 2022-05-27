@@ -1,4 +1,4 @@
-import {combine, createEvent, restore, Store} from 'effector';
+import {combine, createEvent, createStore, Store} from 'effector';
 import { list } from 'forest';
 import { styled } from "foliage";
 
@@ -15,7 +15,7 @@ export function Stores($stores: Store<Record<string, StoreMeta>>, options: Optio
   );
 
   const filterChanged = createEvent<string>();
-  const $filter = restore(filterChanged, '');
+  const $filter = createStore('', {serialize:'ignore'}).on(filterChanged, (_, filter) => filter)
 
   const $filteredList = combine($list, $filter, (list, searchWord) =>
     list.filter(item => item.name.includes(searchWord)),
