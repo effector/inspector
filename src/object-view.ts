@@ -16,7 +16,8 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
     const [$value, $parentOpened] = remap($props, ['value', 'parentOpened']);
 
     const foldableClicked = createEvent<MouseEvent>();
-    const $localOpened = createStore(false, {serialize:'ignore'}).on(foldableClicked, (opened) => !opened);
+    const $localOpened = createStore(false, { serialize: 'ignore' });
+    $localOpened.on(foldableClicked, (opened) => !opened);
 
     const $opened = combine($parentOpened, $localOpened, (parent, local) =>
       parent === true ? local : false,
@@ -361,7 +362,7 @@ export function ObjectView<T extends any>(_: { value: Store<T> }): void {
   const store = combine(
     {
       value,
-      parentOpened: createStore(true,{serialize:'ignore'}),
+      parentOpened: createStore(true, { serialize: 'ignore' }),
       key: '',
     },
     (a) => a, // solving ts errors

@@ -1,4 +1,4 @@
-import { createEvent, createStore, restore, sample, Store } from 'effector';
+import { createEvent, createStore, sample, Store } from 'effector';
 
 import {
   EffectMeta,
@@ -23,7 +23,7 @@ import { Traces } from './traces';
 const KEY_B = 2;
 const KEY_L = 12;
 
-const $isVisible = createStore(false,{serialize:'ignore'});
+const $isVisible = createStore(false, { serialize: 'ignore' });
 const togglePressed = createEvent();
 const clearPressed = createEvent();
 const showInspector = createEvent();
@@ -42,7 +42,7 @@ if (typeof document === 'object') {
 }
 
 function dragdrop() {
-  const $inDrag = createStore(false,{serialize:'ignore'});
+  const $inDrag = createStore(false, { serialize: 'ignore' });
   const mouseDown = createEvent<MouseEvent>();
   const mouseMove = createEvent<MouseEvent>();
   const mouseUp = createEvent<MouseEvent>();
@@ -68,7 +68,8 @@ function dragdrop() {
 
 function ref() {
   const setRef = createEvent<DOMElement>();
-  const $ref = restore(setRef, null);
+  const $ref = createStore<DOMElement | null>(null);
+  $ref.on(setRef, (_, ref) => ref);
   node(setRef);
 
   return $ref as Store<DOMElement>;
@@ -103,7 +104,7 @@ export function Root(
       const $blockRef = ref();
 
       const widthSetting = createJsonSetting('width', 736);
-      const $width = createStore(widthSetting.read(),{serialize:'ignore'});
+      const $width = createStore(widthSetting.read(), { serialize: 'ignore' });
       spec({ style: { width: val`${$width}px` } });
 
       DragHandler({
@@ -113,7 +114,7 @@ export function Root(
 
           spec({ data: { active: $inDrag } });
 
-          const $shift = createStore(0,{serialize:'ignore'});
+          const $shift = createStore(0, { serialize: 'ignore' });
 
           const dragStart = sample($blockRef, mouseDown, (block, event) => ({
             block,

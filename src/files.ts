@@ -1,4 +1,4 @@
-import { combine, createEvent, createStore, restore, sample, Store } from 'effector';
+import { combine, createEvent, createStore, sample, Store } from 'effector';
 import { h, list } from 'forest';
 import { styled } from 'foliage';
 
@@ -27,7 +27,7 @@ export function Files(source: {
   const fileSelected = createEvent<string>();
   const fileCleanup = createEvent();
 
-  const $currentFile = createStore('',{serialize:'ignore'});
+  const $currentFile = createStore('', { serialize: 'ignore' });
   const $hasSelectedFile = $currentFile.map((file) => file !== '');
   const $noFileSelected = $hasSelectedFile.map((has) => !has);
 
@@ -72,7 +72,9 @@ export function Files(source: {
         visible: $noFileSelected,
         fn() {
           const filterChanged = createEvent<string>();
-          const $filter = restore(filterChanged, '');
+          const $filter = createStore('', { serialize: 'ignore' });
+          $filter.on(filterChanged, (_, filter) => filter);
+
           const $filteredFiles = combine($filter, $filesList, (searchWord, list) =>
             list.filter((file) => file.includes(searchWord)),
           );
