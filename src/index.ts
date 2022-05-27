@@ -60,8 +60,8 @@ const traceAdd = merge([traceStoreChange, traceEventTrigger, traceEffectRun]);
 
 const traceFinished = createEvent();
 
-const $traces = createStore<StackTrace[]>([]);
-const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] });
+const $traces = createStore<StackTrace[]>([],{serialize:'ignore'});
+const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] },{serialize:'ignore'});
 
 $currentTrace.on(traceAdd, ({ time, traces }, trace) => ({
   time: time ? time : Date.now(),

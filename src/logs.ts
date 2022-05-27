@@ -25,7 +25,7 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options:
   const filterChanged = createEvent<string>();
   const clearClicked = createEvent<MouseEvent>();
 
-  const $kinds = createStore(kindSetting.read());
+  const $kinds = createStore(kindSetting.read(),{serialize:'ignore'});
   const $filterText = restore(filterChanged, textSetting.read());
 
   $kinds
