@@ -1,4 +1,4 @@
-import {Store, Event, createEvent, createStore} from 'effector';
+import { Store, Event, createEvent, createStore } from 'effector';
 import { Section, SectionHead, SectionTab, SectionContent } from './components';
 import { createSetting } from './setting';
 
@@ -17,7 +17,8 @@ export function Tabs<Keys extends string>(tabs: TabsConfig<Keys>) {
   const initialTab = tabList.includes(savedTab) ? savedTab : firstTab;
 
   const changeTab = createEvent<Keys>();
-  const $tab = createStore(initialTab).on(changeTab, (_, tab) => tab)
+  const $tab = createStore(initialTab);
+  $tab.on(changeTab, (_, tab) => tab);
 
   $tab.watch(lastTab.write);
 

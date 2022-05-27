@@ -1,5 +1,5 @@
-import {Spec, styled} from 'foliage';
-import {spec} from 'forest';
+import { Spec, styled } from 'foliage';
+import { spec } from 'forest';
 
 export const Container = styled.div`
   --primary: #ff8c00;

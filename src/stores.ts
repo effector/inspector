@@ -1,24 +1,23 @@
-import {combine, createEvent, createStore, Store} from 'effector';
+import { combine, createEvent, createStore, Store } from 'effector';
 import { list } from 'forest';
-import { styled } from "foliage";
+import { styled } from 'foliage';
 
 import { Options, StoreMeta } from './types.h';
 import { Node, NodeContent, NodeList, NodeTitle, Search } from './components';
 import { ObjectView } from './object-view';
 import { trimDomain } from './trim-domain';
 
-
 export function Stores($stores: Store<Record<string, StoreMeta>>, options: Options) {
-
   const $list = $stores.map((map) =>
     Object.entries(map).map(([name, meta]) => ({ name, ...meta })),
   );
 
   const filterChanged = createEvent<string>();
-  const $filter = createStore('', {serialize:'ignore'}).on(filterChanged, (_, filter) => filter)
+  const $filter = createStore('', { serialize: 'ignore' });
+  $filter.on(filterChanged, (_, filter) => filter);
 
   const $filteredList = combine($list, $filter, (list, searchWord) =>
-    list.filter(item => item.name.includes(searchWord)),
+    list.filter((item) => item.name.includes(searchWord)),
   );
 
   const searchChanged = filterChanged.prepend(
@@ -33,7 +32,7 @@ export function Stores($stores: Store<Record<string, StoreMeta>>, options: Optio
       },
       handler: { input: searchChanged },
     });
-  })
+  });
 
   NodeList(() => {
     list({
@@ -60,4 +59,4 @@ const Header = styled.div`
     box-sizing: border-box;
     margin: 0;
   }
-`
+`;

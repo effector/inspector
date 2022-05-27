@@ -25,8 +25,9 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options:
   const filterChanged = createEvent<string>();
   const clearClicked = createEvent<MouseEvent>();
 
-  const $kinds = createStore(kindSetting.read(),{serialize:'ignore'});
-  const $filterText = createStore(textSetting.read(), {serialize:'ignore'}).on(filterChanged, (_, filterText) => filterText)
+  const $kinds = createStore(kindSetting.read(), { serialize: 'ignore' });
+  const $filterText = createStore(textSetting.read(), { serialize: 'ignore' });
+  $filterText.on(filterChanged, (_, filterText) => filterText);
 
   $kinds
     .on(toggleKind, (exist, toggled) =>
