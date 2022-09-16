@@ -18,7 +18,7 @@ import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
 import { createJsonSetting } from './setting';
 import { Files } from './files';
-import { Traces } from './traces';
+import { Traces } from './tabs/trace';
 
 const KEY_B = 2;
 const KEY_L = 12;
@@ -82,7 +82,6 @@ export function Root(
   $effects: Store<Record<string, EffectMeta>>,
   $logs: Store<LogMeta[]>,
   $files: Store<FilesMap>,
-  $traces: Store<StackTrace[]>,
   options: Options = {},
 ) {
   if (options.visible) {
@@ -170,7 +169,7 @@ export function Root(
         traces: {
           title: 'Traces',
           fn() {
-            Traces($traces, clearPressed, options);
+            Traces();
           },
         },
         logs: {

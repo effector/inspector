@@ -6,9 +6,6 @@ import {
   Effect,
   Event,
   forward,
-  guard,
-  merge,
-  sample,
   Store,
   Unit,
   step,
@@ -28,14 +25,14 @@ import {
   LogMeta,
   Options,
   StoreCreator,
-  Trace,
   StoreMeta,
-  StackTrace,
-  TraceStoreChange,
-  TraceEventTrigger,
-  TraceEffectRun,
 } from './types.h';
 import { Root } from './view';
+import {
+  traceEffectRun,
+  traceEventTrigger,
+  traceStoreChange
+} from "./tabs/trace";
 
 const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
 
@@ -52,37 +49,6 @@ const effectTriggered = createEvent<{ sid: string }>();
 const $effects = createStore<Record<string, EffectMeta>>({}, {serialize: 'ignore'});
 
 const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
-
-const traceStoreChange = createEvent<TraceStoreChange>();
-const traceEventTrigger = createEvent<TraceEventTrigger>();
-const traceEffectRun = createEvent<TraceEffectRun>();
-const traceAdd = merge([traceStoreChange, traceEventTrigger, traceEffectRun]);
-
-const traceFinished = createEvent();
-
-const $traces = createStore<StackTrace[]>([]);
-const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] });
-
-$currentTrace.on(traceAdd, ({ time, traces }, trace) => ({
-  time: time ? time : Date.now(),
-  traces: [...traces, trace],
-}));
-
-guard({
-  source: $currentTrace,
-  clock: traceAdd,
-  filter: ({ traces }) => traces.length === 1,
-}).watch(() => queueMicrotask(traceFinished));
-
-const moveTrace = sample({
-  source: $currentTrace,
-  clock: traceFinished,
-});
-
-$traces.on(moveTrace, (stackTraces, newTrace) => [...stackTraces, newTrace]);
-$currentTrace.reset(moveTrace);
-
-// $traces.watch((t) => console.log('traces', t));
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -276,7 +242,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, $files, $traces, options));
+  using(root, () => Root($stores, $events, $effects, $logs, $files, options));
   using(root, StyledRoot);
 
   return { root };

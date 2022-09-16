@@ -391,3 +391,22 @@ export const Search = styled.input`
     box-shadow: 0 0 0 2px var(--primary);
   }
 `;
+
+
+const playSymbol = String.fromCharCode(parseInt("25B6",16))
+const
+  pauseSymbol = String.fromCharCode(parseInt("25A0",16))
+
+export function RunButton(config: Spec) {
+  NodeButton({
+    text:`${playSymbol} Run`,
+    ...config
+  })
+}
+
+export function PauseButton(config: Spec) {
+  NodeButton({
+    text:`${pauseSymbol} Pause`,
+    ...config
+  })
+}
