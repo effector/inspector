@@ -33,19 +33,19 @@ import {
 } from "./tabs/trace";
 import { createLogRecordFx}  from "./tabs/log";
 
-const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
+const $files = createStore<FilesMap>({}, { serialize: 'ignore' });
 
 const storeAdd = createEvent<StoreCreator>();
 const storeUpdated = createEvent<{ name: string; value: any }>();
-const $stores = createStore<Record<string, StoreMeta>>({}, {serialize: 'ignore'});
+const $stores = createStore<Record<string, StoreMeta>>({}, { serialize: 'ignore' });
 
 const eventAdd = createEvent<EventCreator>();
 const eventTriggered = createEvent<{ name: string; params: any }>();
-const $events = createStore<Record<string, EventMeta>>({}, {serialize: 'ignore'});
+const $events = createStore<Record<string, EventMeta>>({}, { serialize: 'ignore' });
 
 const effectAdd = createEvent<EffectCreator>();
 const effectTriggered = createEvent<{ sid: string }>();
-const $effects = createStore<Record<string, EffectMeta>>({}, {serialize: 'ignore'});
+const $effects = createStore<Record<string, EffectMeta>>({}, { serialize: 'ignore' });
 
 $stores
   .on(storeAdd, (map, payload) => ({

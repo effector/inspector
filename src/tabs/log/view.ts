@@ -1,4 +1,4 @@
-import { Store, createStore, createEvent, combine, restore } from 'effector';
+import { Store, createStore, createEvent, combine, Event } from 'effector';
 import { list, h } from 'forest';
 
 import { Kind, Options } from '../../types.h';
@@ -31,8 +31,9 @@ export function Logs(options: Options) {
   const toggleKind = createEvent<Kind>();
   const filterChanged = createEvent<string>();
 
-  const $kinds = createStore(kindSetting.read());
-  const $filterText = restore(filterChanged, textSetting.read());
+  const $kinds = createStore(kindSetting.read(), { serialize: 'ignore' });
+  const $filterText = createStore(textSetting.read(), { serialize: 'ignore' });
+  $filterText.on(filterChanged, (_, filterText) => filterText);
 
   $kinds
     .on(toggleKind, (exist, toggled) =>
