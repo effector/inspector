@@ -1,6 +1,5 @@
 import {
   CompositeName,
-  createEffect,
   createEvent,
   createStore,
   Effect,
@@ -22,7 +21,6 @@ import {
   FilesMap,
   Inspector,
   Kind,
-  LogMeta,
   Options,
   StoreCreator,
   StoreMeta,
@@ -33,6 +31,7 @@ import {
   traceEventTrigger,
   traceStoreChange
 } from "./tabs/trace";
+import { createLogRecordFx}  from "./tabs/log";
 
 const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
 
@@ -47,8 +46,6 @@ const $events = createStore<Record<string, EventMeta>>({}, {serialize: 'ignore'}
 const effectAdd = createEvent<EffectCreator>();
 const effectTriggered = createEvent<{ sid: string }>();
 const $effects = createStore<Record<string, EffectMeta>>({}, {serialize: 'ignore'});
-
-const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -139,26 +136,10 @@ $files.on(effectAdd, (map, { name, file }) => {
   return map;
 });
 
-let id = 1e3;
-const nextId = () => (++id).toString(36);
-
-type CreateRecord = Pick<LogMeta, 'name' | 'kind' | 'payload'>;
-
-const createRecordFx = createEffect<CreateRecord, LogMeta>({
-  handler({ name, kind, payload }) {
-    return {
-      id: nextId(),
-      kind,
-      name,
-      payload,
-      datetime: new Date(),
-    };
-  },
-});
 
 forward({
   from: eventTriggered,
-  to: createRecordFx.prepend(({ name, params }) => ({
+  to: createLogRecordFx.prepend(({ name, params }) => ({
     kind: 'event',
     name,
     payload: params,
@@ -167,14 +148,12 @@ forward({
 
 forward({
   from: storeUpdated,
-  to: createRecordFx.prepend(({ name, value }) => ({
+  to: createLogRecordFx.prepend(({ name, value }) => ({
     kind: 'store',
     name,
     payload: value,
   })),
 });
-
-$logs.on(createRecordFx.doneData, (logs, record) => [record, ...logs]);
 
 function graphite(unit: Unit<any>): Node {
   return (unit as any).graphite;
@@ -242,7 +221,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, $files, options));
+  using(root, () => Root($stores, $events, $effects, $files, options));
   using(root, StyledRoot);
 
   return { root };
@@ -339,7 +318,7 @@ export function addEffect(
 
   forward({
     from: [effectRun, effectDone, effectFail],
-    to: createRecordFx,
+    to: createLogRecordFx,
   });
 }
 

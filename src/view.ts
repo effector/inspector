@@ -4,14 +4,12 @@ import {
   EffectMeta,
   EventMeta,
   FilesMap,
-  LogMeta,
   Options,
-  StackTrace,
   StoreMeta,
 } from './types.h';
 import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
-import { Logs } from './logs';
+import { Logs } from './tabs/log';
 import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
@@ -80,7 +78,6 @@ export function Root(
   $stores: Store<Record<string, StoreMeta>>,
   $events: Store<Record<string, EventMeta>>,
   $effects: Store<Record<string, EffectMeta>>,
-  $logs: Store<LogMeta[]>,
   $files: Store<FilesMap>,
   options: Options = {},
 ) {
@@ -175,7 +172,7 @@ export function Root(
         logs: {
           title: 'Logs',
           fn() {
-            Logs($logs, clearPressed, options);
+            Logs( options);
           },
         },
       });
