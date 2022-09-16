@@ -36,6 +36,7 @@ import {
   TraceEffectRun,
 } from './types.h';
 import { Root } from './view';
+import { createNode, Stack } from "effector/effector.cjs";
 
 const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
 
@@ -244,30 +245,40 @@ function copy<T>(a: T): T {
 }
 
 function traceStore($store: Store<any>) {
+
   const name = createName($store);
-  traceEvent($store.updates, `${name}.updates`);
+
+  let before: unknown;
+
   graphite($store).seq.unshift(
     step.compute({
       fn(data, scope) {
-        scope.trace = { before: copy(scope.state.current) };
+        before = copy(scope.state.current)
         return data;
       },
     }),
   );
-  graphite($store).seq.push(
-    step.compute({
-      fn(data, scope, stack) {
-        traceStoreChange({
-          type: 'store',
-          name,
-          before: scope.trace.before,
-          current: data,
-        });
-        return data;
-      },
-    }),
-  );
+
+  createNode({
+    parent: [$store],
+    meta: { op: 'watch' },
+    family: { owners: $store },
+    regional: true,
+    node: [
+      step.run({
+        fn(data: any, scope: any, _stack: Stack) {
+          traceStoreChange({
+            type: 'store',
+            name,
+            before: before,
+            current: data,
+          });
+        },
+      }),
+    ],
+  });
 }
+
 
 export function createInspector(options: Options = {}): Inspector | undefined {
   const root = typeof document === 'object' && document.createElement('div');
