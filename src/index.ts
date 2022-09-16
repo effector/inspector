@@ -13,6 +13,8 @@ import {
   Unit,
   step,
   Node,
+  createNode,
+  Stack
 } from 'effector';
 import { using } from 'forest';
 import { StyledRoot } from 'foliage';
@@ -28,7 +30,6 @@ import {
   LogMeta,
   Options,
   StoreCreator,
-  Trace,
   StoreMeta,
   StackTrace,
   TraceStoreChange,
@@ -36,7 +37,6 @@ import {
   TraceEffectRun,
 } from './types.h';
 import { Root } from './view';
-import { createNode, Stack } from "effector/effector.cjs";
 
 const $files = createStore<FilesMap>({}, {serialize: 'ignore'});
 
