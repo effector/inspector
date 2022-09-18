@@ -1,14 +1,10 @@
 import {
   CompositeName,
-  createEffect,
   createEvent,
   createStore,
   Effect,
   Event,
   forward,
-  guard,
-  merge,
-  sample,
   Store,
   Unit,
   step,
@@ -25,17 +21,17 @@ import {
   FilesMap,
   Inspector,
   Kind,
-  LogMeta,
   Options,
   StoreCreator,
-  Trace,
   StoreMeta,
-  StackTrace,
-  TraceStoreChange,
-  TraceEventTrigger,
-  TraceEffectRun,
 } from './types.h';
 import { Root } from './view';
+import {
+  traceEffectRun,
+  traceEventTrigger,
+  traceStoreChange
+} from "./tabs/trace";
+import { createLogRecordFx}  from "./tabs/log";
 
 const $files = createStore<FilesMap>({}, { serialize: 'ignore' });
 
@@ -50,39 +46,6 @@ const $events = createStore<Record<string, EventMeta>>({}, { serialize: 'ignore'
 const effectAdd = createEvent<EffectCreator>();
 const effectTriggered = createEvent<{ sid: string }>();
 const $effects = createStore<Record<string, EffectMeta>>({}, { serialize: 'ignore' });
-
-const $logs = createStore<LogMeta[]>([], { serialize: 'ignore' });
-
-const traceStoreChange = createEvent<TraceStoreChange>();
-const traceEventTrigger = createEvent<TraceEventTrigger>();
-const traceEffectRun = createEvent<TraceEffectRun>();
-const traceAdd = merge([traceStoreChange, traceEventTrigger, traceEffectRun]);
-
-const traceFinished = createEvent();
-
-const $traces = createStore<StackTrace[]>([], { serialize: 'ignore' });
-const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] }, { serialize: 'ignore' });
-
-$currentTrace.on(traceAdd, ({ time, traces }, trace) => ({
-  time: time ? time : Date.now(),
-  traces: [...traces, trace],
-}));
-
-guard({
-  source: $currentTrace,
-  clock: traceAdd,
-  filter: ({ traces }) => traces.length === 1,
-}).watch(() => queueMicrotask(traceFinished));
-
-const moveTrace = sample({
-  source: $currentTrace,
-  clock: traceFinished,
-});
-
-$traces.on(moveTrace, (stackTraces, newTrace) => [...stackTraces, newTrace]);
-$currentTrace.reset(moveTrace);
-
-// $traces.watch((t) => console.log('traces', t));
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -173,26 +136,10 @@ $files.on(effectAdd, (map, { name, file }) => {
   return map;
 });
 
-let id = 1e3;
-const nextId = () => (++id).toString(36);
-
-type CreateRecord = Pick<LogMeta, 'name' | 'kind' | 'payload'>;
-
-const createRecordFx = createEffect<CreateRecord, LogMeta>({
-  handler({ name, kind, payload }) {
-    return {
-      id: nextId(),
-      kind,
-      name,
-      payload,
-      datetime: new Date(),
-    };
-  },
-});
 
 forward({
   from: eventTriggered,
-  to: createRecordFx.prepend(({ name, params }) => ({
+  to: createLogRecordFx.prepend(({ name, params }) => ({
     kind: 'event',
     name,
     payload: params,
@@ -201,14 +148,12 @@ forward({
 
 forward({
   from: storeUpdated,
-  to: createRecordFx.prepend(({ name, value }) => ({
+  to: createLogRecordFx.prepend(({ name, value }) => ({
     kind: 'store',
     name,
     payload: value,
   })),
 });
-
-$logs.on(createRecordFx.doneData, (logs, record) => [record, ...logs]);
 
 function graphite(unit: Unit<any>): Node {
   return (unit as any).graphite;
@@ -276,7 +221,7 @@ export function createInspector(options: Options = {}): Inspector | undefined {
 
   document.body.append(root);
 
-  using(root, () => Root($stores, $events, $effects, $logs, $files, $traces, options));
+  using(root, () => Root($stores, $events, $effects, $files, options));
   using(root, StyledRoot);
 
   return { root };
@@ -373,7 +318,7 @@ export function addEffect(
 
   forward({
     from: [effectRun, effectDone, effectFail],
-    to: createRecordFx,
+    to: createLogRecordFx,
   });
 }
 

@@ -1,7 +1,7 @@
 import { Store, createStore, createEvent, combine, Event } from 'effector';
 import { list, h } from 'forest';
 
-import { LogMeta, Kind, Options } from './types.h';
+import { Kind, Options } from '../../types.h';
 import {
   NodeList,
   Node,
@@ -10,20 +10,26 @@ import {
   Panel,
   Checkbox,
   Input,
-  NodeButton,
-} from './components';
-import { ObjectView } from './object-view';
-import { createJsonSetting, createSetting } from './setting';
-import { trimDomain } from './trim-domain';
+  NodeButton, RunButton, PauseButton,
+} from '../../components';
+import { ObjectView } from '../../object-view';
+import { createJsonSetting, createSetting } from '../../setting';
+import { trimDomain } from '../../trim-domain';
 
 const defaultKinds: Kind[] = ['event', 'store'];
 const kindSetting = createJsonSetting<Kind[]>('filter-kinds', defaultKinds);
 const textSetting = createSetting('filter-text', '');
 
-export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options: Options) {
+import {
+  $logs,
+  $isLogEnabled,
+  isLogEnabledToggle,
+  logCleared,
+} from './model'
+
+export function Logs(options: Options) {
   const toggleKind = createEvent<Kind>();
   const filterChanged = createEvent<string>();
-  const clearClicked = createEvent<MouseEvent>();
 
   const $kinds = createStore(kindSetting.read(), { serialize: 'ignore' });
   const $filterText = createStore(textSetting.read(), { serialize: 'ignore' });
@@ -35,7 +41,7 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options:
     )
     .watch(kindSetting.write);
   $filterText.watch(textSetting.write);
-  $logs.on(clearClicked, () => []).on(hotKeyClear, () => []);
+
 
   Panel(() => {
     h('span', { text: 'Show: ' });
@@ -65,9 +71,18 @@ export function Logs($logs: Store<LogMeta[]>, hotKeyClear: Event<void>, options:
 
     NodeButton({
       text: 'Clear',
-      handler: { click: clearClicked },
+      handler: { click: logCleared },
       attr: { title: 'Press CTRL+L to clear logs' },
     });
+
+    RunButton({
+      visible: $isLogEnabled.map(value => !value),
+      handler: { click: isLogEnabledToggle }
+    })
+    PauseButton({
+      visible: $isLogEnabled,
+      handler: { click: isLogEnabledToggle },
+    })
   });
 
   NodeList(() => {

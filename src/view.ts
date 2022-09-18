@@ -4,21 +4,19 @@ import {
   EffectMeta,
   EventMeta,
   FilesMap,
-  LogMeta,
   Options,
-  StackTrace,
   StoreMeta,
 } from './types.h';
 import { Container, DragHandler } from './components';
 import { Tabs } from './tabs';
-import { Logs } from './logs';
+import { Logs } from './tabs/log';
 import { Stores } from './stores';
 import { Events } from './events';
 import { Effects } from './effects';
 import { DOMElement, node, spec, val } from 'forest';
 import { createJsonSetting } from './setting';
 import { Files } from './files';
-import { Traces } from './traces';
+import { Traces } from './tabs/trace';
 
 const KEY_B = 2;
 const KEY_L = 12;
@@ -81,9 +79,7 @@ export function Root(
   $stores: Store<Record<string, StoreMeta>>,
   $events: Store<Record<string, EventMeta>>,
   $effects: Store<Record<string, EffectMeta>>,
-  $logs: Store<LogMeta[]>,
   $files: Store<FilesMap>,
-  $traces: Store<StackTrace[]>,
   options: Options = {},
 ) {
   if (options.visible) {
@@ -171,13 +167,13 @@ export function Root(
         traces: {
           title: 'Traces',
           fn() {
-            Traces($traces, clearPressed, options);
+            Traces();
           },
         },
         logs: {
           title: 'Logs',
           fn() {
-            Logs($logs, clearPressed, options);
+            Logs( options);
           },
         },
       });
