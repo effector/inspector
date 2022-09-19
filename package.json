@@ -75,6 +75,7 @@
     "effector": "^22.1.0"
   },
   "dependencies": {
+    "effector-storage": "^5.0.1",
     "foliage": "^0.201.0",
     "forest": "^0.20.2"
   }
