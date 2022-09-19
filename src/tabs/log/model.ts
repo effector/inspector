@@ -1,15 +1,16 @@
 import {createEvent, createStore, guard, createEffect} from "effector";
-import { persist } from 'effector-storage/session'
 
 import {LogMeta} from "../../types.h";
-
+import { createJsonSetting } from "../../setting";
 
 const log = createEvent<LogMeta>();
 export const isLogEnabledToggle = createEvent();
 export const logCleared = createEvent();
 
 export const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
-export const $isLogEnabled = createStore(false);
+const logsSetting = createJsonSetting('logs-enabled', false, sessionStorage)
+export const $isLogEnabled = createStore(logsSetting.read());
+$isLogEnabled.watch(logsSetting.write)
 
 type CreateRecord = Pick<LogMeta, 'name' | 'kind' | 'payload'>;
 
@@ -39,6 +40,3 @@ guard({
   target: log
 })
 
-persist({
-  store: $isLogEnabled,
-})
