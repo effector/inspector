@@ -1,11 +1,11 @@
 import {createEvent, createStore, guard, merge, sample} from "effector";
-import { persist } from 'effector-storage/session'
 import {
   StackTrace,
   TraceEffectRun,
   TraceEventTrigger,
   TraceStoreChange
 } from "../../types.h";
+import {createJsonSetting} from "../../setting";
 
 export const traceStoreChange = createEvent<TraceStoreChange>();
 export const traceEventTrigger = createEvent<TraceEventTrigger>();
@@ -16,7 +16,11 @@ export const traceCleared = createEvent();
 
 export const $traces = createStore<StackTrace[]>([]);
 const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] });
-export const $isTraceEnabled = createStore(false);
+
+const traceSetting = createJsonSetting('trace-enabled', false, sessionStorage)
+export const $isTraceEnabled = createStore(traceSetting.read());
+$isTraceEnabled.watch(traceSetting.write);
+
 export const traceEnableToggled = createEvent<void>();
 
 $isTraceEnabled.on(traceEnableToggled, value => !value)
@@ -26,7 +30,6 @@ $currentTrace.on(traceAdd, ({ time, traces }, trace) => ({
   time: time ? time : Date.now(),
   traces: [...traces, trace],
 }));
-
 
 guard({
   clock:  merge([traceStoreChange, traceEventTrigger, traceEffectRun]),
@@ -48,7 +51,3 @@ const moveTrace = sample({
 $traces.on(moveTrace, (stackTraces, newTrace) => [...stackTraces, newTrace]);
 $currentTrace.reset(moveTrace);
 
-
-persist({
-  store: $isTraceEnabled,
-})
