@@ -17,7 +17,7 @@ export const traceCleared = createEvent();
 export const $traces = createStore<StackTrace[]>([]);
 const $currentTrace = createStore<StackTrace>({ time: 0, traces: [] });
 
-const traceSetting = createJsonSetting('trace-enabled', false, sessionStorage)
+const traceSetting = createJsonSetting('trace-enabled', false, "session")
 export const $isTraceEnabled = createStore(traceSetting.read());
 $isTraceEnabled.watch(traceSetting.write);
 

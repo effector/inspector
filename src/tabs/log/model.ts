@@ -8,7 +8,7 @@ export const isLogEnabledToggle = createEvent();
 export const logCleared = createEvent();
 
 export const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
-const logsSetting = createJsonSetting('logs-enabled', false, sessionStorage)
+const logsSetting = createJsonSetting('logs-enabled', false, 'session')
 export const $isLogEnabled = createStore(logsSetting.read());
 $isLogEnabled.watch(logsSetting.write)
 
