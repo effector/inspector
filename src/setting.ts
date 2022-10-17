@@ -1,13 +1,19 @@
 import { createEvent } from 'effector';
 
+type StorageType = 'local' | 'session';
+
 const PREFIX = (0xeffec ** 2).toString(36);
 
-function read(name: string, defaultValue: string, storage = localStorage): string {
-  return storage.getItem(`${PREFIX}-${name}`) ?? defaultValue;
+function getStorage(type: StorageType) {
+  return type === 'session' ? sessionStorage : localStorage;
 }
 
-function write(name: string, value: string, storage = localStorage): string {
-  storage.setItem(`${PREFIX}-${name}`, value);
+function read(name: string, defaultValue: string, storageType: StorageType = 'local'): string {
+  return getStorage(storageType).getItem(`${PREFIX}-${name}`) ?? defaultValue;
+}
+
+function write(name: string, value: string, storageType: StorageType = 'local'): string {
+  getStorage(storageType).setItem(`${PREFIX}-${name}`, value);
   return value;
 }
 
@@ -21,13 +27,13 @@ export function createSetting(name: string, defaultValue: string) {
   };
 }
 
-export function createJsonSetting<T>(name: string, defaultValue: T, storage = localStorage) {
+export function createJsonSetting<T>(name: string, defaultValue: T, storageType: StorageType = 'local') {
   const save = createEvent<T>();
-  save.watch((value) => write(name, JSON.stringify(value), storage));
+  save.watch((value) => write(name, JSON.stringify(value), storageType));
   return {
-    read: (): T => JSON.parse(read(name, JSON.stringify(defaultValue), storage)),
+    read: (): T => JSON.parse(read(name, JSON.stringify(defaultValue), storageType)),
     write: (value: T): T => {
-      write(name, JSON.stringify(value), storage);
+      write(name, JSON.stringify(value), storageType);
       return value;
     },
     save,
