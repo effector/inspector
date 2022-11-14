@@ -1,53 +1,36 @@
 import {
   CompositeName,
   createEvent,
-  createStore,
+  createNode,
   Effect,
   Event,
   forward,
+  Node,
+  Stack,
+  step,
   Store,
   Unit,
-  step,
-  Node,
-  createNode,
-  Stack
 } from 'effector';
-import { using } from 'forest';
-import { StyledRoot } from 'foliage';
+import { render } from 'solid-js/web';
 
-import {
-  EffectCreator,
-  EffectMeta,
-  EventCreator,
-  EventMeta,
-  FilesMap,
-  Inspector,
-  Kind,
-  Options,
-  StoreCreator,
-  StoreMeta,
-} from './types.h';
-import { Root } from './view';
-import {
-  traceEffectRun,
-  traceEventTrigger,
-  traceStoreChange
-} from "./tabs/trace";
-import { createLogRecordFx}  from "./tabs/log";
-
-const $files = createStore<FilesMap>({}, { serialize: 'ignore' });
+import { EffectCreator, EventCreator, Inspector, Kind, Options, StoreCreator } from './types.h';
+import { $stores } from './entities/stores/model';
+import { $effects } from './entities/effects/model';
+import { $events } from './entities/events/model';
+import { $files } from './entities/files';
+import { setOptions } from './shared/configs/options';
+import { traceEffectRun, traceEventTrigger, traceStoreChange } from './tabs/trace';
+import { createLogRecordFx } from './tabs/log';
+import { App } from './app';
 
 const storeAdd = createEvent<StoreCreator>();
 const storeUpdated = createEvent<{ name: string; value: any }>();
-const $stores = createStore<Record<string, StoreMeta>>({}, { serialize: 'ignore' });
 
 const eventAdd = createEvent<EventCreator>();
 const eventTriggered = createEvent<{ name: string; params: any }>();
-const $events = createStore<Record<string, EventMeta>>({}, { serialize: 'ignore' });
 
 const effectAdd = createEvent<EffectCreator>();
 const effectTriggered = createEvent<{ sid: string }>();
-const $effects = createStore<Record<string, EffectMeta>>({}, { serialize: 'ignore' });
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -125,19 +108,17 @@ $effects
     return { ...map };
   });
 
-$files.on(effectAdd, (map, { name, file }) => {
+$files.on(effectAdd, (map, { sid: name, file }) => {
   if (file) {
     if (map[file]) {
       const list = map[file];
-      return { ...map, [file]: [...list, { kind: 'event', name }] };
+      return { ...map, [file]: [...list, { kind: 'effect', name }] };
     }
 
-    return { ...map, [file]: [{ kind: 'event', name }] };
+    return { ...map, [file]: [{ kind: 'effect', name }] };
   }
-
   return map;
 });
-
 
 forward({
   from: eventTriggered,
@@ -191,7 +172,6 @@ function copy<T>(a: T): T {
 }
 
 function traceStore($store: Store<any>) {
-
   const name = createName($store);
 
   let before: unknown;
@@ -199,7 +179,7 @@ function traceStore($store: Store<any>) {
   graphite($store).seq.unshift(
     step.compute({
       fn(data, scope) {
-        before = copy(scope.state.current)
+        before = copy(scope.state.current);
         return data;
       },
     }),
@@ -225,18 +205,21 @@ function traceStore($store: Store<any>) {
   });
 }
 
-
 export function createInspector(options: Options = {}): Inspector | undefined {
-  const root = typeof document === 'object' && document.createElement('div');
-  if (!root) return undefined;
-  root.classList.add('effector-inspector');
+  const solidRoot = typeof document === 'object' && document.createElement('div');
+  if (!solidRoot) return undefined;
+  setOptions(options);
+  solidRoot.classList.add('effector-inspector-solid');
+  document.body.append(solidRoot);
+  render(App, solidRoot);
 
-  document.body.append(root);
-
-  using(root, () => Root($stores, $events, $effects, $files, options));
-  using(root, StyledRoot);
-
-  return { root };
+  console.info(
+    '%c[effector-inspector] %cPress %cCTRL+B %cto open Inspector',
+    'color: gray; font-size: 1rem;',
+    'color: currentColor; font-size: 1rem;',
+    'color: deepskyblue; font-family: monospace; font-size: 1rem;',
+    'color: currentColor; font-size: 1rem;',
+  );
 }
 
 function getLocFile(unit: Unit<any>): string | undefined {

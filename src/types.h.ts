@@ -57,12 +57,6 @@ export interface Inspector {
   root: HTMLElement;
 }
 
-type FileName = string;
-export type FilesMap = Record<
-  FileName,
-  Array<{ kind: 'store' | 'event' | 'effect'; name: string }>
->;
-
 type Loc = {
   file: string;
   line: number;

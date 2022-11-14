@@ -1,7 +1,9 @@
 export {
   traceEffectRun,
   traceEventTrigger,
-  traceStoreChange
-} from "./model";
-
-export {Traces} from './view'
+  traceStoreChange,
+  $isTraceEnabled,
+  $traces,
+  traceCleared,
+  traceEnableToggled,
+} from './model';

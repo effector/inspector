@@ -1,0 +1,1 @@
+export { Effect } from './view';

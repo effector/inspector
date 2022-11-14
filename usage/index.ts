@@ -1,5 +1,6 @@
 import { createDomain, createEffect, createEvent, createStore } from 'effector';
 import * as inspector from '../src';
+
 import {
   $args,
   $error,
@@ -10,6 +11,7 @@ import {
   $fn3,
   $setOfFns,
   $window,
+  // @ts-ignore
 } from './another';
 
 const emptyEvent = createEvent();
@@ -112,7 +114,20 @@ const exampleFx = createEffect({
   },
 });
 
+const exampleFx2 = createEffect({
+  handler() {
+    return new Promise((resolve) => setTimeout(resolve, 3000));
+  },
+});
+
+const trimDomain = createDomain();
+
+const trimDomainStore = trimDomain.createStore('No Domain in name');
+const trimDomainEvent = trimDomain.createEvent();
+const trimDomainEffect = trimDomain.createEffect();
+
 inspector.addEffect(exampleFx);
+inspector.addEffect(exampleFx2);
 inspector.addEvent(emptyEvent);
 inspector.addEvent(event);
 inspector.addEvent(just);
@@ -155,7 +170,11 @@ inspector.addStore($weakSet);
 inspector.addStore($window);
 inspector.addStore($anotherNumber);
 
-inspector.createInspector({ visible: true });
+inspector.addStore(trimDomainStore);
+inspector.addEvent(trimDomainEvent);
+inspector.addEffect(trimDomainEffect);
+
+inspector.createInspector({ visible: true, trimDomain: 'trimDomain' });
 let incrementor = 0;
 setInterval(() => emptyEvent(), 2000);
 setInterval(() => event({ count: incrementor++ }), 2000);
@@ -163,6 +182,13 @@ setTimeout(() => just('hello'), 0);
 setInterval(() => {
   exampleFx();
 }, 1500);
+
+setInterval(() => {
+  exampleFx2();
+}, 4000);
+setInterval(() => {
+  exampleFx2();
+}, 3500);
 
 $anotherNumber.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());

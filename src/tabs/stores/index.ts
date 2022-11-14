@@ -1,0 +1,1 @@
+export { Stores } from './view';

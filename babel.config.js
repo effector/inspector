@@ -24,7 +24,7 @@ const aliases = {
     esm: 'effector/effector.mjs',
   },
   foliage: {
-    esm: 'foliage/index.mjs'
+    esm: 'foliage/index.mjs',
   },
   forest: {
     esm: 'forest/forest.mjs',
@@ -32,7 +32,7 @@ const aliases = {
 };
 
 const babelConfig = {
-  presets: ['@babel/preset-env', '@babel/preset-typescript'],
+  presets: ['@babel/preset-env', '@babel/preset-typescript', 'solid'],
   plugins(meta) {
     const alias = parseAliases(meta, aliases);
     return [
@@ -74,5 +74,4 @@ function parseAliases(meta, object) {
   }
 }
 
-module.exports.getAliases = (metadata = meta) =>
-  parseAliases(metadata, aliases);
+module.exports.getAliases = (metadata = meta) => parseAliases(metadata, aliases);
