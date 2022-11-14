@@ -1,4 +1,4 @@
-import { createEvent, createStore } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { For, Match, Show, Switch } from 'solid-js';
 import { useUnit } from 'effector-solid';
 import { styled, createGlobalStyles } from 'solid-styled-components';
@@ -12,7 +12,6 @@ import { Effect } from '../tabs/effects';
 import { Events } from '../tabs/events';
 import { Trace } from '../tabs/trace/view';
 import { Logs } from '../tabs/log';
-import { sample } from 'effector/effector.cjs';
 import { useDragable } from '../shared/lib/use-dragalbe';
 
 const Tabs = {
