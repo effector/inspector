@@ -2,7 +2,7 @@
 
 | Dark theme and unit tracing                     | Units in files                            |
 | ----------------------------------------------- | ----------------------------------------- |
-| ![Dark-Traces](https://i.imgur.com/Gqx47NV.png) | ![Units](https://i.imgur.com/xqrp2wl.png) |
+| ![Dark-Traces](https://i.imgur.com/m9arc8u.png) | ![Units](https://i.imgur.com/VFki78R.png) |
 
 ## Installation
 
