@@ -64,7 +64,7 @@ const clearPressed = createEvent();
 const showInspector = createEvent();
 
 if (typeof document === 'object') {
-  document.addEventListener('keypress', (event) => {
+  document.addEventListener('keydown', (event) => {
     if (event.ctrlKey) {
       if (event.key === 'l' || event.keyCode === KEY_L) {
         clearPressed();
