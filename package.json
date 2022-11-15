@@ -11,6 +11,7 @@
     },
     "./index.mjs": "./index.mjs"
   },
+  "packageManager": "pnpm@7.16.0",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "files": [
