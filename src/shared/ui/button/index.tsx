@@ -1,8 +1,8 @@
 import {styled} from 'solid-styled-components';
 
 export const Button = styled.button`
+  white-space: nowrap;
   margin: 0;
-  margin-left: 1rem;
   padding: 0.2rem 0.4rem;
 
   color: var(--primary-text);
@@ -24,10 +24,14 @@ export const Button = styled.button`
 const playSymbol = String.fromCharCode(parseInt('25B6', 16));
 const pauseSymbol = String.fromCharCode(parseInt('25A0', 16));
 
+const SwitchButton = styled(Button)`
+  white-space: nowrap;
+`;
+
 export function RunButton(props: {onClick: () => void}) {
-  return <Button onClick={props.onClick}>{playSymbol} Run</Button>;
+  return <SwitchButton onClick={props.onClick}>{playSymbol} Run</SwitchButton>;
 }
 
 export function PauseButton(props: {onClick: () => void}) {
-  return <Button onClick={props.onClick}>{pauseSymbol} Pause</Button>;
+  return <SwitchButton onClick={props.onClick}>{pauseSymbol} Pause</SwitchButton>;
 }

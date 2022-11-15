@@ -13,5 +13,4 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  padding: 0 0.5rem;
 `;

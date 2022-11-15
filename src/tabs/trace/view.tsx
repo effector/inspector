@@ -4,6 +4,7 @@ import {styled} from 'solid-styled-components';
 
 import {UnitContent} from '../../entities/units';
 import {Button, PauseButton, RunButton} from '../../shared/ui/button';
+import {TabTemplate} from '../../shared/ui/templates/template';
 import {ValueView} from '../../shared/ui/values';
 import {TraceEffectRun, TraceEventTrigger, TraceStoreChange} from '../../types.h';
 
@@ -13,45 +14,49 @@ export function Trace() {
   const [isTraceEnabled, traces] = useUnit([$isTraceEnabled, $traces]);
 
   return (
-    <>
-      <Actions>
-        <Button onClick={() => traceCleared()}>Clear</Button>
-        <Show
-          when={!isTraceEnabled()}
-          fallback={<PauseButton onClick={() => traceEnableToggled()} />}
-        >
-          <RunButton onClick={() => traceEnableToggled()} />
-        </Show>
-      </Actions>
-      <TraceList>
-        <For each={traces()}>
-          {(trace) => (
-            <>
-              <TraceTitle>
-                <ValueView value={new Date(trace.time)} />
-              </TraceTitle>
-              <For each={trace.traces}>
-                {(line) => (
-                  <Node>
-                    <Switch>
-                      <Match when={line.type === 'event'}>
-                        <TraceEvent trace={line as TraceEventTrigger} />
-                      </Match>
-                      <Match when={line.type === 'store'}>
-                        <TraceStore trace={line as TraceStoreChange} />
-                      </Match>
-                      <Match when={line.type === 'effect'}>
-                        <TraceEffect trace={line as TraceEffectRun} />
-                      </Match>
-                    </Switch>
-                  </Node>
-                )}
-              </For>
-            </>
-          )}
-        </For>
-      </TraceList>
-    </>
+    <TabTemplate
+      header={
+        <Actions>
+          <Button onClick={() => traceCleared()}>Clear</Button>
+          <Show
+            when={!isTraceEnabled()}
+            fallback={<PauseButton onClick={() => traceEnableToggled()} />}
+          >
+            <RunButton onClick={() => traceEnableToggled()} />
+          </Show>
+        </Actions>
+      }
+      content={
+        <TraceList>
+          <For each={traces()}>
+            {(trace) => (
+              <>
+                <TraceTitle>
+                  <ValueView value={new Date(trace.time)} />
+                </TraceTitle>
+                <For each={trace.traces}>
+                  {(line) => (
+                    <Node>
+                      <Switch>
+                        <Match when={line.type === 'event'}>
+                          <TraceEvent trace={line as TraceEventTrigger} />
+                        </Match>
+                        <Match when={line.type === 'store'}>
+                          <TraceStore trace={line as TraceStoreChange} />
+                        </Match>
+                        <Match when={line.type === 'effect'}>
+                          <TraceEffect trace={line as TraceEffectRun} />
+                        </Match>
+                      </Switch>
+                    </Node>
+                  )}
+                </For>
+              </>
+            )}
+          </For>
+        </TraceList>
+      }
+    />
   );
 }
 
@@ -108,8 +113,8 @@ function TraceEffect(props: {trace: TraceEffectRun}) {
 
 const Actions = styled.div`
   display: flex;
+  gap: 0.5rem;
   flex-shrink: 0;
-  padding: 1rem;
 `;
 
 const TraceList = styled.ul`
@@ -118,7 +123,6 @@ const TraceList = styled.ul`
   flex-grow: 1;
   margin: 0 0;
   padding: 0 0;
-  overflow-x: auto;
 
   list-style-type: none;
 `;
