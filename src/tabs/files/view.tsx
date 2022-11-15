@@ -1,6 +1,13 @@
-import { useUnit } from 'effector-solid';
-import { For, Show } from 'solid-js';
-import { styled } from 'solid-styled-components';
+import {useUnit} from 'effector-solid';
+import {For, Show} from 'solid-js';
+import {styled} from 'solid-styled-components';
+
+import {EffectView} from '../../entities/effects';
+import {EventView} from '../../entities/events';
+import {StoreView} from '../../entities/stores';
+import {Button} from '../../shared/ui/button';
+import {Search, Select} from '../../shared/ui/forms';
+
 import {
   $EffectFromFile,
   $EventsFromFile,
@@ -13,11 +20,6 @@ import {
   fileSelected,
   filterChanged,
 } from './model';
-import { StoreView } from '../../entities/stores';
-import { EventView } from '../../entities/events';
-import { Button } from '../../shared/ui/button';
-import { Select, Search } from '../../shared/ui/forms';
-import { EffectView } from '../../entities/effects';
 
 export function Files() {
   const [selectedFile, storesFromFile, eventsFromFile, effectFromFile, filter] = useUnit([

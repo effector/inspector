@@ -1,15 +1,16 @@
-import { useUnit } from 'effector-solid';
-import { styled } from 'solid-styled-components';
-import { combine, createEvent, createStore } from 'effector';
-import { For } from 'solid-js';
-import { Search } from '../../shared/ui/forms';
-import { StoreView } from '../../entities/stores';
-import { $stores } from '../../entities/stores/model';
+import {combine, createEvent, createStore} from 'effector';
+import {useUnit} from 'effector-solid';
+import {For} from 'solid-js';
+import {styled} from 'solid-styled-components';
 
-const $list = $stores.map((map) => Object.entries(map).map(([name, meta]) => ({ name, ...meta })));
+import {StoreView} from '../../entities/stores';
+import {$stores} from '../../entities/stores/model';
+import {Search} from '../../shared/ui/forms';
+
+const $list = $stores.map((map) => Object.entries(map).map(([name, meta]) => ({name, ...meta})));
 
 const filterChanged = createEvent<string>();
-const $filter = createStore('', { serialize: 'ignore' });
+const $filter = createStore('', {serialize: 'ignore'});
 $filter.on(filterChanged, (_, filter) => filter);
 
 const $filteredList = combine($list, $filter, (list, searchWord) =>

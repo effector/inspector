@@ -1,1 +1,1 @@
-export { Files } from './view';
+export {Files} from './view';

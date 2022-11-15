@@ -1,13 +1,13 @@
-import { combine, createEffect, createEvent, createStore, guard } from 'effector';
+import {combine, createEffect, createEvent, createStore, guard} from 'effector';
 
-import { Kind, LogMeta } from '../../types.h';
-import { createJsonSetting, createSetting } from '../../shared/lib/setting';
+import {createJsonSetting, createSetting} from '../../shared/lib/setting';
+import {Kind, LogMeta} from '../../types.h';
 
 const log = createEvent<LogMeta>();
 export const isLogEnabledToggle = createEvent();
 export const logCleared = createEvent();
 
-export const $logs = createStore<LogMeta[]>([], { serialize: 'ignore' });
+export const $logs = createStore<LogMeta[]>([], {serialize: 'ignore'});
 const logsSetting = createJsonSetting('logs-enabled', false, 'session');
 export const $isLogEnabled = createStore(logsSetting.read());
 $isLogEnabled.watch(logsSetting.write);
@@ -18,7 +18,7 @@ let id = 1e3;
 const nextId = () => (++id).toString(36);
 
 export const createLogRecordFx = createEffect<CreateRecord, LogMeta>({
-  handler({ name, kind, payload }) {
+  handler({name, kind, payload}) {
     return {
       id: nextId(),
       kind,
@@ -43,8 +43,8 @@ const defaultKinds: Kind[] = ['event', 'store'];
 export const kindSetting = createJsonSetting<Kind[]>('filter-kinds', defaultKinds);
 export const textSetting = createSetting('filter-text', '');
 export const filterChanged = createEvent<string>();
-export const $kinds = createStore(kindSetting.read(), { serialize: 'ignore' });
-export const $filterText = createStore(textSetting.read(), { serialize: 'ignore' });
+export const $kinds = createStore(kindSetting.read(), {serialize: 'ignore'});
+export const $filterText = createStore(textSetting.read(), {serialize: 'ignore'});
 
 $filterText.on(filterChanged, (_, filterText) => filterText);
 

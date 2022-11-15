@@ -1,4 +1,4 @@
-import { createEvent, createStore } from 'effector';
+import {createEvent, createStore} from 'effector';
 
 type Options = {
   trimDomain?: string;

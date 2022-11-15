@@ -1,8 +1,8 @@
-import { useUnit } from 'effector-solid';
-import { For } from 'solid-js';
+import {useUnit} from 'effector-solid';
+import {For} from 'solid-js';
 
-import { EventView } from '../../entities/events';
-import { $events } from '../../entities/events/model';
+import {EventView} from '../../entities/events';
+import {$events} from '../../entities/events/model';
 
 const $eventsNames = $events.map((events) => Object.keys(events));
 

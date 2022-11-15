@@ -1,13 +1,13 @@
-import { combine, createEvent, createStore } from 'effector';
+import {combine, createEvent, createStore} from 'effector';
 
-import { $stores } from '../../entities/stores/model';
-import { $files } from '../../entities/files';
+import {$files} from '../../entities/files';
+import {$stores} from '../../entities/stores/model';
 
 export const fileSelected = createEvent<string>();
 export const fileCleanup = createEvent();
 export const filterChanged = createEvent<string>();
 
-export const $selectedFile = createStore('', { serialize: 'ignore' });
+export const $selectedFile = createStore('', {serialize: 'ignore'});
 export const $filter = createStore('');
 
 export const $filesList = $files.map((files) => Object.keys(files));
@@ -22,19 +22,19 @@ export const $storesFromFile = combine($selectedFile, $files, (current, files) =
   if (current === '' || !files[current]) {
     return [];
   }
-  return files[current].filter(({ kind }) => kind === 'store').map(({ name }) => name);
+  return files[current].filter(({kind}) => kind === 'store').map(({name}) => name);
 });
 
 export const $EventsFromFile = combine($selectedFile, $files, (current, files) => {
   if (current === '' || !files[current]) {
     return [];
   }
-  return files[current].filter(({ kind }) => kind === 'event').map(({ name }) => name);
+  return files[current].filter(({kind}) => kind === 'event').map(({name}) => name);
 });
 
 export const $EffectFromFile = combine($selectedFile, $files, (current, files) => {
   if (current === '' || !files[current]) {
     return [];
   }
-  return files[current].filter(({ kind }) => kind === 'effect').map(({ name }) => name);
+  return files[current].filter(({kind}) => kind === 'effect').map(({name}) => name);
 });

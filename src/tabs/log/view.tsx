@@ -1,8 +1,12 @@
-import { For, Show } from 'solid-js';
-import { useUnit } from 'effector-solid';
-import { styled } from 'solid-styled-components';
+import {useUnit} from 'effector-solid';
+import {For, Show} from 'solid-js';
+import {styled} from 'solid-styled-components';
 
-import { Button, PauseButton, RunButton } from '../../shared/ui/button';
+import {UnitContent} from '../../entities/units';
+import {Button, PauseButton, RunButton} from '../../shared/ui/button';
+import {Checkbox, Input} from '../../shared/ui/forms';
+import {ValueView} from '../../shared/ui/values';
+
 import {
   $filteredLogs,
   $filterText,
@@ -13,10 +17,6 @@ import {
   logCleared,
   toggleKind,
 } from './model';
-
-import { ValueView } from '../../shared/ui/values';
-import { UnitContent } from '../../entities/units';
-import { Checkbox, Input } from '../../shared/ui/forms';
 
 export function Logs() {
   const [isLogEnabled, logs, filterText, kinds] = useUnit([

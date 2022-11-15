@@ -1,4 +1,5 @@
-import { createStore } from 'effector';
-import { StoreMeta } from '../../types.h';
+import {createStore} from 'effector';
 
-export const $stores = createStore<Record<string, StoreMeta>>({}, { serialize: 'ignore' });
+import {StoreMeta} from '../../types.h';
+
+export const $stores = createStore<Record<string, StoreMeta>>({}, {serialize: 'ignore'});

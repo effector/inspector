@@ -1,4 +1,4 @@
-import { Store, Event, Effect } from 'effector';
+import {Effect, Event, Store} from 'effector';
 
 export interface Options {
   trimDomain?: string;
@@ -86,4 +86,4 @@ export type TraceEffectRun = {
 };
 
 export type Trace = TraceStoreChange | TraceEventTrigger | TraceEffectRun;
-export type StackTrace = { time: number; traces: Trace[] };
+export type StackTrace = {time: number; traces: Trace[]};

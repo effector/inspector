@@ -1,4 +1,4 @@
-import { styled } from 'solid-styled-components';
+import {styled} from 'solid-styled-components';
 
 export const UnitName = styled.pre`
   display: flex;

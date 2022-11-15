@@ -1,11 +1,13 @@
-import { styled } from 'solid-styled-components';
-import { $isTraceEnabled, $traces, traceCleared, traceEnableToggled } from './model';
-import { useUnit } from 'effector-solid';
-import { For, Match, Show, Switch } from 'solid-js';
-import { TraceEffectRun, TraceEventTrigger, TraceStoreChange } from '../../types.h';
-import { UnitContent } from '../../entities/units';
-import { ValueView } from '../../shared/ui/values';
-import { Button, PauseButton, RunButton } from '../../shared/ui/button';
+import {useUnit} from 'effector-solid';
+import {For, Match, Show, Switch} from 'solid-js';
+import {styled} from 'solid-styled-components';
+
+import {UnitContent} from '../../entities/units';
+import {Button, PauseButton, RunButton} from '../../shared/ui/button';
+import {ValueView} from '../../shared/ui/values';
+import {TraceEffectRun, TraceEventTrigger, TraceStoreChange} from '../../types.h';
+
+import {$isTraceEnabled, $traces, traceCleared, traceEnableToggled} from './model';
 
 export function Trace() {
   const [isTraceEnabled, traces] = useUnit([$isTraceEnabled, $traces]);
@@ -53,7 +55,7 @@ export function Trace() {
   );
 }
 
-function TraceEvent(props: { trace: TraceEventTrigger }) {
+function TraceEvent(props: {trace: TraceEventTrigger}) {
   return (
     <>
       <TraceLine>
@@ -69,7 +71,7 @@ function TraceEvent(props: { trace: TraceEventTrigger }) {
   );
 }
 
-function TraceStore(props: { trace: TraceStoreChange }) {
+function TraceStore(props: {trace: TraceStoreChange}) {
   return (
     <>
       <TraceLine>
@@ -89,7 +91,7 @@ function TraceStore(props: { trace: TraceStoreChange }) {
   );
 }
 
-function TraceEffect(props: { trace: TraceEffectRun }) {
+function TraceEffect(props: {trace: TraceEffectRun}) {
   return (
     <>
       <TraceLine>

@@ -1,5 +1,5 @@
-import { styled } from 'solid-styled-components';
-import { createSignal, For } from 'solid-js';
+import {createSignal, For} from 'solid-js';
+import {styled} from 'solid-styled-components';
 
 const typeRegexp = /\[object ([\w\s]+)\]/;
 
@@ -68,7 +68,7 @@ export const ListItem = styled.span`
   }
 `;
 
-export function ValueView(props: { value: unknown; opened?: boolean }) {
+export function ValueView(props: {value: unknown; opened?: boolean}) {
   const type = getType(props.value);
 
   const [opened, setOpened] = createSignal(false);

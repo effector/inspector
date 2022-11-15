@@ -1,4 +1,4 @@
-import { createEvent } from 'effector';
+import {createEvent} from 'effector';
 
 type StorageType = 'local' | 'session';
 
@@ -27,7 +27,11 @@ export function createSetting(name: string, defaultValue: string) {
   };
 }
 
-export function createJsonSetting<T>(name: string, defaultValue: T, storageType: StorageType = 'local') {
+export function createJsonSetting<T>(
+  name: string,
+  defaultValue: T,
+  storageType: StorageType = 'local',
+) {
   const save = createEvent<T>();
   save.watch((value) => write(name, JSON.stringify(value), storageType));
   return {

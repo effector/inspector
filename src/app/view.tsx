@@ -1,18 +1,17 @@
-import { createEvent, createStore, sample } from 'effector';
-import { For, Match, Show, Switch } from 'solid-js';
-import { useUnit } from 'effector-solid';
-import { createGlobalStyles, styled } from 'solid-styled-components';
+import {createEvent, createStore, sample} from 'effector';
+import {useUnit} from 'effector-solid';
+import {For, Match, Show, Switch} from 'solid-js';
+import {createGlobalStyles, styled} from 'solid-styled-components';
 
-import { createJsonSetting, createSetting } from '../shared/lib/setting';
-import { ThemeProvider } from '../shared/ui/styles/global';
-
-import { Files } from '../tabs/files';
-import { Stores } from '../tabs/stores';
-import { Effect } from '../tabs/effects';
-import { Events } from '../tabs/events';
-import { Trace } from '../tabs/trace/view';
-import { Logs } from '../tabs/log';
-import { useDragable } from '../shared/lib/use-dragable';
+import {createJsonSetting, createSetting} from '../shared/lib/setting';
+import {useDragable} from '../shared/lib/use-dragable';
+import {ThemeProvider} from '../shared/ui/styles/global';
+import {Effect} from '../tabs/effects';
+import {Events} from '../tabs/events';
+import {Files} from '../tabs/files';
+import {Logs} from '../tabs/log';
+import {Stores} from '../tabs/stores';
+import {Trace} from '../tabs/trace/view';
 
 const Tabs = {
   files: {
@@ -58,7 +57,7 @@ const KEY_B = 2;
 const KEY_L = 12;
 
 const visibleSettings = createJsonSetting('visible', false);
-const $isVisible = createStore(visibleSettings.read(), { serialize: 'ignore' });
+const $isVisible = createStore(visibleSettings.read(), {serialize: 'ignore'});
 const togglePressed = createEvent();
 const clearPressed = createEvent();
 const showInspector = createEvent();
@@ -83,7 +82,7 @@ const widthChanged = createEvent<number>();
 const dragStopped = createEvent();
 
 const widthSetting = createJsonSetting('width', 736);
-const $width = createStore(widthSetting.read(), { serialize: 'ignore' });
+const $width = createStore(widthSetting.read(), {serialize: 'ignore'});
 
 $width.on(widthChanged, (width, change) => width - change);
 
@@ -97,7 +96,7 @@ export function App() {
   const [currentTab, isVisible, width] = useUnit([$tab, $isVisible, $width]);
 
   const [onDown, isDrag] = useDragable({
-    onMove({ shift }) {
+    onMove({shift}) {
       widthChanged(shift[0]);
     },
     onUp: dragStopped,
@@ -109,7 +108,7 @@ export function App() {
       <BodyCursor isDrag={isDrag()} />
 
       <Show when={isVisible()}>
-        <InspectorRoot style={{ width: `${width()}px` }}>
+        <InspectorRoot style={{width: `${width()}px`}}>
           <DragHandler onMouseDown={onDown}>...</DragHandler>
           <TabsContainer>
             <TabsHeader>
@@ -264,8 +263,8 @@ const InspectorRoot = styled.div`
 `;
 
 // @ts-ignore
-const BodyCursor = createGlobalStyles<{ isDrag: boolean }>`
+const BodyCursor = createGlobalStyles<{isDrag: boolean}>`
   body {
-    cursor: ${(props: { isDrag: boolean }) => (props.isDrag ? 'col-resize' : 'auto')};
+    cursor: ${(props: {isDrag: boolean}) => (props.isDrag ? 'col-resize' : 'auto')};
   }
 `;

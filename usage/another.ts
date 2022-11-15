@@ -1,4 +1,4 @@
-import { createStore } from 'effector';
+import {createStore} from 'effector';
 
 export const $fn1 = createStore(function demo() {
   /* */
@@ -16,7 +16,7 @@ export const $setOfFns = createStore({
   ]),
 });
 export const $args = createStore(
-  (function(a, b, c, d) {
+  (function (a, b, c, d) {
     return arguments; // eslint-disable-line prefer-rest-params
   })(1, 5, {}, () => 0),
 );

@@ -1,4 +1,5 @@
-import { createDomain, createEffect, createEvent, createStore } from 'effector';
+import {createDomain, createEffect, createEvent, createStore} from 'effector';
+
 import * as inspector from '../src';
 
 import {
@@ -10,19 +11,18 @@ import {
   $fn2,
   $fn3,
   $setOfFns,
-  $window,
-  // @ts-ignore
+  $window, // @ts-ignore
 } from './another';
 
 const emptyEvent = createEvent();
-const event = createEvent<{ count: number }>();
+const event = createEvent<{count: number}>();
 const just = createEvent<string>();
 
 const $foo = createStore('hello');
 const $bar = $foo.map((foo) => foo.length);
 
 const $deep = createStore({
-  demo: { baz: 1, baf: 'hello', naf: false },
+  demo: {baz: 1, baf: 'hello', naf: false},
 });
 
 const veryRootDomain = createDomain();
@@ -64,15 +64,9 @@ const $mapWrapped = createStore({
   ]),
 });
 
-const $setInMap = createStore(
-  new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]),
-);
+const $setInMap = createStore(new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]));
 
-const $mapInSet = createStore(
-  new Set([
-    new Map([['hello', new Set<any>(['b', 12])]]),
-  ]),
-);
+const $mapInSet = createStore(new Set([new Map([['hello', new Set<any>(['b', 12])]])]));
 
 const $array = createStore([
   false,
@@ -81,16 +75,14 @@ const $array = createStore([
   'hello',
   BigInt(720587) * BigInt(44),
   new Map([['hello', new Set<any>(['a', 2, false, null, undefined])]]),
-  new Set([
-    new Map([['hello', new Set<any>(['b', 12])]]),
-  ]),
+  new Set([new Map([['hello', new Set<any>(['b', 12])]])]),
   {
     ref: new Set(['a', 2, false, null, undefined, new Date()]),
   },
 ]);
 
 const $uint = createStore(new Uint32Array([0, 5, 1, 2]));
-const $weakSet = createStore(new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }]));
+const $weakSet = createStore(new WeakSet([{a: 1}, {b: 2}, {c: 3}]));
 
 const $iterators = createStore([
   new Set(['a', 2, false, null, undefined, new Date()]).entries(),
@@ -133,7 +125,7 @@ inspector.addEvent(event);
 inspector.addEvent(just);
 inspector.addStore($args);
 inspector.addStore($array);
-inspector.addStore($bar, { mapped: true });
+inspector.addStore($bar, {mapped: true});
 inspector.addStore($bigint);
 inspector.addStore($bool);
 inspector.addStore($bool2);
@@ -174,10 +166,10 @@ inspector.addStore(trimDomainStore);
 inspector.addEvent(trimDomainEvent);
 inspector.addEffect(trimDomainEffect);
 
-inspector.createInspector({ visible: true, trimDomain: 'trimDomain' });
+inspector.createInspector({visible: true, trimDomain: 'trimDomain'});
 let incrementor = 0;
 setInterval(() => emptyEvent(), 2000);
-setInterval(() => event({ count: incrementor++ }), 2000);
+setInterval(() => event({count: incrementor++}), 2000);
 setTimeout(() => just('hello'), 0);
 setInterval(() => {
   exampleFx();

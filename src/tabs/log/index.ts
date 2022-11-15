@@ -1,2 +1,2 @@
-export { Logs } from './view';
-export { createLogRecordFx } from './model';
+export {Logs} from './view';
+export {createLogRecordFx} from './model';

@@ -1,4 +1,4 @@
-import { Accessor, createSignal } from 'solid-js';
+import {Accessor, createSignal} from 'solid-js';
 
 export function useDragable(params: {
   onDown?: DownCallback;
@@ -49,7 +49,7 @@ type Vector = [number, number];
 type Point = Vector;
 
 type DownCallback = (start: Point) => void;
-type MoveCallback = (param: { coords: Point; shift: Vector }) => void;
+type MoveCallback = (param: {coords: Point; shift: Vector}) => void;
 
 function getPointFromEvent(event: MouseEvent, element: Element): Point {
   const clientRect = element.getBoundingClientRect();

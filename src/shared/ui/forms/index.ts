@@ -1,6 +1,6 @@
-import { styled } from 'solid-styled-components';
+import {styled} from 'solid-styled-components';
 
-export { Checkbox } from './checkbox';
+export {Checkbox} from './checkbox';
 
 export const Input = styled.input`
   display: flex;

@@ -1,12 +1,12 @@
-import { useStoreMap } from 'effector-solid';
+import {useStoreMap} from 'effector-solid';
 
-import { Unit, UnitContent, UnitName } from '../units';
-import { Number, String } from '../../shared/ui/values';
-import { useTrimDomain } from '../../shared/lib/domains';
+import {useTrimDomain} from '../../shared/lib/domains';
+import {Number, String} from '../../shared/ui/values';
+import {Unit, UnitContent, UnitName} from '../units';
 
-import { $effects } from './model';
+import {$effects} from './model';
 
-export function EffectView(props: { id: string }) {
+export function EffectView(props: {id: string}) {
   const effect = useStoreMap($effects, (effects) => effects[props.id]);
   const displayName = useTrimDomain(effect().name);
 

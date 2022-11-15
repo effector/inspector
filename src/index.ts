@@ -11,26 +11,26 @@ import {
   Store,
   Unit,
 } from 'effector';
-import { render } from 'solid-js/web';
+import {render} from 'solid-js/web';
 
-import { EffectCreator, EventCreator, Inspector, Kind, Options, StoreCreator } from './types.h';
-import { $stores } from './entities/stores/model';
-import { $effects } from './entities/effects/model';
-import { $events } from './entities/events/model';
-import { $files } from './entities/files';
-import { setOptions } from './shared/configs/options';
-import { traceEffectRun, traceEventTrigger, traceStoreChange } from './tabs/trace';
-import { createLogRecordFx } from './tabs/log';
-import { App } from './app';
+import {App} from './app';
+import {$effects} from './entities/effects/model';
+import {$events} from './entities/events/model';
+import {$files} from './entities/files';
+import {$stores} from './entities/stores/model';
+import {setOptions} from './shared/configs/options';
+import {createLogRecordFx} from './tabs/log';
+import {traceEffectRun, traceEventTrigger, traceStoreChange} from './tabs/trace';
+import {EffectCreator, EventCreator, Inspector, Kind, Options, StoreCreator} from './types.h';
 
 const storeAdd = createEvent<StoreCreator>();
-const storeUpdated = createEvent<{ name: string; value: any }>();
+const storeUpdated = createEvent<{name: string; value: any}>();
 
 const eventAdd = createEvent<EventCreator>();
-const eventTriggered = createEvent<{ name: string; params: any }>();
+const eventTriggered = createEvent<{name: string; params: any}>();
 
 const effectAdd = createEvent<EffectCreator>();
-const effectTriggered = createEvent<{ sid: string }>();
+const effectTriggered = createEvent<{sid: string}>();
 
 $stores
   .on(storeAdd, (map, payload) => ({
@@ -40,20 +40,20 @@ $stores
       mapped: payload.mapped,
     },
   }))
-  .on(storeUpdated, (map, { name, value }) => {
+  .on(storeUpdated, (map, {name, value}) => {
     // should not change the order of fields
-    map[name] = { ...map[name], value };
-    return { ...map };
+    map[name] = {...map[name], value};
+    return {...map};
   });
 
-$files.on(storeAdd, (map, { name, file }) => {
+$files.on(storeAdd, (map, {name, file}) => {
   if (file) {
     if (map[file]) {
       const list = map[file];
-      return { ...map, [file]: [...list, { kind: 'store', name }] };
+      return {...map, [file]: [...list, {kind: 'store', name}]};
     }
 
-    return { ...map, [file]: [{ kind: 'store', name }] };
+    return {...map, [file]: [{kind: 'store', name}]};
   }
 
   return map;
@@ -67,24 +67,24 @@ $events
       history: [],
     },
   }))
-  .on(eventTriggered, (map, { name, params }) => {
+  .on(eventTriggered, (map, {name, params}) => {
     // should not change the order of fields
     const safeParams = params === undefined ? undefined : JSON.parse(JSON.stringify(params));
     map[name] = {
       ...map[name],
       history: [safeParams, ...map[name].history],
     };
-    return { ...map };
+    return {...map};
   });
 
-$files.on(eventAdd, (map, { name, file }) => {
+$files.on(eventAdd, (map, {name, file}) => {
   if (file) {
     if (map[file]) {
       const list = map[file];
-      return { ...map, [file]: [...list, { kind: 'event', name }] };
+      return {...map, [file]: [...list, {kind: 'event', name}]};
     }
 
-    return { ...map, [file]: [{ kind: 'event', name }] };
+    return {...map, [file]: [{kind: 'event', name}]};
   }
 
   return map;
@@ -99,30 +99,30 @@ $effects
       inFlight: effect.effect.inFlight.getState(),
     },
   }))
-  .on(effectTriggered, (map, { sid }) => {
+  .on(effectTriggered, (map, {sid}) => {
     const fx = map[sid];
     map[sid] = {
       ...fx,
       inFlight: fx.effect.inFlight.getState(),
     };
-    return { ...map };
+    return {...map};
   });
 
-$files.on(effectAdd, (map, { sid: name, file }) => {
+$files.on(effectAdd, (map, {sid: name, file}) => {
   if (file) {
     if (map[file]) {
       const list = map[file];
-      return { ...map, [file]: [...list, { kind: 'effect', name }] };
+      return {...map, [file]: [...list, {kind: 'effect', name}]};
     }
 
-    return { ...map, [file]: [{ kind: 'effect', name }] };
+    return {...map, [file]: [{kind: 'effect', name}]};
   }
   return map;
 });
 
 forward({
   from: eventTriggered,
-  to: createLogRecordFx.prepend(({ name, params }) => ({
+  to: createLogRecordFx.prepend(({name, params}) => ({
     kind: 'event',
     name,
     payload: params,
@@ -131,7 +131,7 @@ forward({
 
 forward({
   from: storeUpdated,
-  to: createLogRecordFx.prepend(({ name, value }) => ({
+  to: createLogRecordFx.prepend(({name, value}) => ({
     kind: 'store',
     name,
     payload: value,
@@ -147,7 +147,7 @@ function traceEffect(effect: Effect<any, any, any>) {
   graphite(effect).seq.unshift(
     step.compute({
       fn(data, scope, stack) {
-        traceEffectRun({ type: 'effect', name, argument: data?.param });
+        traceEffectRun({type: 'effect', name, argument: data?.param});
         return data;
       },
     }),
@@ -160,7 +160,7 @@ function traceEvent(event: Event<any>, name = createName(event)) {
   graphite(event).seq.unshift(
     step.compute({
       fn(data, scope, stack) {
-        traceEventTrigger({ type: 'event', name, argument: data });
+        traceEventTrigger({type: 'event', name, argument: data});
         return data;
       },
     }),
@@ -187,8 +187,8 @@ function traceStore($store: Store<any>) {
 
   createNode({
     parent: [$store],
-    meta: { op: 'watch' },
-    family: { owners: $store },
+    meta: {op: 'watch'},
+    family: {owners: $store},
     regional: true,
     node: [
       step.run({
@@ -226,10 +226,7 @@ function getLocFile(unit: Unit<any>): string | undefined {
   return (unit as any).defaultConfig?.loc?.file;
 }
 
-export function addStore(
-  store: Store<any>,
-  options: { mapped?: boolean; name?: string } = {},
-): void {
+export function addStore(store: Store<any>, options: {mapped?: boolean; name?: string} = {}): void {
   const name = options.name || createName(store);
 
   storeAdd({
@@ -242,15 +239,12 @@ export function addStore(
   traceStore(store);
 
   forward({
-    from: store.updates.map((value) => ({ name, value })),
+    from: store.updates.map((value) => ({name, value})),
     to: storeUpdated,
   });
 }
 
-export function addEvent(
-  event: Event<any>,
-  options: { mapped?: boolean; name?: string } = {},
-): void {
+export function addEvent(event: Event<any>, options: {mapped?: boolean; name?: string} = {}): void {
   const name = options.name || createName(event);
 
   eventAdd({
@@ -273,7 +267,7 @@ export function addEvent(
 
 export function addEffect(
   effect: Effect<any, any, any>,
-  options: { attached?: boolean; sid?: string } = {},
+  options: {attached?: boolean; sid?: string} = {},
 ) {
   const name = createName(effect);
   const sid = options.sid || effect.sid || name;
@@ -290,7 +284,7 @@ export function addEffect(
 
   forward({
     from: [effect, effect.finally],
-    to: effectTriggered.prepend(() => ({ sid })),
+    to: effectTriggered.prepend(() => ({sid})),
   });
 
   const effectRun = effect.map((params) => ({
@@ -317,6 +311,6 @@ export function addEffect(
   });
 }
 
-function createName<T extends { compositeName: CompositeName }>(unit: T): string {
+function createName<T extends {compositeName: CompositeName}>(unit: T): string {
   return unit.compositeName.path.join('/');
 }

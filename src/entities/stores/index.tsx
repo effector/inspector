@@ -1,10 +1,12 @@
-import { useStoreMap } from 'effector-solid';
-import { Unit, UnitContent, UnitName } from '../units';
-import { ValueView } from '../../shared/ui/values';
-import { $stores } from './model';
-import { useTrimDomain } from '../../shared/lib/domains';
+import {useStoreMap} from 'effector-solid';
 
-export function StoreView(props: { name: string }) {
+import {useTrimDomain} from '../../shared/lib/domains';
+import {ValueView} from '../../shared/ui/values';
+import {Unit, UnitContent, UnitName} from '../units';
+
+import {$stores} from './model';
+
+export function StoreView(props: {name: string}) {
   const store = useStoreMap($stores, (stores) => stores[props.name]);
   const displayName = useTrimDomain(props.name);
 

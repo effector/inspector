@@ -1,6 +1,6 @@
-import { styled } from 'solid-styled-components';
+import {styled} from 'solid-styled-components';
 
-export function Checkbox(props: { value: boolean; onClick: () => void; label: string }) {
+export function Checkbox(props: {value: boolean; onClick: () => void; label: string}) {
   return (
     <Label>
       <input type="checkbox" checked={props.value} onClick={() => props.onClick()} />

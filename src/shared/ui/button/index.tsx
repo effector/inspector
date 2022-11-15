@@ -1,4 +1,4 @@
-import { styled } from 'solid-styled-components';
+import {styled} from 'solid-styled-components';
 
 export const Button = styled.button`
   margin: 0;
@@ -24,10 +24,10 @@ export const Button = styled.button`
 const playSymbol = String.fromCharCode(parseInt('25B6', 16));
 const pauseSymbol = String.fromCharCode(parseInt('25A0', 16));
 
-export function RunButton(props: { onClick: () => void }) {
+export function RunButton(props: {onClick: () => void}) {
   return <Button onClick={props.onClick}>{playSymbol} Run</Button>;
 }
 
-export function PauseButton(props: { onClick: () => void }) {
+export function PauseButton(props: {onClick: () => void}) {
   return <Button onClick={props.onClick}>{pauseSymbol} Pause</Button>;
 }

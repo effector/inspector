@@ -1,11 +1,11 @@
-import { styled } from "solid-styled-components";
-import { ParentProps } from 'solid-js';
+import {ParentProps} from 'solid-js';
+import {styled} from 'solid-styled-components';
 
 export function ThemeProvider(props: ParentProps<{}>) {
-  return <Styles>{props.children}</Styles>
+  return <Styles>{props.children}</Styles>;
 }
 
-const Styles = styled("div")`
+const Styles = styled('div')`
   --primary: #ff8c00;
   --primary-light: #ffb152;
   --primary-dark: #c86e00;

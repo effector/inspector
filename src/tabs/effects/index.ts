@@ -1,1 +1,1 @@
-export { Effect } from './view';
+export {Effect} from './view';
