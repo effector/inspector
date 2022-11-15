@@ -10,7 +10,6 @@ specifiers:
   '@rollup/plugin-commonjs': ^23.0.2
   '@rollup/plugin-node-resolve': ^15.0.1
   '@rollup/plugin-terser': ^0.1.0
-  '@rollup/plugin-typescript': ^9.0.2
   '@types/babel__core': ^7.1.20
   '@types/node': ^18.11.9
   '@typescript-eslint/eslint-plugin': ^2.16.0
@@ -28,6 +27,7 @@ specifiers:
   lint-staged: ^10.5.4
   prettier: ^2.7.1
   rollup: ^3.3.0
+  rollup-plugin-typescript2: ^0.34.1
   solid-js: ^1.6.2
   solid-styled-components: ^0.28.5
   stylelint: ^14.15.0
@@ -47,7 +47,6 @@ devDependencies:
   '@rollup/plugin-commonjs': 23.0.2_rollup@3.3.0
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.3.0
   '@rollup/plugin-terser': 0.1.0_rollup@3.3.0
-  '@rollup/plugin-typescript': 9.0.2_aoc4guvlpr5bfeyf2nus4ubkpu
   '@types/babel__core': 7.1.20
   '@types/node': 18.11.9
   '@typescript-eslint/eslint-plugin': 2.34.0_izpcerxjnbrrlhffcttpz7zrma
@@ -65,6 +64,7 @@ devDependencies:
   lint-staged: 10.5.4
   prettier: 2.7.1
   rollup: 3.3.0
+  rollup-plugin-typescript2: 0.34.1_aoc4guvlpr5bfeyf2nus4ubkpu
   solid-js: 1.6.2
   solid-styled-components: 0.28.5_solid-js@1.6.2
   stylelint: 14.15.0
@@ -1630,23 +1630,12 @@ packages:
       terser: 5.15.1
     dev: true
 
-  /@rollup/plugin-typescript/9.0.2_aoc4guvlpr5bfeyf2nus4ubkpu:
-    resolution: {integrity: sha512-/sS93vmHUMjzDUsl5scNQr1mUlNE1QjBBvOhmRwJCH8k2RRhDIm3c977B3wdu3t3Ap17W6dDeXP3hj1P1Un1bA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
+  /@rollup/pluginutils/4.2.1:
+    resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
+    engines: {node: '>= 8.0.0'}
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.3.0
-      resolve: 1.22.1
-      rollup: 3.3.0
-      typescript: 4.8.4
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
     dev: true
 
   /@rollup/pluginutils/5.0.2_rollup@3.3.0:
@@ -3541,6 +3530,15 @@ packages:
       path-exists: 3.0.0
     dev: true
 
+  /find-cache-dir/3.3.2:
+    resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
+    engines: {node: '>=8'}
+    dependencies:
+      commondir: 1.0.1
+      make-dir: 3.1.0
+      pkg-dir: 4.2.0
+    dev: true
+
   /find-node-modules/2.0.0:
     resolution: {integrity: sha512-8MWIBRgJi/WpjjfVXumjPKCtmQ10B+fjx6zmSA+770GMJirLhWIzg8l763rhjl9xaeaHbnxPNRQKq2mgMhr+aw==}
     dependencies:
@@ -4793,6 +4791,13 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
+  /make-dir/3.1.0:
+    resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
+    engines: {node: '>=8'}
+    dependencies:
+      semver: 6.3.0
+    dev: true
+
   /make-error/1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
@@ -5397,6 +5402,13 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /pkg-dir/4.2.0:
+    resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      find-up: 4.1.0
+    dev: true
+
   /pkg-up/3.1.0:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
@@ -5966,6 +5978,21 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+    dev: true
+
+  /rollup-plugin-typescript2/0.34.1_aoc4guvlpr5bfeyf2nus4ubkpu:
+    resolution: {integrity: sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw==}
+    peerDependencies:
+      rollup: '>=1.26.3'
+      typescript: '>=2.4.0'
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      find-cache-dir: 3.3.2
+      fs-extra: 10.1.0
+      rollup: 3.3.0
+      semver: 7.3.8
+      tslib: 2.4.1
+      typescript: 4.8.4
     dev: true
 
   /rollup/2.79.1:

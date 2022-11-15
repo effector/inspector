@@ -3,7 +3,7 @@ const pluginResolve = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser');
 const { babel } = require('@rollup/plugin-babel');
 const commonjs = require('@rollup/plugin-commonjs');
-const typescript = require('@rollup/plugin-typescript');
+const typescript = require('rollup-plugin-typescript2');
 const babelConfig = require('./babel.config');
 
 const extensions = ['.tsx', '.ts', '.js', '.json'];
@@ -20,10 +20,9 @@ function createBuild(input, format) {
     plugins: [
       commonjs(),
       pluginResolve({ extensions }),
-      typescript({
-        tsconfig: './tsconfig.json',
-      }),
+      typescript({ useTsconfigDeclarationDir: true }),
       babel({
+        exclude: 'node_modules/**',
         babelHelpers: 'bundled',
         extensions,
         skipPreflightCheck: true,
