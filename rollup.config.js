@@ -1,9 +1,10 @@
-import { resolve } from 'path';
-import pluginResolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import { babel } from '@rollup/plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
+const { resolve } = require('path');
+const pluginResolve = require('@rollup/plugin-node-resolve');
+const terser = require('@rollup/plugin-terser');
+const { babel } = require('@rollup/plugin-babel');
+const commonjs = require('@rollup/plugin-commonjs');
+const typescript = require('@rollup/plugin-typescript');
+const babelConfig = require('./babel.config');
 
 const extensions = ['.tsx', '.ts', '.js', '.json'];
 
@@ -27,7 +28,7 @@ function createBuild(input, format) {
         extensions,
         skipPreflightCheck: true,
         babelrc: false,
-        ...require('./babel.config').generateConfig({
+        ...babelConfig.generateConfig({
           isEsm: format === 'esm',
         }),
       }),
@@ -38,6 +39,6 @@ function createBuild(input, format) {
 const inputs = ['index'];
 const formats = ['cjs', 'esm'];
 
-const config = inputs.map((i) => formats.map((f) => createBuild(i, f))).flat();
+const configs = inputs.map((input) => formats.map((format) => createBuild(input, format))).flat();
 
-export default config;
+module.exports = configs;
