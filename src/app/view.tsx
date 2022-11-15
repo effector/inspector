@@ -1,7 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { For, Match, Show, Switch } from 'solid-js';
 import { useUnit } from 'effector-solid';
-import { styled, createGlobalStyles } from 'solid-styled-components';
+import { createGlobalStyles, styled } from 'solid-styled-components';
 
 import { createJsonSetting, createSetting } from '../shared/lib/setting';
 import { ThemeProvider } from '../shared/ui/styles/global';
@@ -12,7 +12,7 @@ import { Effect } from '../tabs/effects';
 import { Events } from '../tabs/events';
 import { Trace } from '../tabs/trace/view';
 import { Logs } from '../tabs/log';
-import { useDragable } from '../shared/lib/use-dragalbe';
+import { useDragable } from '../shared/lib/use-dragable';
 
 const Tabs = {
   files: {
@@ -198,6 +198,7 @@ const TabsContainer = styled.section`
   flex-flow: column;
   width: 100%;
   border-radius: inherit;
+  box-shadow: var(--shadow);
 `;
 
 export const DragHandler = styled.div`
