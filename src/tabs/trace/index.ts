@@ -7,3 +7,4 @@ export {
   traceCleared,
   traceEnableToggled,
 } from './model';
+export {Trace} from './view';

@@ -11,7 +11,7 @@ import {Events} from '../tabs/events';
 import {Files} from '../tabs/files';
 import {Logs} from '../tabs/log';
 import {Stores} from '../tabs/stores';
-import {Trace} from '../tabs/trace/view';
+import {Trace} from '../tabs/trace';
 
 const Tabs = {
   files: {
