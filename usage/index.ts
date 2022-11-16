@@ -100,6 +100,13 @@ const $promise = createStore(new Promise((resolve) => setTimeout(resolve, 5000))
 const $promiseResolved = createStore(Promise.resolve(1));
 const $promiseRejected = createStore(Promise.reject(1));
 
+const a = {};
+const b = {a};
+// @ts-ignore
+a.b = b;
+
+const $circularObject = createStore(a);
+
 const exampleFx = createEffect({
   handler() {
     return new Promise((resolve) => setTimeout(resolve, 1000));
@@ -161,6 +168,7 @@ inspector.addStore($uint);
 inspector.addStore($weakSet);
 inspector.addStore($window);
 inspector.addStore($anotherNumber);
+inspector.addStore($circularObject);
 
 inspector.addStore(trimDomainStore);
 inspector.addEvent(trimDomainEvent);

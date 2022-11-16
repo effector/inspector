@@ -1,4 +1,4 @@
-import {createSignal, For} from 'solid-js';
+import {createSignal, For, Show} from 'solid-js';
 import {styled} from 'solid-styled-components';
 
 const typeRegexp = /\[object ([\w\s]+)\]/;
@@ -68,13 +68,15 @@ export const ListItem = styled.span`
   }
 `;
 
-export function ValueView(props: {value: unknown; opened?: boolean}) {
+export function ValueView(props: {value: unknown; opened?: boolean; level?: number}) {
   const type = getType(props.value);
+  const level = props.level ?? 0;
 
   const [opened, setOpened] = createSignal(false);
 
   const localOpened = () =>
     props.opened === undefined || props.opened === true ? opened() : false;
+  const openable = () => props.opened === undefined || props.opened === true;
 
   function toggleOpened() {
     setOpened(!opened());
@@ -84,11 +86,14 @@ export function ValueView(props: {value: unknown; opened?: boolean}) {
     return (
       <>
         <span data-opened={localOpened()}>
-          <span onClick={toggleOpened}>{title} [</span>
+          <Openedable data-active={openable()} onClick={toggleOpened}>
+            {title}
+          </Openedable>
+          {' ['}
           <For each={[...value]}>
             {(item) => (
               <ListItem>
-                <ValueView value={item} opened={localOpened()} />
+                <ValueView value={item} opened={localOpened()} level={level + 1} />
               </ListItem>
             )}
           </For>
@@ -129,13 +134,16 @@ export function ValueView(props: {value: unknown; opened?: boolean}) {
       return (
         <>
           <span data-opened={localOpened()}>
-            <span onClick={toggleOpened}>Map {'{'}</span>
+            <Openedable data-active={openable()} onClick={toggleOpened}>
+              Map
+            </Openedable>
+            {' {'}
             <For each={[...Object(value)]}>
               {([key, mapValue]) => (
                 <ListItem>
                   <String>"{key}"</String>
                   <span>{` => `}</span>
-                  <ValueView value={mapValue} opened={localOpened()} />
+                  <ValueView value={mapValue} opened={localOpened()} level={level + 1} />
                 </ListItem>
               )}
             </For>
@@ -146,41 +154,57 @@ export function ValueView(props: {value: unknown; opened?: boolean}) {
     },
     Error: (error: Error) => (
       <span data-opened={localOpened()}>
-        <span onClick={toggleOpened}>
-          {error.name} {'{'}
-        </span>
+        <Openedable data-active={openable()} onClick={toggleOpened}>
+          {error.name}
+        </Openedable>
+        {' {'}
         <ListItem data-hidden="expanded">
           <String>"message" :</String>
-          "<ValueView value={error.message} />"
+          "<ValueView value={error.message} level={level + 1} />"
         </ListItem>
         <ListItem data-hidden="folded">
           <String>"stack" :</String>
-          <ValueView value={error.stack} />
+          <ValueView value={error.stack} level={level + 1} />
         </ListItem>
         <For each={Object.entries(error)}>
           {([key, objValue], index) => (
             <ListItem>
-              <String>"{key}"</String>: <ValueView value={objValue} opened={localOpened()} />
+              <String>"{key}"</String>:{' '}
+              <ValueView value={objValue} opened={localOpened()} level={level + 1} />
             </ListItem>
           )}
         </For>
-        <span>{'}'}</span>
+        {'}'}
       </span>
     ),
     Window: () => <span>Window {'{...}'}</span>,
     __default: (value: object) => (
       <>
         <span data-opened={localOpened()}>
-          <span onClick={toggleOpened}>
-            {type} {'{'}
-          </span>
-          <For each={Object.entries(value)}>
-            {([key, objValue]) => (
-              <ListItem>
-                <String>"{key}"</String>: <ValueView value={objValue} opened={localOpened()} />
-              </ListItem>
-            )}
-          </For>
+          <Openedable
+            data-active={openable() && Object.entries(value).length > 0}
+            onClick={toggleOpened}
+          >
+            {type}
+          </Openedable>
+          {' {'}
+          <Show
+            when={level < 10 || opened()}
+            fallback={
+              <Openedable data-active={openable()} onClick={toggleOpened}>
+                ...
+              </Openedable>
+            }
+          >
+            <For each={Object.entries(value)}>
+              {([key, objValue]) => (
+                <ListItem>
+                  <String>"{key}"</String>:{' '}
+                  <ValueView value={objValue} opened={localOpened()} level={level + 1} />
+                </ListItem>
+              )}
+            </For>
+          </Show>
           {'}'}
         </span>
       </>
@@ -195,3 +219,12 @@ export function ValueView(props: {value: unknown; opened?: boolean}) {
 
   return <>{mapByTypes['__default'](props.value as object)}</>;
 }
+
+const Openedable = styled.span`
+  &[data-active='true'] {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
