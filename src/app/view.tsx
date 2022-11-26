@@ -79,27 +79,58 @@ $isVisible.on(togglePressed, (visible) => !visible).on(showInspector, () => true
 $isVisible.watch(visibleSettings.write);
 
 const widthChanged = createEvent<number>();
-const dragStopped = createEvent();
+const resizeStopped = createEvent();
+const positionChanged = createEvent<{top: number; right: number}>();
+const positionChangedStopped = createEvent();
 
 const widthSetting = createJsonSetting('width', 736);
 const $width = createStore(widthSetting.read(), {serialize: 'ignore'});
 
+const positionSettings = createJsonSetting('position', {top: 64, right: 64});
+const $position = createStore(positionSettings.read(), {serialize: 'ignore'});
+
 $width.on(widthChanged, (width, change) => width - change);
+$position.on(positionChanged, (position, changes) => ({
+  top: position.top - changes.top,
+  right: position.right - changes.right,
+}));
 
 sample({
-  clock: dragStopped,
+  clock: resizeStopped,
   source: $width,
   target: widthSetting.save,
 });
 
+sample({
+  clock: positionChangedStopped,
+  source: $position,
+  target: positionSettings.save,
+});
+
 export function App() {
-  const [currentTab, isVisible, width] = useUnit([$tab, $isVisible, $width]);
+  const [currentTab, isVisible, width, position] = useUnit([$tab, $isVisible, $width, $position]);
 
   const [onDown, isDrag] = useDragable({
     onMove({shift}) {
       widthChanged(shift[0]);
     },
-    onUp: dragStopped,
+    onUp: resizeStopped,
+  });
+
+  const [onHeaderMouseDown] = useDragable({
+    onMove({shift}) {
+      positionChanged({
+        top: shift[1],
+        right: shift[0],
+      });
+    },
+    onUp: positionChangedStopped,
+  });
+
+  const styles = () => ({
+    width: `${width()}px`,
+    top: `${position().top}px`,
+    right: `${position().right}px`,
   });
 
   return (
@@ -108,17 +139,24 @@ export function App() {
       <BodyCursor isDrag={isDrag()} />
 
       <Show when={isVisible()}>
-        <InspectorRoot style={{width: `${width()}px`}}>
+        <InspectorRoot style={styles()}>
           <DragHandler onMouseDown={onDown}>...</DragHandler>
           <TabsContainer>
             <TabsHeader>
-              <For each={Object.entries(Tabs)} fallback={<div>Loading...</div>}>
-                {([key, tab]) => (
-                  <Tab data-active={currentTab() === key} onClick={() => changeTab(key as Key)}>
-                    {tab.title}
-                  </Tab>
-                )}
-              </For>
+              <Header onMouseDown={onHeaderMouseDown}>
+                <Logo>☄️</Logo>
+                <For each={Object.entries(Tabs)} fallback={<div>Loading...</div>}>
+                  {([key, tab]) => (
+                    <Tab
+                      onMouseDown={(e) => e.stopPropagation()}
+                      data-active={currentTab() === key}
+                      onClick={() => changeTab(key as Key)}
+                    >
+                      {tab.title}
+                    </Tab>
+                  )}
+                </For>
+              </Header>
             </TabsHeader>
             <SectionContent>
               <Switch fallback={<div>Not Found</div>}>
@@ -139,7 +177,7 @@ export function App() {
 }
 
 const Tab = styled.div`
-  padding: 8px 16px;
+  padding: 8px;
 
   color: var(--tab-text);
 
@@ -180,6 +218,19 @@ const TabsHeader = styled.div`
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   box-shadow: var(--tabs-shadow);
+`;
+
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  width: 100%;
+  cursor: grab;
 `;
 
 const SectionContent = styled.div`
@@ -235,13 +286,13 @@ const InspectorRoot = styled.div`
   position: fixed;
   right: 48px;
   top: 48px;
-  bottom: 48px;
+  height: 80vh;
 
   display: flex;
   justify-content: center;
 
   width: 736px;
-  min-width: 465px;
+  min-width: 410px;
   max-width: 90%;
 
   color: var(--text);
