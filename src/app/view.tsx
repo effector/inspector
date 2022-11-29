@@ -287,6 +287,7 @@ const InspectorRoot = styled.div`
   right: 48px;
   top: 48px;
   height: 80vh;
+  z-index: 1000;
 
   display: flex;
   justify-content: center;
