@@ -68,9 +68,8 @@ export const ListItem = styled.span`
   }
 `;
 
-export function ValueView(props: {value: unknown; opened?: boolean; level?: number}) {
+export function ValueView(props: {value: unknown; opened?: boolean}) {
   const type = getType(props.value);
-  const level = props.level ?? 0;
 
   const [opened, setOpened] = createSignal(false);
 
@@ -90,13 +89,22 @@ export function ValueView(props: {value: unknown; opened?: boolean; level?: numb
             {title}
           </Openedable>
           {' ['}
-          <For each={[...value]}>
-            {(item) => (
-              <ListItem>
-                <ValueView value={item} opened={localOpened()} level={level + 1} />
-              </ListItem>
-            )}
-          </For>
+          <Show
+            when={opened()}
+            fallback={
+              <Openedable data-active={openable()} onClick={toggleOpened}>
+                ...
+              </Openedable>
+            }
+          >
+            <For each={[...value]}>
+              {(item) => (
+                <ListItem>
+                  <ValueView value={item} opened={localOpened()} />
+                </ListItem>
+              )}
+            </For>
+          </Show>
           ]
         </span>
       </>
@@ -143,7 +151,7 @@ export function ValueView(props: {value: unknown; opened?: boolean; level?: numb
                 <ListItem>
                   <String>"{key}"</String>
                   <span>{` => `}</span>
-                  <ValueView value={mapValue} opened={localOpened()} level={level + 1} />
+                  <ValueView value={mapValue} opened={localOpened()} />
                 </ListItem>
               )}
             </For>
@@ -160,17 +168,16 @@ export function ValueView(props: {value: unknown; opened?: boolean; level?: numb
         {' {'}
         <ListItem data-hidden="expanded">
           <String>"message" :</String>
-          "<ValueView value={error.message} level={level + 1} />"
+          "<ValueView value={error.message} />"
         </ListItem>
         <ListItem data-hidden="folded">
           <String>"stack" :</String>
-          <ValueView value={error.stack} level={level + 1} />
+          <ValueView value={error.stack} />
         </ListItem>
         <For each={Object.entries(error)}>
           {([key, objValue], index) => (
             <ListItem>
-              <String>"{key}"</String>:{' '}
-              <ValueView value={objValue} opened={localOpened()} level={level + 1} />
+              <String>"{key}"</String>: <ValueView value={objValue} opened={localOpened()} />
             </ListItem>
           )}
         </For>
@@ -189,7 +196,7 @@ export function ValueView(props: {value: unknown; opened?: boolean; level?: numb
           </Openedable>
           {' {'}
           <Show
-            when={level < 10 || opened()}
+            when={opened()}
             fallback={
               <Openedable data-active={openable()} onClick={toggleOpened}>
                 ...
@@ -199,8 +206,7 @@ export function ValueView(props: {value: unknown; opened?: boolean; level?: numb
             <For each={Object.entries(value)}>
               {([key, objValue]) => (
                 <ListItem>
-                  <String>"{key}"</String>:{' '}
-                  <ValueView value={objValue} opened={localOpened()} level={level + 1} />
+                  <String>"{key}"</String>: <ValueView value={objValue} opened={localOpened()} />
                 </ListItem>
               )}
             </For>
