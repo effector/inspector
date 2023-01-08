@@ -2,9 +2,11 @@ import {
   CompositeName,
   createEvent,
   createNode,
+  Domain,
   Effect,
   Event,
   forward,
+  is,
   Node,
   Stack,
   step,
@@ -228,11 +230,12 @@ function getLocFile(unit: Unit<any>): string | undefined {
 
 export function addStore(store: Store<any>, options: {mapped?: boolean; name?: string} = {}): void {
   const name = options.name || createName(store);
+  const mapped = isDerived(store);
 
   storeAdd({
     store,
     name,
-    mapped: options.mapped || false,
+    mapped: options.mapped || mapped,
     file: getLocFile(store),
   });
 
@@ -246,11 +249,12 @@ export function addStore(store: Store<any>, options: {mapped?: boolean; name?: s
 
 export function addEvent(event: Event<any>, options: {mapped?: boolean; name?: string} = {}): void {
   const name = options.name || createName(event);
+  const mapped = isDerived(event);
 
   eventAdd({
     event,
     name,
-    mapped: options.mapped || false,
+    mapped: options.mapped || mapped,
     file: getLocFile(event),
   });
 
@@ -270,13 +274,14 @@ export function addEffect(
   options: {attached?: boolean; sid?: string} = {},
 ) {
   const name = createName(effect);
+  const attached = isAttached(effect);
   const sid = options.sid || effect.sid || name;
 
   effectAdd({
     effect,
     name,
     sid,
-    attached: options.attached ?? false,
+    attached: options.attached || attached,
     file: getLocFile(effect),
   });
 
@@ -311,6 +316,70 @@ export function addEffect(
   });
 }
 
+/**
+ *
+ * Attaches inspector to provided units
+ *
+ * @param root {Unit<any>[]} - units to attach inspector to
+ */
+export function attachInspector(targets: Unit<any>[]): void;
+/**
+ *
+ * Attaches inspector to provided effect.
+ *
+ * @param root {Store} - effect to attach inspector to
+ */
+export function attachInspector(target: Effect<any, any, any>): void;
+/**
+ *
+ * Attaches inspector to provided event.
+ *
+ * @param root {Event} - event to attach inspector to
+ */
+export function attachInspector(target: Event<any>): void;
+/**
+ *
+ * Attaches inspector to provided store.
+ *
+ * @param root {Store} - store to attach inspector to
+ */
+export function attachInspector(target: Store<any>): void;
+/**
+ *
+ * Attaches inspector to provided domain - all units inside will be tracked
+ *
+ * @param root {Domain} - domain to attach inspector to
+ */
+export function attachInspector(root: Domain): void;
+export function attachInspector(entries: Unit<unknown> | Array<Unit<unknown>>) {
+  const targets = Array.isArray(entries) ? entries : [entries];
+
+  targets.forEach((unit) => {
+    if (is.domain(unit)) {
+      unit.onCreateStore(addStore);
+      unit.onCreateEvent(addEvent);
+      unit.onCreateEffect(addEffect);
+    }
+    if (is.store(unit)) {
+      addStore(unit);
+    }
+    if (is.effect(unit)) {
+      addEffect(unit);
+    }
+    if (is.event(unit)) {
+      addEvent(unit);
+    }
+  });
+}
+
 function createName<T extends {compositeName: CompositeName}>(unit: T): string {
   return unit.compositeName.path.join('/');
+}
+
+function isDerived(store: Store<any> | Event<any>): boolean {
+  return Boolean((store as any).graphite.meta.derived);
+}
+
+function isAttached(effect: Effect<any, any, any>): boolean {
+  return Boolean((effect as any).graphite.meta.attached);
 }
