@@ -125,54 +125,55 @@ const trimDomainStore = trimDomain.createStore('No Domain in name');
 const trimDomainEvent = trimDomain.createEvent();
 const trimDomainEffect = trimDomain.createEffect();
 
-inspector.addEffect(exampleFx);
-inspector.addEffect(exampleFx2);
-inspector.addEvent(emptyEvent);
-inspector.addEvent(event);
-inspector.addEvent(just);
-inspector.addStore($args);
-inspector.addStore($array);
-inspector.addStore($bar, {mapped: true});
-inspector.addStore($bigint);
-inspector.addStore($bool);
-inspector.addStore($bool2);
-inspector.addStore($date);
-inspector.addStore($deep);
-inspector.addStore($error);
-inspector.addStore($errorCustom);
-inspector.addStore($errorType);
-inspector.addStore($example);
-inspector.addStore($fn1);
-inspector.addStore($fn2);
-inspector.addStore($fn3);
-inspector.addStore($foo);
-inspector.addStore($iterators);
-inspector.addStore($map);
-inspector.addStore($mapInSet);
-inspector.addStore($mapWrapped);
-inspector.addStore($null);
-inspector.addStore($number);
-inspector.addStore($numberInf);
-inspector.addStore($numberNot);
-inspector.addStore($promise);
-inspector.addStore($promiseRejected);
-inspector.addStore($promiseResolved);
-inspector.addStore($regexp1);
-inspector.addStore($regexp2);
-inspector.addStore($set);
-inspector.addStore($setInMap);
-inspector.addStore($setOfFns);
-inspector.addStore($setWrapped);
-inspector.addStore($symbol);
-inspector.addStore($uint);
-inspector.addStore($weakSet);
-inspector.addStore($window);
-inspector.addStore($anotherNumber);
-inspector.addStore($circularObject);
-
-inspector.addStore(trimDomainStore);
-inspector.addEvent(trimDomainEvent);
-inspector.addEffect(trimDomainEffect);
+inspector.attachInspector(domain);
+inspector.attachInspector([
+  exampleFx,
+  exampleFx2,
+  emptyEvent,
+  event,
+  just,
+  $args,
+  $array,
+  $bar,
+  $bigint,
+  $bool,
+  $bool2,
+  $date,
+  $deep,
+  $error,
+  $errorCustom,
+  $errorType,
+  $fn1,
+  $fn2,
+  $fn3,
+  $foo,
+  $iterators,
+  $map,
+  $mapInSet,
+  $mapWrapped,
+  $null,
+  $number,
+  $numberInf,
+  $numberNot,
+  $promise,
+  $promiseRejected,
+  $promiseResolved,
+  $regexp1,
+  $regexp2,
+  $set,
+  $setInMap,
+  $setOfFns,
+  $setWrapped,
+  $symbol,
+  $uint,
+  $weakSet,
+  $window,
+  $anotherNumber,
+  $circularObject,
+  trimDomainStore,
+  trimDomainEvent,
+  trimDomainEffect,
+]);
 
 inspector.createInspector({visible: true, trimDomain: 'trimDomain'});
 let incrementor = 0;
@@ -193,3 +194,4 @@ setInterval(() => {
 $anotherNumber.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());
 $foo.on(just, (s, n) => s + n);
+$example.on(event, () => Math.random() * 100);
