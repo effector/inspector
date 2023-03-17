@@ -20,7 +20,7 @@ specifiers:
   babel-preset-solid: ^1.6.2
   commitizen: 4.0.3
   cz-conventional-changelog: 3.0.2
-  effector: ^22.4.0
+  effector: 22.7.0
   effector-solid: ^0.22.6
   eslint: ^6.6.0
   eslint-plugin-prettier: ^3.1.2
@@ -61,8 +61,8 @@ devDependencies:
   babel-preset-solid: 1.6.2_@babel+core@7.20.2
   commitizen: 4.0.3
   cz-conventional-changelog: 3.0.2
-  effector: 22.4.0
-  effector-solid: 0.22.6_wcqktydo3i3mw5c2xhe4rnflpe
+  effector: 22.7.0
+  effector-solid: 0.22.6_o66at45rr535orq5iddccrfqvi
   eslint: 6.8.0
   eslint-plugin-prettier: 3.4.1_z3t5winqgas25x6qp2elb4naby
   eslint-plugin-react: 7.31.10_eslint@6.8.0
@@ -3018,19 +3018,19 @@ packages:
       is-obj: 2.0.0
     dev: true
 
-  /effector-solid/0.22.6_wcqktydo3i3mw5c2xhe4rnflpe:
+  /effector-solid/0.22.6_o66at45rr535orq5iddccrfqvi:
     resolution: {integrity: sha512-cjxjnHA8vJbDHV323vCpZIhRgBE/RLojkgiOx9btpXofEQVNW9mQp5Ci74hnk8Csgo3Bt4IFtoUFBB6RZV/ePw==}
     engines: {node: '>=11.0.0'}
     peerDependencies:
       effector: ^22.0.2
       solid-js: '>= 1.3.0'
     dependencies:
-      effector: 22.4.0
+      effector: 22.7.0
       solid-js: 1.6.2
     dev: true
 
-  /effector/22.4.0:
-    resolution: {integrity: sha512-WQ0rboUp1fvkzo2rPymtWzR9isUl8v9McGvBA4g8zvQaTgZnXQ1iCbNj2S54bADGpSNl1CYv1/61vvdbc5Goyw==}
+  /effector/22.7.0:
+    resolution: {integrity: sha512-C3jMCjRmU/j7Mu04q0zm45OYglQB9fYxSHNu51UrV77VDZJRs7nFmNfNiaXmgkKOnsUP4VuyE64aiSvAZWZo7g==}
     engines: {node: '>=11.0.0'}
     dev: true
 
