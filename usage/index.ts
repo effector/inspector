@@ -1,7 +1,6 @@
 import {createDomain, createEffect, createEvent, createStore} from 'effector';
 
 import * as inspector from '../src';
-
 import {
   $args,
   $error,
@@ -100,12 +99,12 @@ const $promise = createStore(new Promise((resolve) => setTimeout(resolve, 5000))
 const $promiseResolved = createStore(Promise.resolve(1));
 const $promiseRejected = createStore(Promise.reject(1));
 
-const a = {};
-const b = {a};
+const cdFirst = {};
 // @ts-ignore
-a.b = b;
+cdFirst.cdFirst = cdFirst;
 
-const $circularObject = createStore(a);
+const $circularObject = createStore(cdFirst);
+const circular = createEvent<Record<string, any>>();
 
 const exampleFx = createEffect({
   handler() {
@@ -190,8 +189,19 @@ setInterval(() => {
 setInterval(() => {
   exampleFx2();
 }, 3500);
+setTimeout(() => {
+  const cdSecond = {};
+  // @ts-ignore
+  cdSecond.cdSecond = cdSecond;
+
+  circular(cdSecond);
+}, 2000)
 
 $anotherNumber.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());
 $foo.on(just, (s, n) => s + n);
 $example.on(event, () => Math.random() * 100);
+$circularObject.on(circular, (value, nextValue) => ({
+  ...value,
+  ...nextValue,
+}));
