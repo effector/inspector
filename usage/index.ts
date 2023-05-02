@@ -195,7 +195,17 @@ setTimeout(() => {
   cdSecond.cdSecond = cdSecond;
 
   circular(cdSecond);
-}, 2000)
+}, 1000)
+
+setTimeout(() => {
+  const cdThird = {
+    purple: true,
+  };
+  // @ts-ignore
+  cdThird.cdThird = cdThird;
+
+  circular(cdThird);
+}, 3000)
 
 $anotherNumber.on(event, (counter) => counter + 1);
 $date.on(event, () => new Date());
