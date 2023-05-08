@@ -14,6 +14,7 @@ import {
   Unit,
 } from 'effector';
 import {render} from 'solid-js/web';
+import clone from 'ramda.clone';
 
 import {App} from './app';
 import {$effects} from './entities/effects/model';
@@ -23,6 +24,8 @@ import {$stores} from './entities/stores/model';
 import {setOptions} from './shared/configs/options';
 import {createLogRecordFx} from './tabs/log';
 import {traceEffectRun, traceEventTrigger, traceStoreChange} from './tabs/trace';
+
+import './types.d';
 import {EffectCreator, EventCreator, Inspector, Kind, Options, StoreCreator} from './types.h';
 
 const storeAdd = createEvent<StoreCreator>();
@@ -71,7 +74,7 @@ $events
   }))
   .on(eventTriggered, (map, {name, params}) => {
     // should not change the order of fields
-    const safeParams = params === undefined ? undefined : JSON.parse(JSON.stringify(params));
+    const safeParams = params === undefined ? undefined : clone(params);
     map[name] = {
       ...map[name],
       history: [safeParams, ...map[name].history],
@@ -169,10 +172,6 @@ function traceEvent(event: Event<any>, name = createName(event)) {
   );
 }
 
-function copy<T>(a: T): T {
-  return JSON.parse(JSON.stringify(a));
-}
-
 function traceStore($store: Store<any>) {
   const name = createName($store);
 
@@ -181,7 +180,7 @@ function traceStore($store: Store<any>) {
   graphite($store).seq.unshift(
     step.compute({
       fn(data, scope) {
-        before = copy(scope.state.current);
+        before = clone(scope.state.current);
         return data;
       },
     }),

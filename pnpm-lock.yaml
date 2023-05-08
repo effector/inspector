@@ -28,6 +28,7 @@ specifiers:
   husky: ^8.0.2
   lint-staged: ^10.5.4
   prettier: ^2.7.1
+  ramda.clone: ^0.26.1
   rollup: ^3.3.0
   rollup-plugin-typescript2: ^0.34.1
   solid-js: ^1.6.2
@@ -69,6 +70,7 @@ devDependencies:
   husky: 8.0.2
   lint-staged: 10.5.4
   prettier: 2.7.1
+  ramda.clone: 0.26.1
   rollup: 3.3.0
   rollup-plugin-typescript2: 0.34.1_aoc4guvlpr5bfeyf2nus4ubkpu
   solid-js: 1.6.2
@@ -5862,6 +5864,10 @@ packages:
   /quick-lru/4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+    dev: true
+
+  /ramda.clone/0.26.1:
+    resolution: {integrity: sha512-cv5/cFu93d33JYIzSeIb3qiGa1bcDeSmNw2GrSNJeO1G9IBnYvEP07S+egvo/MWoST7RB/JX9UeVXVt4sRB6BQ==}
     dev: true
 
   /react-is/16.13.1:
