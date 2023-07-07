@@ -65,7 +65,7 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "solid-js": "^1.6.2",
     "solid-styled-components": "^0.28.5",
-    "stylelint": "^14.15.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^9.0.0",
     "terser": "^5.4.0",
